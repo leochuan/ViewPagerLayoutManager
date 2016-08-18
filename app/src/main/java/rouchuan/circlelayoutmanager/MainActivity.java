@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView =(RecyclerView)findViewById(R.id.recycler);
+        recyclerView.addOnScrollListener(new CenterScrollListener());
         recyclerView.setLayoutManager(new CircleLayoutManager(this));
         recyclerView.setAdapter(new Adapter());
     }

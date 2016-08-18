@@ -268,6 +268,14 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
     }
 
     /**
+     * @return Get the dx should be scrolled to the center
+     */
+
+    public int getOffsetCenterView(){
+        return (int)((getCurrentPosition()*intervalAngle-offsetRotate)*DISTANCE_RATIO);
+    }
+
+    /**
      *
      * @return Get the radius of the circle
      */
