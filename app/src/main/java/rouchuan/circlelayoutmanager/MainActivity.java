@@ -1,7 +1,8 @@
 package rouchuan.circlelayoutmanager;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +11,35 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean isCircle = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView recyclerView =(RecyclerView)findViewById(R.id.recycler);
+        final RecyclerView recyclerView =(RecyclerView)findViewById(R.id.recycler);
+        final CircleLayoutManager circleLayoutManager = new CircleLayoutManager(this);
+        final ScrollZoomLayoutManager scrollZoomLayoutManager = new ScrollZoomLayoutManager(this,Dp2px(10));
         recyclerView.addOnScrollListener(new CenterScrollListener());
-        recyclerView.setLayoutManager(new CircleLayoutManager(this));
+        recyclerView.setLayoutManager(circleLayoutManager);
         recyclerView.setAdapter(new Adapter());
+        FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isCircle){
+                    recyclerView.setLayoutManager(scrollZoomLayoutManager);
+                }else{
+                    recyclerView.setLayoutManager(circleLayoutManager);
+                }
+                isCircle = !isCircle;
+            }
+        });
+    }
+
+    public int Dp2px(float dp) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 
     class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{

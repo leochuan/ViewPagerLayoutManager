@@ -8,11 +8,12 @@ import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
+
 /**
- * Created by Dajavu on 16/8/8.
+ * Created by Dajavu on 16/4/22.
  */
 public class CircleLayoutManager extends RecyclerView.LayoutManager{
-
+    
     private static int INTERVAL_ANGLE = 30;// The default interval angle between each items
     private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
 
@@ -111,8 +112,8 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
 
         //add the views which do not attached and in the range
         for(int i=0;i<getItemCount();i++){
-            if(itemsRotate.get(i) - offsetRotate< maxRemoveDegree
-                    && itemsRotate.get(i) - offsetRotate> minRemoveDegree){
+            if(itemsRotate.get(i) - offsetRotate<= maxRemoveDegree
+                    && itemsRotate.get(i) - offsetRotate>= minRemoveDegree){
                 if(!itemAttached.get(i)){
                     View scrap = recycler.getViewForPosition(i);
                     measureChildWithMargins(scrap, 0, 0);
@@ -212,7 +213,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
      * @return the max degrees according to current number of views and interval angle
      */
     private float getMaxOffsetDegree(){
-        return (getItemCount()-1)* intervalAngle;
+       return (getItemCount()-1)* intervalAngle;
     }
 
     private PointF computeScrollVectorForPosition(int targetPosition) {
@@ -232,7 +233,10 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
     @Override
     public void scrollToPosition(int position) {
         if(position < 0 || position > getItemCount()-1) return;
-        offsetRotate = position * intervalAngle;
+        float targetRotate = position * intervalAngle;
+        if(targetRotate == offsetRotate) return;
+        offsetRotate = targetRotate;
+        fixRotateOffset();
         requestLayout();
     }
 
@@ -268,11 +272,11 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
     }
 
     /**
+     *
      * @return Get the dx should be scrolled to the center
      */
-
     public int getOffsetCenterView(){
-        return (int)((getCurrentPosition()*intervalAngle-offsetRotate)*DISTANCE_RATIO);
+        return (int) ((getCurrentPosition()*intervalAngle-offsetRotate)*DISTANCE_RATIO);
     }
 
     /**
@@ -366,5 +370,3 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
         maxRemoveDegree = max;
     }
 }
-
-

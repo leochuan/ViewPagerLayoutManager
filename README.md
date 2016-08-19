@@ -1,4 +1,4 @@
-Android Circle LayoutManager for Recyclerview
+Android Circle and Zoom LayoutManager for Recyclerview
 ======================
 
 ## Examples
@@ -6,20 +6,29 @@ Android Circle LayoutManager for Recyclerview
 
 ####Springback mode
 
-![Example](resources/circle3.gif "working example")
+![Example](resources/circle3.gif "working example") ![Example](resources/circle4.gif "working example")
 
 ## Description
 
-This LayoutManager arrays items into a circle.
+Circle LayoutManager arrays items into a circle.
 It uses a SparseArray to record every child's rotate degree. 
 Then layout all of children by calculating their x and y position according to their current degree.
 When scrolling it will transform the swipe distance into offset degree and re-layout all the children. 
 Also it will remove the view which is out of range for reusing. 
 
+ScrollZoomLayoputManager will zoom the center view and it will handle the scale while scrolling.
+
 ## Usage
+#### CircleLayoutManager
 ```Java
-circleLayoutManager = new CircleLayoutManager(this);
+circleLayoutManager = new CircleLayoutManager(context);
 recyclerView.setLayoutManager(circleLayoutManager);
+```
+
+#### ScrollZoomLayoutManager
+```Java
+scrollZoomLayoutManager = new ScrollZoomLayoutManager(context,space);
+recyclerView.setLayoutManager(scrollZoomLayoutManager);
 ```
 
 ####To enable springback
@@ -62,8 +71,14 @@ setContentOffsetY(int contentOffsetY)
 
 ## License ##
     Copyright 2016 shenruochuan
-    Licensed under the Apache License, Version 2.0 (the "License");you may not use this file except in compliance with the License.You may obtain a copy of the License at
-    
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, softwaredistributed under the License is distributed on an "AS IS" BASIS,WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.See the License for the specific language governing permissions andlimitations under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
