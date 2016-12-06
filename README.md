@@ -21,7 +21,7 @@ ScrollZoomLayoputManager will zoom the center view and it will handle the scale 
 ## Usage
 #### CircleLayoutManager
 ```Java
-circleLayoutManager = new CircleLayoutManager(context);
+circleLayoutManager = new CircleLayoutManager(context); //CircleLayoutManager(context,clockwise)
 recyclerView.setLayoutManager(circleLayoutManager);
 ```
 

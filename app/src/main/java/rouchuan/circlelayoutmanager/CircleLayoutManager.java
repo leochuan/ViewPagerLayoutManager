@@ -48,13 +48,20 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
     private SparseBooleanArray itemAttached = new SparseBooleanArray();
     private SparseArray<Float> itemsRotate = new SparseArray<>();
 
+    private boolean isClockWise;
 
-    public CircleLayoutManager(Context context) {
+
+    public CircleLayoutManager(Context context){
+        this(context,true);
+    }
+
+    public CircleLayoutManager(Context context,boolean isClockWise) {
         this.context = context;
         intervalAngle = INTERVAL_ANGLE;
         offsetRotate = 0;
         minRemoveDegree = -90;
         maxRemoveDegree = 90;
+        this.isClockWise = isClockWise;
     }
 
     @Override
@@ -83,7 +90,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
         for (int i = 0; i < getItemCount(); i++) {
             itemsRotate.put(i,rotate);
             itemAttached.put(i,false);
-            rotate+= intervalAngle;
+            rotate=isClockWise?rotate+intervalAngle:rotate-intervalAngle;
         }
 
         detachAndScrapAttachedViews(recycler);
@@ -92,7 +99,8 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
     }
 
     private void layoutItems(RecyclerView.Recycler recycler,RecyclerView.State state){
-        layoutItems(recycler,state,SCROLL_RIGHT);
+        int layoutDire = isClockWise?SCROLL_RIGHT:SCROLL_LEFT;
+        layoutItems(recycler,state,layoutDire);
     }
 
     private void layoutItems(RecyclerView.Recycler recycler,
@@ -141,7 +149,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
         float targetRotate = offsetRotate + theta;
 
         //handle the boundary
-        if (targetRotate < 0) {
+        if (targetRotate < getMinOffsetDegree()) {
             willScroll = (int) (-offsetRotate*DISTANCE_RATIO);
         }
         else if (targetRotate > getMaxOffsetDegree()) {
@@ -200,8 +208,8 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
      *  fix the offset rotate angle in case item out of boundary
      **/
     private void fixRotateOffset() {
-        if(offsetRotate < 0){
-            offsetRotate = 0;
+        if(offsetRotate < getMinOffsetDegree()){
+            offsetRotate = getMinOffsetDegree();
         }
         if(offsetRotate > getMaxOffsetDegree()){
             offsetRotate = getMaxOffsetDegree();
@@ -213,7 +221,15 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
      * @return the max degrees according to current number of views and interval angle
      */
     private float getMaxOffsetDegree(){
-       return (getItemCount()-1)* intervalAngle;
+       return isClockWise?(getItemCount()-1)* intervalAngle:0;
+    }
+
+    /**
+     *
+     * @return the min degrees according to current number of views and interval angle
+     */
+    private float getMinOffsetDegree() {
+        return isClockWise?0:-(getItemCount()-1)* intervalAngle;
     }
 
     private PointF computeScrollVectorForPosition(int targetPosition) {
@@ -221,7 +237,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
             return null;
         }
         final int firstChildPos = getPosition(getChildAt(0));
-        final int direction = targetPosition < firstChildPos ? -1 : 1;
+        final int direction = targetPosition < firstChildPos == isClockWise ? -1 : 1;
         return new PointF(direction, 0);
     }
 
@@ -233,7 +249,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
     @Override
     public void scrollToPosition(int position) {
         if(position < 0 || position > getItemCount()-1) return;
-        float targetRotate = position * intervalAngle;
+        float targetRotate = isClockWise?position * intervalAngle:-position * intervalAngle;
         if(targetRotate == offsetRotate) return;
         offsetRotate = targetRotate;
         fixRotateOffset();
@@ -268,7 +284,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
      * @return Get the current positon of views
      */
     public int getCurrentPosition(){
-        return Math.round(offsetRotate / intervalAngle);
+        return Math.round(Math.abs(offsetRotate) / intervalAngle);
     }
 
     /**
@@ -276,7 +292,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
      * @return Get the dx should be scrolled to the center
      */
     public int getOffsetCenterView(){
-        return (int) ((getCurrentPosition()*intervalAngle-offsetRotate)*DISTANCE_RATIO);
+        return (int) ((getCurrentPosition()*(isClockWise?intervalAngle:-intervalAngle)-offsetRotate)*DISTANCE_RATIO);
     }
 
     /**
