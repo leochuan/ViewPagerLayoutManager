@@ -16,6 +16,7 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
     
     private static int INTERVAL_ANGLE = 30;// The default interval angle between each items
     private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
+    private static int MAX_DISPLAY_ITEM_COUNT = 100;
 
     //Flags of scroll dirction
     private static int SCROLL_LEFT = 1;
@@ -119,7 +120,11 @@ public class CircleLayoutManager extends RecyclerView.LayoutManager{
         }
 
         //add the views which do not attached and in the range
-        for(int i=0;i<getItemCount();i++){
+        int begin = getCurrentPosition() - MAX_DISPLAY_ITEM_COUNT / 2;
+        int end = getCurrentPosition() + MAX_DISPLAY_ITEM_COUNT / 2;
+        if(begin<0) begin = 0;
+        if(end > getItemCount()) end = getItemCount();
+        for(int i=begin;i<end;i++){
             if(itemsRotate.get(i) - offsetRotate<= maxRemoveDegree
                     && itemsRotate.get(i) - offsetRotate>= minRemoveDegree){
                 if(!itemAttached.get(i)){
