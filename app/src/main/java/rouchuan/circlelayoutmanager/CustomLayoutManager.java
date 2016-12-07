@@ -11,7 +11,7 @@ import android.view.ViewGroup;
  * Created by zixintechno on 12/7/16.
  */
 
-public abstract class BaseLayoutManager extends RecyclerView.LayoutManager{
+public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
 
     //Flags of scroll dirction
     private static int SCROLL_LEFT = 1;
@@ -25,10 +25,10 @@ public abstract class BaseLayoutManager extends RecyclerView.LayoutManager{
     protected int mDecoratedChildWidth;
     protected int mDecoratedChildHeight;
 
-    //Property
-    private int startLeft;
-    private int startTop;
-    protected float offset;
+    //Properties
+    protected int startLeft;
+    protected int startTop;
+    protected float offset; //The delta of property which will change when scroll
 
     //initial position of content
     protected int contentOffsetX = -1;
@@ -39,12 +39,25 @@ public abstract class BaseLayoutManager extends RecyclerView.LayoutManager{
 
     protected boolean isClockWise;
 
-    private float interval;
+    protected float interval; //the interval of each item's offset
 
+    protected abstract float setInterval();
+
+    /**
+     * You can set up your own properties here or change the exist properties like startLeft and startTop
+     */
     protected abstract void setUp();
 
+    /**
+     *
+     * @return the max offset value of which the view should be removed
+     */
     protected abstract float maxRemoveOffset();
 
+    /**
+     *
+     * @return the min offset value of which the view should be removed
+     */
     protected abstract float minRemoveOffset();
 
     protected abstract int calItemLeftPosition(float targetOffset);
@@ -53,14 +66,15 @@ public abstract class BaseLayoutManager extends RecyclerView.LayoutManager{
 
     protected abstract void setItemViewProperty(View itemView,float targetOffset);
 
-    public BaseLayoutManager(Context context,float interval){
-        this(context,interval,true);
+    protected abstract float propertyChangeWhenScroll(View itemView);
+
+    public CustomLayoutManager(Context context){
+        this(context,true);
     }
 
-    public BaseLayoutManager(Context context,float interval,boolean isClockWise) {
+    public CustomLayoutManager(Context context, boolean isClockWise) {
         this.context = context;
         this.isClockWise = isClockWise;
-        this.interval = interval;
     }
 
     @Override
@@ -79,6 +93,7 @@ public abstract class BaseLayoutManager extends RecyclerView.LayoutManager{
             mDecoratedChildHeight = getDecoratedMeasuredHeight(scrap);
             startLeft = contentOffsetX == -1?(getHorizontalSpace() - mDecoratedChildWidth) / 2 : contentOffsetX;
             startTop = contentOffsetY == -1 ? (getVerticalSpace()-mDecoratedChildHeight) / 2 : contentOffsetY;
+            interval = setInterval();
             setUp();
             detachAndScrapView(scrap, recycler);
         }
@@ -143,7 +158,7 @@ public abstract class BaseLayoutManager extends RecyclerView.LayoutManager{
         //re-calculate the rotate x,y of each items
         for(int i=0;i<getChildCount();i++){
             View scrap = getChildAt(i);
-            float delta = scrap.getRotation() - realDx;
+            float delta = propertyChangeWhenScroll(scrap) - realDx;
             layoutScrap(scrap,delta);
         }
 

@@ -15,11 +15,16 @@ public class CircleLayoutManager extends BaseLayoutManager{
     private int mRadius;
 
     public CircleLayoutManager(Context context) {
-        super(context, INTERVAL_ANGLE);
+        super(context);
     }
 
     public CircleLayoutManager(Context context, boolean isClockWise) {
-        super(context, INTERVAL_ANGLE, isClockWise);
+        super(context, isClockWise);
+    }
+
+    @Override
+    protected float setInterval() {
+        return INTERVAL_ANGLE;
     }
 
     @Override
@@ -50,6 +55,11 @@ public class CircleLayoutManager extends BaseLayoutManager{
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
         itemView.setRotation(targetOffset);
+    }
+
+    @Override
+    protected float propertyChangeWhenScroll(View itemView) {
+        return itemView.getRotation();
     }
 
     @Override
