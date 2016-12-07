@@ -13,7 +13,7 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener{
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
         final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        if(!(layoutManager instanceof CircleLayoutManager) && !(layoutManager instanceof ScrollZoomLayoutManager)){
+        if(!(layoutManager instanceof BaseLayoutManager)){
             mAutoSet = true;
             return;
         }
@@ -21,11 +21,7 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener{
         if(!mAutoSet){
             if(newState == RecyclerView.SCROLL_STATE_IDLE){
                 final int dx;
-                if(layoutManager instanceof CircleLayoutManager){
-                    dx = ((CircleLayoutManager) layoutManager).getOffsetCenterView();
-                }else{
-                    dx = ((ScrollZoomLayoutManager)layoutManager).getOffsetCenterView();
-                }
+                dx = ((BaseLayoutManager)layoutManager).getOffsetCenterView();
                 recyclerView.smoothScrollBy(dx,0);
             }
             mAutoSet = true;
