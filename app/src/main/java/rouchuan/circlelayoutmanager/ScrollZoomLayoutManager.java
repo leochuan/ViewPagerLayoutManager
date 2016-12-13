@@ -3,11 +3,13 @@ package rouchuan.circlelayoutmanager;
 import android.content.Context;
 import android.view.View;
 
+import rouchuan.customlayoutmanager.CustomLayoutManager;
+
 /**
  * Created by zixintechno on 12/7/16.
  */
 
-public class ScrollZoomLayoutManager extends BaseLayoutManager{
+public class ScrollZoomLayoutManager extends CustomLayoutManager {
 
     private static final float SCALE_RATE = 1.2f;
     private int itemSpace = 0;

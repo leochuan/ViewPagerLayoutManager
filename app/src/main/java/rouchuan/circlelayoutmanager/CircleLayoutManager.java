@@ -3,11 +3,13 @@ package rouchuan.circlelayoutmanager;
 import android.content.Context;
 import android.view.View;
 
+import rouchuan.customlayoutmanager.CustomLayoutManager;
+
 /**
  * Created by zixintechno on 12/7/16.
  */
 
-public class CircleLayoutManager extends BaseLayoutManager{
+public class CircleLayoutManager extends CustomLayoutManager {
 
     private static int INTERVAL_ANGLE = 30;// The default interval angle between each items
     private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
