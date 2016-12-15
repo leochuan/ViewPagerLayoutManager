@@ -56,7 +56,7 @@ public class ScrollZoomLayoutManager extends CustomLayoutManager {
 
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        float scale = calculateScale((int) targetOffset);
+        float scale = calculateScale((int) targetOffset + startLeft);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
     }

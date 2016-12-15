@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CircleLayoutManager.iml" filepath="$PROJECT_DIR$/CircleLayoutManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CustomLayoutManager.iml" filepath="$PROJECT_DIR$/CustomLayoutManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/customlayoutmanager/customlayoutmanager.iml" filepath="$PROJECT_DIR$/customlayoutmanager/customlayoutmanager.iml" />
     </modules>
