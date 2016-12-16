@@ -21,9 +21,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final RecyclerView recyclerView =(RecyclerView)findViewById(R.id.recycler);
         final CircleLayoutManager circleLayoutManager = new CircleLayoutManager(this,true);
+        final CircleZoomLayoutManager circleZoomLayoutManager = new CircleZoomLayoutManager(this,true);
         final ScrollZoomLayoutManager scrollZoomLayoutManager = new ScrollZoomLayoutManager(this,Dp2px(10));
         recyclerView.addOnScrollListener(new CenterScrollListener());
-        recyclerView.setLayoutManager(circleLayoutManager);
+        recyclerView.setLayoutManager(circleZoomLayoutManager);
         recyclerView.setAdapter(new Adapter());
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
