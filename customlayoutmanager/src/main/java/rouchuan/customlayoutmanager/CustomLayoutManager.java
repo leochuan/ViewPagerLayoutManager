@@ -30,12 +30,8 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
     protected int startTop;
     protected float offset; //The delta of property which will change when scroll
 
-    //initial position of content
-    protected int contentOffsetX = -1;
-    protected int contentOffsetY = -1;
-
-    protected SparseBooleanArray itemAttached = new SparseBooleanArray();
-    protected SparseArray<Float> itemsOffset = new SparseArray<>();
+    private SparseBooleanArray itemAttached = new SparseBooleanArray();
+    private SparseArray<Float> itemsOffset = new SparseArray<>();
 
     protected boolean isClockWise;
 
@@ -91,8 +87,8 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
             measureChildWithMargins(scrap, 0, 0);
             mDecoratedChildWidth = getDecoratedMeasuredWidth(scrap);
             mDecoratedChildHeight = getDecoratedMeasuredHeight(scrap);
-            startLeft = contentOffsetX == -1?(getHorizontalSpace() - mDecoratedChildWidth) / 2 : contentOffsetX;
-            startTop = contentOffsetY == -1 ? (getVerticalSpace()-mDecoratedChildHeight) / 2 : contentOffsetY;
+            startLeft = (getHorizontalSpace() - mDecoratedChildWidth) / 2;
+            startTop = (getVerticalSpace()-mDecoratedChildHeight) / 2;
             interval = setInterval();
             setUp();
             detachAndScrapView(scrap, recycler);

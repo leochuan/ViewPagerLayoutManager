@@ -1,72 +1,95 @@
-Android Circle and Zoom LayoutManager for Recyclerview
+Custom-Layout-Manager
 ======================
+Building your own LayoutManager faster.
 
-## Examples
+It will handle the recycling under the hood.
+All you need to concern about is which the property you want to change and how it change accroding to the scroll offset.
+
 ![Example](resources/circle1.gif "working example") ![Example](resources/circle2.gif "working example") 
-
-####Springback mode
-
 ![Example](resources/circle3.gif "working example") ![Example](resources/circle4.gif "working example")
 
-## Description
-
-Circle LayoutManager arrays items into a circle.
-It uses a SparseArray to record every child's rotate degree. 
-Then layout all of children by calculating their x and y position according to their current degree.
-When scrolling it will transform the swipe distance into offset degree and re-layout all the children. 
-Also it will remove the view which is out of range for reusing. 
-
-ScrollZoomLayoputManager will zoom the center view and it will handle the scale while scrolling.
-
 ## Usage
-#### CircleLayoutManager
+#### Gradle
 ```Java
-circleLayoutManager = new CircleLayoutManager(context); //CircleLayoutManager(context,clockwise)
-recyclerView.setLayoutManager(circleLayoutManager);
+compile 'rouchuan.customlayoutmanager:customlayoutmanager:1.0.0'
+```
+####Default Properties 
+```Java
+protected Context context;
+
+// Size of each items
+protected int mDecoratedChildWidth;
+protected int mDecoratedChildHeight;
+
+protected int startLeft; //position x of first item
+protected int startTop; // position y of first item
+protected float offset; //The delta of property which will change when scroll
+
+protected boolean isClockWise;//The alignment of horizontal direction 
+
+protected float interval; //the interval between each items
 ```
 
-#### ScrollZoomLayoutManager
+####Methods must be implemented.
+It will set the interval of each items.
+Once it was set you can use the variable interval directly
+
 ```Java
-scrollZoomLayoutManager = new ScrollZoomLayoutManager(context,space);
-recyclerView.setLayoutManager(scrollZoomLayoutManager);
+protected abstract float setInterval();
 ```
 
-####To enable springback
+You can set up your own properties or change the default properties like startLeft and startTop here
 
+```Java
+protected abstract void setUp();
+```
+
+The max offset value of which the view should be removed
+
+```Java
+protected abstract float maxRemoveOffset();
+```
+
+The min offset value of which the view should be removed
+
+```Java
+protected abstract float minRemoveOffset();
+```
+
+You can calculate and set the postion x of each items here
+
+```Java
+protected abstract int calItemLeftPosition(float targetOffset);
+```
+
+You can calculate and set the postion y of each items here
+
+```Java
+protected abstract int calItemTopPosition(float targetOffset);
+```
+
+You can set item's properties which is determined by target offset here 
+
+```Java
+protected abstract void setItemViewProperty(View itemView,float targetOffset);
+```
+
+You need to return the property which you want change while scrolling
+
+```Java
+protected abstract float propertyChangeWhenScroll(View itemView);
+```
+####Methods you can override.
+It return the (scroll dx / offset);
+
+```Java
+protected float getDistanceRatio(){
+   return 1f;
+}
+```
+####Enable springback
 ```Java
 recyclerView.addOnScrollListener(new CenterScrollListener());
-```
-
-## API
-
-```JAVA
-         0
-         |
-         |
-         |
-270------ -------90 
-         |
-         |
-         |
-        180
-
-//set the visable range of degrees
-setDegreeRangeWillShow(int min,int max)
-
-//set the radius
-setRadius(int mRadius)
-
-//set interval angle for each children
-setIntervalAngle(int intervalAngle)
-
-//set first child rotate
-setFirstChildRotate(int firstChildRotate)
-
-//set content x point in parent
-setContentOffsetX(int contentOffsetX)
-
-//set content y point in parent
-setContentOffsetY(int contentOffsetY)
 ```
 
 ## License ##
