@@ -46,16 +46,6 @@ public class GalleryLayoutManager extends CustomLayoutManager {
     }
 
     @Override
-    protected int calItemLeftPosition(float targetOffset) {
-        return (int) targetOffset;
-    }
-
-    @Override
-    protected int calItemTopPosition(float targetOffset) {
-        return 0;
-    }
-
-    @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
         itemView.setRotationY(calRotationY(targetOffset));
         itemView.setAlpha(calAlpha(targetOffset));

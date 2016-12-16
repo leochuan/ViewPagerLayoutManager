@@ -33,7 +33,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
     private SparseBooleanArray itemAttached = new SparseBooleanArray();
     private SparseArray<Float> itemsOffset = new SparseArray<>();
 
-    protected boolean isClockWise;
+    private boolean isClockWise;
 
     protected float interval; //the interval of each item's offset
 
@@ -55,10 +55,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
      * @return the min offset value of which the view should be removed
      */
     protected abstract float minRemoveOffset();
-
-    protected abstract int calItemLeftPosition(float targetOffset);
-
-    protected abstract int calItemTopPosition(float targetOffset);
 
     protected abstract void setItemViewProperty(View itemView,float targetOffset);
 
@@ -242,6 +238,14 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
         layoutDecorated(scrap, startLeft + left, startTop + top,
                 startLeft + left + mDecoratedChildWidth, startTop + top + mDecoratedChildHeight);
         setItemViewProperty(scrap,targetOffset);
+    }
+
+    protected int calItemLeftPosition(float targetOffset){
+        return (int) targetOffset;
+    }
+
+    protected int calItemTopPosition(float targetOffset){
+        return 0;
     }
 
     protected int getHorizontalSpace() {

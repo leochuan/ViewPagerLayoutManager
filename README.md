@@ -25,9 +25,22 @@ protected int startLeft; //position x of first item
 protected int startTop; // position y of first item
 protected float offset; //The delta of property which will change when scroll
 
-protected boolean isClockWise;//The alignment of horizontal direction 
-
 protected float interval; //the interval between each items
+```
+####Consturct
+By default there are two constructs.isClockWise determine the way how each items align
+
+```Java
+//Default pass isClockWise true
+public CustomLayoutManager(Context context){
+    this(context,true);
+}
+
+public CustomLayoutManager(Context context, boolean isClockWise) {
+    this.context = context;
+    this.isClockWise = isClockWise;
+}
+
 ```
 
 ####Methods must be implemented.
@@ -56,18 +69,6 @@ The min offset value of which the view should be removed
 protected abstract float minRemoveOffset();
 ```
 
-You can calculate and set the postion x of each items here
-
-```Java
-protected abstract int calItemLeftPosition(float targetOffset);
-```
-
-You can calculate and set the postion y of each items here
-
-```Java
-protected abstract int calItemTopPosition(float targetOffset);
-```
-
 You can set item's properties which is determined by target offset here 
 
 ```Java
@@ -80,6 +81,22 @@ You need to return the property which you want change while scrolling
 protected abstract float propertyChangeWhenScroll(View itemView);
 ```
 ####Methods you can override.
+You can calculate and set the postion x of each items here
+
+```Java
+protected int calItemLeftPosition(float targetOffset){
+    return targetOffset;
+}
+```
+
+You can calculate and set the postion y of each items here
+
+```Java
+protected int calItemTopPosition(float targetOffset){
+    return 0;
+}
+```
+
 It return the (scroll dx / offset);
 
 ```Java
