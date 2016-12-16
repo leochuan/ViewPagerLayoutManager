@@ -227,6 +227,9 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
 
     private void resetViewProperty(View v) {
         v.setRotation(0);
+        v.setRotationY(0);
+        v.setRotationY(0);
+        v.setAlpha(1f);
     }
 
     private float getMaxOffset(){

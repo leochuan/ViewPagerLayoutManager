@@ -8,39 +8,73 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import rouchuan.customlayoutmanager.CenterScrollListener;
 
 public class MainActivity extends AppCompatActivity {
+    private final static int CIRCLE = 0;
+    private final static int SCROLL_ZOOM = 1;
+    private final static int CIRCLE_ZOOM = 2;
+    private final static int GALLERY = 3;
 
-    private boolean isCircle = true;
+    private int mode = -1;
+    private RecyclerView recyclerView;
+    private CircleLayoutManager circleLayoutManager;
+    private CircleZoomLayoutManager circleZoomLayoutManager;
+    private ScrollZoomLayoutManager scrollZoomLayoutManager;
+    private GalleryLayoutManager galleryLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final RecyclerView recyclerView =(RecyclerView)findViewById(R.id.recycler);
-        final CircleLayoutManager circleLayoutManager = new CircleLayoutManager(this,true);
-        final CircleZoomLayoutManager circleZoomLayoutManager = new CircleZoomLayoutManager(this,true);
-        final ScrollZoomLayoutManager scrollZoomLayoutManager = new ScrollZoomLayoutManager(this,Dp2px(10));
-        recyclerView.addOnScrollListener(new CenterScrollListener());
-        recyclerView.setLayoutManager(circleZoomLayoutManager);
-        recyclerView.setAdapter(new Adapter());
+        configureRecyclerView();
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isCircle){
-                    recyclerView.setLayoutManager(scrollZoomLayoutManager);
-                }else{
-                    recyclerView.setLayoutManager(circleLayoutManager);
-                }
-                isCircle = !isCircle;
+                determinLayoutManager();
             }
         });
     }
 
-    public int Dp2px(float dp) {
+    private void configureRecyclerView(){
+        recyclerView =(RecyclerView)findViewById(R.id.recycler);
+        circleLayoutManager = new CircleLayoutManager(this,true);
+        circleZoomLayoutManager = new CircleZoomLayoutManager(this,true);
+        scrollZoomLayoutManager = new ScrollZoomLayoutManager(this,Dp2px(10));
+        galleryLayoutManager = new GalleryLayoutManager(this,Dp2px(10));
+        recyclerView.addOnScrollListener(new CenterScrollListener());
+        determinLayoutManager();
+        recyclerView.setAdapter(new Adapter());
+    }
+
+    private void determinLayoutManager(){
+        mode++;
+        if(mode == 4) mode = 0;
+        switch (mode){
+            case CIRCLE:
+                changeAndToast(circleLayoutManager,"Now in circleLayoutManager");
+                break;
+            case SCROLL_ZOOM:
+                changeAndToast(scrollZoomLayoutManager,"Now in scrollZoomLayoutManager");
+                break;
+            case CIRCLE_ZOOM:
+                changeAndToast(circleZoomLayoutManager,"Now in circleZoomLayoutManager");
+                break;
+            case GALLERY:
+                changeAndToast(galleryLayoutManager,"Now in galleryLayoutManager");
+                break;
+        }
+    }
+
+    private void changeAndToast(RecyclerView.LayoutManager layoutManager,String toast){
+        recyclerView.setLayoutManager(layoutManager);
+        Toast.makeText(this,toast,Toast.LENGTH_SHORT).show();
+    }
+
+    private int Dp2px(float dp) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
