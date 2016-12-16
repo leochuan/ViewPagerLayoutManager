@@ -44,21 +44,8 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
      */
     protected abstract void setUp();
 
-    /**
-     *
-     * @return the max offset value of which the view should be removed
-     */
-    protected abstract float maxRemoveOffset();
-
-    /**
-     *
-     * @return the min offset value of which the view should be removed
-     */
-    protected abstract float minRemoveOffset();
-
     protected abstract void setItemViewProperty(View itemView,float targetOffset);
 
-    protected abstract float propertyChangeWhenScroll(View itemView);
 
     public CustomLayoutManager(Context context){
         this(context,true);
@@ -254,6 +241,18 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager{
 
     protected int getVerticalSpace() {
         return getHeight() - getPaddingBottom() - getPaddingTop();
+    }
+
+    protected float maxRemoveOffset(){
+        return getHorizontalSpace() - startLeft;
+    }
+
+    protected float minRemoveOffset(){
+        return -mDecoratedChildWidth-getPaddingLeft() - startLeft;
+    }
+
+    protected float propertyChangeWhenScroll(View itemView){
+        return itemView.getLeft()-startLeft;
     }
 
     protected float getDistanceRatio(){

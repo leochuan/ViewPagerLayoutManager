@@ -11,7 +11,7 @@ All you need to concern about is which the property you want to change and how i
 ## Usage
 #### Gradle
 ```Java
-compile 'rouchuan.customlayoutmanager:customlayoutmanager:1.0.0'
+compile 'rouchuan.customlayoutmanager:customlayoutmanager:1.0.1'
 ```
 ####Default Properties 
 ```Java
@@ -57,30 +57,29 @@ You can set up your own properties or change the default properties like startLe
 protected abstract void setUp();
 ```
 
-The max offset value of which the view should be removed
-
-```Java
-protected abstract float maxRemoveOffset();
-```
-
-The min offset value of which the view should be removed
-
-```Java
-protected abstract float minRemoveOffset();
-```
-
 You can set item's properties which is determined by target offset here 
 
 ```Java
 protected abstract void setItemViewProperty(View itemView,float targetOffset);
 ```
 
-You need to return the property which you want change while scrolling
+####Methods you can override.
+The max offset value of which the view should be removed
 
 ```Java
-protected abstract float propertyChangeWhenScroll(View itemView);
+protected float maxRemoveOffset(){
+    return getHorizontalSpace() - startLeft;
+}
 ```
-####Methods you can override.
+
+The min offset value of which the view should be removed
+
+```Java
+protected abstract minRemoveOffset(){
+    return -mDecoratedChildWidth-getPaddingLeft() - startLeft;
+}
+```
+
 You can calculate and set the postion x of each items here
 
 ```Java
@@ -94,6 +93,14 @@ You can calculate and set the postion y of each items here
 ```Java
 protected int calItemTopPosition(float targetOffset){
     return 0;
+}
+```
+
+Return the property which you want to change while scrolling
+
+```Java
+protected float propertyChangeWhenScroll(View itemView){
+    return itemView.getLeft()-startLeft;
 }
 ```
 

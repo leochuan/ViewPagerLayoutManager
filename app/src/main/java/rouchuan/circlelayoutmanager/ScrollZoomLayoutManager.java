@@ -35,25 +35,10 @@ public class ScrollZoomLayoutManager extends CustomLayoutManager {
     }
 
     @Override
-    protected float maxRemoveOffset() {
-        return getHorizontalSpace() - startLeft;
-    }
-
-    @Override
-    protected float minRemoveOffset() {
-        return -mDecoratedChildWidth-getPaddingLeft() - startLeft;
-    }
-
-    @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
         float scale = calculateScale((int) targetOffset + startLeft);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
-    }
-
-    @Override
-    protected float propertyChangeWhenScroll(View itemView) {
-        return itemView.getLeft()-startLeft;
     }
 
     /**

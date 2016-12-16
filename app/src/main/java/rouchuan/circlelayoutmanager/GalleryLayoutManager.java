@@ -36,24 +36,9 @@ public class GalleryLayoutManager extends CustomLayoutManager {
     }
 
     @Override
-    protected float maxRemoveOffset() {
-        return getHorizontalSpace() - startLeft;
-    }
-
-    @Override
-    protected float minRemoveOffset() {
-        return -mDecoratedChildWidth-getPaddingLeft() - startLeft;
-    }
-
-    @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
         itemView.setRotationY(calRotationY(targetOffset));
         itemView.setAlpha(calAlpha(targetOffset));
-    }
-
-    @Override
-    protected float propertyChangeWhenScroll(View itemView) {
-        return itemView.getLeft()-startLeft;
     }
 
     private float calRotationY(float targetOffset){
