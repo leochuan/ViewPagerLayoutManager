@@ -1,6 +1,7 @@
 package rouchuan.circlelayoutmanager;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 
 import rouchuan.customlayoutmanager.CustomLayoutManager;
@@ -61,6 +62,9 @@ public class CircleZoomLayoutManager extends CustomLayoutManager {
         float scale = calculateScale(itemView,targetOffset);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            itemView.setZ(scale);
+        }
     }
 
     @Override
