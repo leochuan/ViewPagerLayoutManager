@@ -30,48 +30,55 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         configureRecyclerView();
-        FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 determinLayoutManager();
             }
         });
+        FloatingActionButton floatingActionButton2 = (FloatingActionButton) findViewById(R.id.fab2);
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.smoothScrollToPosition(5);
+            }
+        });
     }
 
-    private void configureRecyclerView(){
-        recyclerView =(RecyclerView)findViewById(R.id.recycler);
-        circleLayoutManager = new CircleLayoutManager(this,true);
-        circleZoomLayoutManager = new CircleZoomLayoutManager(this,true);
-        scrollZoomLayoutManager = new ScrollZoomLayoutManager(this,Dp2px(10));
-        galleryLayoutManager = new GalleryLayoutManager(this,Dp2px(10));
+    private void configureRecyclerView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        circleLayoutManager = new CircleLayoutManager(this, true);
+        circleZoomLayoutManager = new CircleZoomLayoutManager(this, true);
+        scrollZoomLayoutManager = new ScrollZoomLayoutManager(this, Dp2px(10));
+        galleryLayoutManager = new GalleryLayoutManager(this, Dp2px(10));
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determinLayoutManager();
         recyclerView.setAdapter(new Adapter());
     }
 
-    private void determinLayoutManager(){
+    private void determinLayoutManager() {
         mode++;
-        if(mode == 4) mode = 0;
-        switch (mode){
+        if (mode == 4) mode = 0;
+        switch (mode) {
             case CIRCLE:
-                changeAndToast(circleLayoutManager,"Now in circleLayoutManager");
+                changeAndToast(circleLayoutManager, "Now in circleLayoutManager");
                 break;
             case SCROLL_ZOOM:
-                changeAndToast(scrollZoomLayoutManager,"Now in scrollZoomLayoutManager");
+                changeAndToast(scrollZoomLayoutManager, "Now in scrollZoomLayoutManager");
                 break;
             case CIRCLE_ZOOM:
-                changeAndToast(circleZoomLayoutManager,"Now in circleZoomLayoutManager");
+                changeAndToast(circleZoomLayoutManager, "Now in circleZoomLayoutManager");
                 break;
             case GALLERY:
-                changeAndToast(galleryLayoutManager,"Now in galleryLayoutManager");
+                changeAndToast(galleryLayoutManager, "Now in galleryLayoutManager");
                 break;
         }
     }
 
-    private void changeAndToast(RecyclerView.LayoutManager layoutManager,String toast){
+    private void changeAndToast(RecyclerView.LayoutManager layoutManager, String toast) {
         recyclerView.setLayoutManager(layoutManager);
-        Toast.makeText(this,toast,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
     }
 
     private int Dp2px(float dp) {
@@ -79,17 +86,17 @@ public class MainActivity extends AppCompatActivity {
         return (int) (dp * scale + 0.5f);
     }
 
-    class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MyViewHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.my_image,parent,false));
+            return new MyViewHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.my_image, parent, false));
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            int index = (position+1)%6;
+            int index = (position + 1) % 6;
             int res = 0;
-            switch (index){
+            switch (index) {
                 case 0:
                     res = R.mipmap.item1;
                     break;
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                     res = R.mipmap.item6;
                     break;
             }
-            ((MyViewHolder)holder).imageView.setImageResource(res);
+            ((MyViewHolder) holder).imageView.setImageResource(res);
         }
 
         @Override
@@ -117,9 +124,10 @@ public class MainActivity extends AppCompatActivity {
             return 200;
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder{
+        class MyViewHolder extends RecyclerView.ViewHolder {
             ImageView imageView;
-            public MyViewHolder(View itemView){
+
+            public MyViewHolder(View itemView) {
                 super(itemView);
                 imageView = (ImageView) itemView.findViewById(R.id.image);
             }

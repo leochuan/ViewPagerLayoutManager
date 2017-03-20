@@ -22,6 +22,7 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener{
             if(newState == RecyclerView.SCROLL_STATE_IDLE){
                 final int dx;
                 dx = ((CustomLayoutManager)layoutManager).getOffsetCenterView();
+                ((CustomLayoutManager) layoutManager).resetTargetPosition();
                 recyclerView.smoothScrollBy(dx,0);
             }
             mAutoSet = true;
