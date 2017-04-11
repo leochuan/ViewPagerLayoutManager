@@ -2,10 +2,9 @@ package rouchuan.customlayoutmanager;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,7 +18,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     private static int SCROLL_LEFT = 1;
     private static int SCROLL_RIGHT = 2;
 
-    private static int MAX_DISPLAY_ITEM_COUNT = 100;
+    private static int MAX_DISPLAY_ITEM_COUNT = 50;
 
     protected Context context;
 
@@ -32,10 +31,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     protected int startTop;
     protected float offset; //The delta of property which will change when scroll
 
-    private SparseBooleanArray itemAttached = new SparseBooleanArray();
-    private SparseArray<Float> itemsOffset = new SparseArray<>();
-
-    private boolean isClockWise;
+    private boolean mShouldReverseLayout;
 
     protected float interval; //the interval of each item's offset
 
@@ -55,9 +51,9 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
         this(context, true);
     }
 
-    public CustomLayoutManager(Context context, boolean isClockWise) {
+    public CustomLayoutManager(Context context, boolean shouldReverseLayout) {
         this.context = context;
-        this.isClockWise = isClockWise;
+        this.mShouldReverseLayout = shouldReverseLayout;
     }
 
     @Override
@@ -81,17 +77,31 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             detachAndScrapView(scrap, recycler);
         }
 
-        //init the state of each items
-        float property = 0;
-        for (int i = 0; i < getItemCount(); i++) {
-            itemAttached.put(i, false);
-            itemsOffset.put(i, property);
-            property = isClockWise ? property + interval : property - interval;
-        }
-
         detachAndScrapAttachedViews(recycler);
         handleOutOfRange();
         layoutItems(recycler, state);
+    }
+
+    private float getProperty(int position) {
+        return mShouldReverseLayout ? position * interval : position * -interval;
+    }
+
+    @Override
+    public View findViewByPosition(int position) {
+        final int childCount = getChildCount();
+        if (childCount == 0) {
+            return null;
+        }
+        final int firstChild = getPosition(getChildAt(0));
+        final int viewPosition = position - firstChild;
+        if (viewPosition >= 0 && viewPosition < childCount) {
+            final View child = getChildAt(viewPosition);
+            if (getPosition(child) == position) {
+                return child; // in pre-layout, this may not match
+            }
+        }
+        // fallback to traversal. This might be necessary in pre-layout.
+        return super.findViewByPosition(position);
     }
 
     @Override
@@ -106,6 +116,16 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     }
 
     @Override
+    public Parcelable onSaveInstanceState() {
+        return super.onSaveInstanceState();
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
+    }
+
+    @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
@@ -113,7 +133,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public void scrollToPosition(int position) {
         if (position < 0 || position > getItemCount() - 1) return;
-        float targetRotate = isClockWise ? position * interval : -position * interval;
+        float targetRotate = mShouldReverseLayout ? position * interval : -position * interval;
         if (targetRotate == offset) return;
         offset = targetRotate;
         handleOutOfRange();
@@ -138,7 +158,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             return null;
         }
         final int firstChildPos = getPosition(getChildAt(0));
-        final float direction = targetPosition < firstChildPos == isClockWise ? -1 / getDistanceRatio() : 1 / getDistanceRatio();
+        final float direction = targetPosition < firstChildPos == mShouldReverseLayout ? -1 / getDistanceRatio() : 1 / getDistanceRatio();
         return new PointF(direction, 0);
     }
 
@@ -175,7 +195,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     }
 
     private void layoutItems(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        int layoutDire = isClockWise ? SCROLL_RIGHT : SCROLL_LEFT;
+        int layoutDire = mShouldReverseLayout ? SCROLL_RIGHT : SCROLL_LEFT;
         layoutItems(recycler, state, layoutDire);
     }
 
@@ -187,8 +207,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
         for (int i = 0; i < getChildCount(); i++) {
             View view = getChildAt(i);
             int position = getPosition(view);
-            if (removeCondition(itemsOffset.get(position) - offset)) {
-                itemAttached.put(position, false);
+            if (removeCondition(getProperty(position) - offset)) {
                 removeAndRecycleView(view, recycler);
             }
         }
@@ -199,8 +218,8 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
         if (begin < 0) begin = 0;
         if (end > getItemCount()) end = getItemCount();
         for (int i = begin; i < end; i++) {
-            if (!removeCondition(itemsOffset.get(i) - offset)) {
-                if (!itemAttached.get(i)) {
+            if (!removeCondition(getProperty(i) - offset)) {
+                if (findViewByPosition(i) == null) {
                     View scrap = recycler.getViewForPosition(i);
                     measureChildWithMargins(scrap, 0, 0);
                     if (oritention == SCROLL_LEFT)
@@ -208,9 +227,8 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
                     else
                         addView(scrap);
                     resetViewProperty(scrap);
-                    float targetOffset = itemsOffset.get(i) - offset;
+                    float targetOffset = getProperty(i) - offset;
                     layoutScrap(scrap, targetOffset);
-                    itemAttached.put(i, true);
                 }
             }
         }
@@ -232,16 +250,16 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     private void resetViewProperty(View v) {
         v.setRotation(0);
         v.setRotationY(0);
-        v.setRotationY(0);
+        v.setRotationX(0);
         v.setAlpha(1f);
     }
 
     private float getMaxOffset() {
-        return isClockWise ? (getItemCount() - 1) * interval : 0;
+        return mShouldReverseLayout ? (getItemCount() - 1) * interval : 0;
     }
 
     private float getMinOffset() {
-        return isClockWise ? 0 : -(getItemCount() - 1) * interval;
+        return mShouldReverseLayout ? 0 : -(getItemCount() - 1) * interval;
     }
 
     private void layoutScrap(View scrap, float targetOffset) {
@@ -294,6 +312,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     }
 
     public int getOffsetCenterView() {
-        return (int) ((getCurrentPosition() * (isClockWise ? interval : -interval) - offset) * getDistanceRatio());
+        return (int) ((getCurrentPosition() * (mShouldReverseLayout ? interval : -interval) - offset) * getDistanceRatio());
     }
 }

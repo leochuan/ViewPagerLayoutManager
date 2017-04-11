@@ -13,7 +13,7 @@ All you need to concern about is which the property you want to change and how i
 ```Java
 compile 'rouchuan.customlayoutmanager:customlayoutmanager:1.0.2'
 ```
-####Default Properties 
+#### Default Properties
 ```Java
 protected Context context;
 
@@ -27,23 +27,23 @@ protected float offset; //The delta of property which will change when scroll
 
 protected float interval; //the interval between each items
 ```
-####Consturct
-By default there are two constructs.isClockWise determine the way how each items align
+#### Consturct
+By default there are two constructs.mShouldReverseLayout determine the way how each items align
 
 ```Java
-//Default pass isClockWise true
+//Default pass mShouldReverseLayout true
 public CustomLayoutManager(Context context){
     this(context,true);
 }
 
-public CustomLayoutManager(Context context, boolean isClockWise) {
+public CustomLayoutManager(Context context, boolean mShouldReverseLayout) {
     this.context = context;
-    this.isClockWise = isClockWise;
+    this.mShouldReverseLayout = mShouldReverseLayout;
 }
 
 ```
 
-####Methods must be implemented.
+#### Methods must be implemented.
 It will set the interval of each items.
 Once it was set you can use the variable interval directly
 
@@ -63,7 +63,7 @@ You can set item's properties which is determined by target offset here
 protected abstract void setItemViewProperty(View itemView,float targetOffset);
 ```
 
-####Methods you can override.
+#### Methods you can override.
 The max offset value of which the view should be removed
 
 ```Java
@@ -111,7 +111,7 @@ protected float getDistanceRatio(){
    return 1f;
 }
 ```
-####Enable springback
+#### Enable springback
 ```Java
 recyclerView.addOnScrollListener(new CenterScrollListener());
 ```
