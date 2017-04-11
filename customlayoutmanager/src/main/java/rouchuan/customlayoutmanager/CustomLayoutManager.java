@@ -14,10 +14,6 @@ import android.view.ViewGroup;
 
 public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
-    //Flags of scroll dirction
-    private static int SCROLL_LEFT = 1;
-    private static int SCROLL_RIGHT = 2;
-
     private static int MAX_DISPLAY_ITEM_COUNT = 50;
 
     protected Context context;
@@ -54,6 +50,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     public CustomLayoutManager(Context context, boolean shouldReverseLayout) {
         this.context = context;
         this.mShouldReverseLayout = shouldReverseLayout;
+        interval = setInterval();
     }
 
     @Override
@@ -72,7 +69,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             mDecoratedChildHeight = getDecoratedMeasuredHeight(scrap);
             startLeft = (getHorizontalSpace() - mDecoratedChildWidth) / 2;
             startTop = (getVerticalSpace() - mDecoratedChildHeight) / 2;
-            interval = setInterval();
             setUp();
             detachAndScrapView(scrap, recycler);
         }
@@ -186,21 +182,13 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             layoutScrap(scrap, delta);
         }
 
-        //different direction child will overlap different way
-        if (dx < 0)
-            layoutItems(recycler, state, SCROLL_LEFT);
-        else
-            layoutItems(recycler, state, SCROLL_RIGHT);
+        layoutItems(recycler, state);
+
         return willScroll;
     }
 
-    private void layoutItems(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        int layoutDire = mShouldReverseLayout ? SCROLL_RIGHT : SCROLL_LEFT;
-        layoutItems(recycler, state, layoutDire);
-    }
-
     private void layoutItems(RecyclerView.Recycler recycler,
-                             RecyclerView.State state, int oritention) {
+                             RecyclerView.State state) {
         if (state.isPreLayout()) return;
 
         //remove the views which out of range
@@ -217,15 +205,13 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
         int end = getCurrentPosition() + MAX_DISPLAY_ITEM_COUNT / 2;
         if (begin < 0) begin = 0;
         if (end > getItemCount()) end = getItemCount();
+
         for (int i = begin; i < end; i++) {
             if (!removeCondition(getProperty(i) - offset)) {
                 if (findViewByPosition(i) == null) {
                     View scrap = recycler.getViewForPosition(i);
                     measureChildWithMargins(scrap, 0, 0);
-                    if (oritention == SCROLL_LEFT)
-                        addView(scrap, 0);
-                    else
-                        addView(scrap);
+                    addView(scrap);
                     resetViewProperty(scrap);
                     float targetOffset = getProperty(i) - offset;
                     layoutScrap(scrap, targetOffset);

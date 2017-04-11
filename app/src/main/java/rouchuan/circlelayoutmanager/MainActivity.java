@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                determinLayoutManager();
+                determineLayoutManager();
             }
         });
         FloatingActionButton floatingActionButton2 = (FloatingActionButton) findViewById(R.id.fab2);
@@ -53,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
         scrollZoomLayoutManager = new ScrollZoomLayoutManager(this, Dp2px(10));
         galleryLayoutManager = new GalleryLayoutManager(this, Dp2px(10));
         recyclerView.addOnScrollListener(new CenterScrollListener());
-        determinLayoutManager();
+        determineLayoutManager();
         recyclerView.setAdapter(new Adapter());
     }
 
-    private void determinLayoutManager() {
+    private void determineLayoutManager() {
         mode++;
         if (mode == 4) mode = 0;
         switch (mode) {

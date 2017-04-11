@@ -36,12 +36,12 @@ public class CircleLayoutManager extends CustomLayoutManager {
 
     @Override
     protected float maxRemoveOffset() {
-        return 60;
+        return 90;
     }
 
     @Override
     protected float minRemoveOffset() {
-        return -60;
+        return -90;
     }
 
     @Override
