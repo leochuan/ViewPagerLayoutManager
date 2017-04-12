@@ -33,6 +33,8 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     private int targetPosition = -1;
 
+    private int scrollToPosition;
+
     protected abstract float setInterval();
 
     /**
@@ -50,7 +52,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     public CustomLayoutManager(Context context, boolean shouldReverseLayout) {
         this.context = context;
         this.mShouldReverseLayout = shouldReverseLayout;
-        interval = setInterval();
     }
 
     @Override
@@ -69,10 +70,12 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             mDecoratedChildHeight = getDecoratedMeasuredHeight(scrap);
             startLeft = (getHorizontalSpace() - mDecoratedChildWidth) / 2;
             startTop = (getVerticalSpace() - mDecoratedChildHeight) / 2;
+            interval = setInterval();
             setUp();
             detachAndScrapView(scrap, recycler);
         }
 
+        offset = mShouldReverseLayout ? scrollToPosition * interval : -scrollToPosition * interval;
         detachAndScrapAttachedViews(recycler);
         handleOutOfRange();
         layoutItems(recycler, state);
@@ -109,6 +112,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     public void onAdapterChanged(RecyclerView.Adapter oldAdapter, RecyclerView.Adapter newAdapter) {
         removeAllViews();
         offset = 0;
+        scrollToPosition = 0;
     }
 
     @Override
@@ -128,11 +132,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void scrollToPosition(int position) {
-        if (position < 0 || position > getItemCount() - 1) return;
-        float targetRotate = mShouldReverseLayout ? position * interval : -position * interval;
-        if (targetRotate == offset) return;
-        offset = targetRotate;
-        handleOutOfRange();
+        scrollToPosition = position;
         requestLayout();
     }
 

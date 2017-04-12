@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
         recyclerView.setAdapter(new Adapter());
+        recyclerView.scrollToPosition(5);
     }
 
     private void determineLayoutManager() {
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return Integer.MAX_VALUE;
+            return 10;
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
