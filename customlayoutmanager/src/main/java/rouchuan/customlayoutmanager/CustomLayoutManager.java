@@ -27,13 +27,19 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     protected int startTop;
     protected float offset; //The delta of property which will change when scroll
 
-    private boolean mShouldReverseLayout;
+    private boolean isClockWise;
 
     protected float interval; //the interval of each item's offset
 
     private int targetPosition = -1;
 
     private int scrollToPosition;
+
+    /**
+     * Works the same way as {@link android.widget.AbsListView#setSmoothScrollbarEnabled(boolean)}.
+     * see {@link android.widget.AbsListView#setSmoothScrollbarEnabled(boolean)}
+     */
+    private boolean mSmoothScrollbarEnabled = true;
 
     protected abstract float setInterval();
 
@@ -51,7 +57,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     public CustomLayoutManager(Context context, boolean shouldReverseLayout) {
         this.context = context;
-        this.mShouldReverseLayout = shouldReverseLayout;
+        this.isClockWise = shouldReverseLayout;
     }
 
     @Override
@@ -75,14 +81,14 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             detachAndScrapView(scrap, recycler);
         }
 
-        offset = mShouldReverseLayout ? scrollToPosition * interval : -scrollToPosition * interval;
+        offset = isClockWise ? scrollToPosition * interval : -scrollToPosition * interval;
         detachAndScrapAttachedViews(recycler);
         handleOutOfRange();
         layoutItems(recycler, state);
     }
 
     private float getProperty(int position) {
-        return mShouldReverseLayout ? position * interval : position * -interval;
+        return isClockWise ? position * interval : position * -interval;
     }
 
     @Override
@@ -154,8 +160,47 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             return null;
         }
         final int firstChildPos = getPosition(getChildAt(0));
-        final float direction = targetPosition < firstChildPos == mShouldReverseLayout ? -1 / getDistanceRatio() : 1 / getDistanceRatio();
+        final float direction = targetPosition < firstChildPos == isClockWise ? -1 / getDistanceRatio() : 1 / getDistanceRatio();
         return new PointF(direction, 0);
+    }
+
+    @Override
+    public int computeHorizontalScrollOffset(RecyclerView.State state) {
+        if (getChildCount() == 0) {
+            return 0;
+        }
+
+        if (!mSmoothScrollbarEnabled) {
+            return isClockWise ? getCurrentPosition() : getItemCount() - getCurrentPosition() - 1;
+        }
+
+        return isClockWise ? (int) offset : (int) (getMaxOffset() - offset);
+    }
+
+    @Override
+    public int computeHorizontalScrollExtent(RecyclerView.State state) {
+        if (getChildCount() == 0) {
+            return 0;
+        }
+
+        if (!mSmoothScrollbarEnabled) {
+            return 1;
+        }
+
+        return (int) (getMaxOffset() / getItemCount());
+    }
+
+    @Override
+    public int computeHorizontalScrollRange(RecyclerView.State state) {
+        if (getChildCount() == 0) {
+            return 0;
+        }
+
+        if (!mSmoothScrollbarEnabled) {
+            return getItemCount();
+        }
+
+        return (int) getMaxOffset();
     }
 
     @Override
@@ -167,7 +212,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
         //handle the boundary
         if (targetOffset < getMinOffset()) {
-            willScroll = (int) (-offset * getDistanceRatio());
+            willScroll = isClockWise ? (int) (offset * getDistanceRatio()) : 0;
         } else if (targetOffset > getMaxOffset()) {
             willScroll = (int) ((getMaxOffset() - offset) * getDistanceRatio());
         }
@@ -241,11 +286,11 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     }
 
     private float getMaxOffset() {
-        return mShouldReverseLayout ? (getItemCount() - 1) * interval : 0;
+        return isClockWise ? (getItemCount() - 1) * interval : 0;
     }
 
     private float getMinOffset() {
-        return mShouldReverseLayout ? 0 : -(getItemCount() - 1) * interval;
+        return isClockWise ? 0 : -(getItemCount() - 1) * interval;
     }
 
     private void layoutScrap(View scrap, float targetOffset) {
@@ -298,6 +343,36 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     }
 
     public int getOffsetCenterView() {
-        return (int) ((getCurrentPosition() * (mShouldReverseLayout ? interval : -interval) - offset) * getDistanceRatio());
+        return (int) ((getCurrentPosition() * (isClockWise ? interval : -interval) - offset) * getDistanceRatio());
+    }
+
+    /**
+     * When smooth scrollbar is enabled, the position and size of the scrollbar thumb is computed
+     * based on the number of visible pixels in the visible items. This however assumes that all
+     * list items have similar or equal widths or heights (depending on list orientation).
+     * If you use a list in which items have different dimensions, the scrollbar will change
+     * appearance as the user scrolls through the list. To avoid this issue,  you need to disable
+     * this property.
+     * <p>
+     * When smooth scrollbar is disabled, the position and size of the scrollbar thumb is based
+     * solely on the number of items in the adapter and the position of the visible items inside
+     * the adapter. This provides a stable scrollbar as the user navigates through a list of items
+     * with varying widths / heights.
+     *
+     * @param enabled Whether or not to enable smooth scrollbar.
+     * @see #setSmoothScrollbarEnabled(boolean)
+     */
+    public void setSmoothScrollbarEnabled(boolean enabled) {
+        mSmoothScrollbarEnabled = enabled;
+    }
+
+    /**
+     * Returns the current state of the smooth scrollbar feature. It is enabled by default.
+     *
+     * @return True if smooth scrollbar is enabled, false otherwise.
+     * @see #setSmoothScrollbarEnabled(boolean)
+     */
+    public boolean isSmoothScrollbarEnabled() {
+        return mSmoothScrollbarEnabled;
     }
 }

@@ -48,14 +48,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void configureRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        circleLayoutManager = new CircleLayoutManager(this, true);
-        circleZoomLayoutManager = new CircleZoomLayoutManager(this, true);
+        circleLayoutManager = new CircleLayoutManager(this);
+        circleZoomLayoutManager = new CircleZoomLayoutManager(this);
         scrollZoomLayoutManager = new ScrollZoomLayoutManager(this, Dp2px(10));
         galleryLayoutManager = new GalleryLayoutManager(this, Dp2px(10));
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
         recyclerView.setAdapter(new Adapter());
-        recyclerView.scrollToPosition(5);
     }
 
     private void determineLayoutManager() {
