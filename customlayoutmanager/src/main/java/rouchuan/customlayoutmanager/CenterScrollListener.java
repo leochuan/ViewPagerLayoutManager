@@ -1,6 +1,7 @@
 package rouchuan.customlayoutmanager;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 
 /**
@@ -11,6 +12,7 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener{
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        Log.e("state",newState+"");
         super.onScrollStateChanged(recyclerView, newState);
         final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if(!(layoutManager instanceof CustomLayoutManager)){
