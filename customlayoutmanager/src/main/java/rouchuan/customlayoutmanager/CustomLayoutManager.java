@@ -31,8 +31,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     protected float interval; //the interval of each item's offset
 
-    private int targetPosition = -1;
-
     private int scrollToPosition;
 
     /**
@@ -150,7 +148,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
                 return CustomLayoutManager.this.computeScrollVectorForPosition(targetPosition);
             }
         };
-        targetPosition = position;
         linearSmoothScroller.setTargetPosition(position);
         startSmoothScroll(linearSmoothScroller);
     }
@@ -205,16 +202,18 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        if (getChildCount() == 0 || dx == 0) {
+            return 0;
+        }
+
         int willScroll = dx;
 
         float realDx = dx / getDistanceRatio();
         float targetOffset = offset + realDx;
 
         //handle the boundary
-        if (targetOffset < getMinOffset()) {
-            willScroll = isClockWise ? (int) (offset * getDistanceRatio()) : 0;
-        } else if (targetOffset > getMaxOffset()) {
-            willScroll = (int) ((getMaxOffset() - offset) * getDistanceRatio());
+        if (targetOffset < getMinOffset() || targetOffset > getMaxOffset()) {
+            willScroll = 0;
         }
         realDx = willScroll / getDistanceRatio();
 
@@ -334,12 +333,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     }
 
     public int getCurrentPosition() {
-        if (targetPosition != -1) return targetPosition;
         return Math.round(Math.abs(offset) / interval);
-    }
-
-    public void resetTargetPosition() {
-        targetPosition = -1;
     }
 
     public int getOffsetCenterView() {
