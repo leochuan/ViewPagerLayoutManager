@@ -31,8 +31,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     protected float interval; //the interval of each item's offset
 
-    private int scrollToPosition;
-
     /**
      * Works the same way as {@link android.widget.AbsListView#setSmoothScrollbarEnabled(boolean)}.
      * see {@link android.widget.AbsListView#setSmoothScrollbarEnabled(boolean)}
@@ -79,7 +77,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             detachAndScrapView(scrap, recycler);
         }
 
-        offset = isClockWise ? scrollToPosition * interval : -scrollToPosition * interval;
         detachAndScrapAttachedViews(recycler);
         handleOutOfRange();
         layoutItems(recycler, state);
@@ -116,7 +113,6 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     public void onAdapterChanged(RecyclerView.Adapter oldAdapter, RecyclerView.Adapter newAdapter) {
         removeAllViews();
         offset = 0;
-        scrollToPosition = 0;
     }
 
     @Override
@@ -136,7 +132,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void scrollToPosition(int position) {
-        scrollToPosition = position;
+        offset = position * interval;
         requestLayout();
     }
 
@@ -212,9 +208,12 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
         float targetOffset = offset + realDx;
 
         //handle the boundary
-        if (targetOffset < getMinOffset() || targetOffset > getMaxOffset()) {
-            willScroll = 0;
+        if (targetOffset < getMinOffset()) {
+            willScroll = isClockWise ? (int) (offset * getDistanceRatio()) : 0;
+        } else if (targetOffset > getMaxOffset()) {
+            willScroll = (int) ((getMaxOffset() - offset) * getDistanceRatio());
         }
+
         realDx = willScroll / getDistanceRatio();
 
         offset += realDx;

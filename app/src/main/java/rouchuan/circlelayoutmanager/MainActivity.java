@@ -3,7 +3,6 @@ package rouchuan.circlelayoutmanager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         configureRecyclerView();
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         circleLayoutManager = new CircleLayoutManager(this);
         circleZoomLayoutManager = new CircleZoomLayoutManager(this);
-        scrollZoomLayoutManager = new ScrollZoomLayoutManager(this, Dp2px(10));
+        scrollZoomLayoutManager = new ScrollZoomLayoutManager(this, Dp2px(10), false);
         galleryLayoutManager = new GalleryLayoutManager(this, Dp2px(10));
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
