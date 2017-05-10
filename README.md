@@ -11,7 +11,7 @@ All you need to concern about is which the property you want to change and how i
 ## Usage
 #### Gradle
 ```Java
-compile 'rouchuan.customlayoutmanager:customlayoutmanager:1.0.5'
+compile 'rouchuan.customlayoutmanager:customlayoutmanager:1.0.6'
 ```
 #### Default Properties
 ```Java
