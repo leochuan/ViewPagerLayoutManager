@@ -1,7 +1,6 @@
 package rouchuan.customlayoutmanager;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 
 /**
@@ -14,7 +13,7 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener{
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
         final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        if(!(layoutManager instanceof CustomLayoutManager)){
+        if(!(layoutManager instanceof ViewPagerLayoutManager)){
             mAutoSet = true;
             return;
         }
@@ -22,7 +21,7 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener{
         if(!mAutoSet){
             if(newState == RecyclerView.SCROLL_STATE_IDLE){
                 final int dx;
-                dx = ((CustomLayoutManager)layoutManager).getOffsetCenterView();
+                dx = ((ViewPagerLayoutManager)layoutManager).getOffsetCenterView();
                 recyclerView.smoothScrollBy(dx,0);
             }
             mAutoSet = true;

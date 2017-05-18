@@ -1,27 +1,26 @@
 package rouchuan.circlelayoutmanager;
 
-import android.content.Context;
 import android.view.View;
 
-import rouchuan.customlayoutmanager.CustomLayoutManager;
+import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
  * Created by zixintechno on 12/7/16.
  */
 
-public class CircleLayoutManager extends CustomLayoutManager {
+public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     private static int INTERVAL_ANGLE = 30;// The default interval angle between each items
     private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
 
     private int mRadius;
 
-    public CircleLayoutManager(Context context) {
-        super(context);
+    public CircleLayoutManager() {
+        super();
     }
 
-    public CircleLayoutManager(Context context, boolean isClockWise) {
-        super(context, isClockWise);
+    public CircleLayoutManager(boolean shouldReverseLayout) {
+        super(shouldReverseLayout);
     }
 
     @Override

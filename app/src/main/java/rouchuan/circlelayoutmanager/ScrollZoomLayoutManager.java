@@ -1,32 +1,31 @@
 package rouchuan.circlelayoutmanager;
 
-import android.content.Context;
 import android.view.View;
 
-import rouchuan.customlayoutmanager.CustomLayoutManager;
+import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
  * Created by zixintechno on 12/7/16.
  */
 
-public class ScrollZoomLayoutManager extends CustomLayoutManager {
+public class ScrollZoomLayoutManager extends ViewPagerLayoutManager {
 
     private static final float SCALE_RATE = 1.2f;
     private int itemSpace = 0;
 
-    public ScrollZoomLayoutManager(Context context, int itemSpace) {
-        super(context);
+    public ScrollZoomLayoutManager(int itemSpace) {
+        super();
         this.itemSpace = itemSpace;
     }
 
-    public ScrollZoomLayoutManager(Context context, int itemSpace, boolean isClockWise) {
-        super(context,isClockWise);
+    public ScrollZoomLayoutManager(int itemSpace, boolean shouldReverseLayout) {
+        super(shouldReverseLayout);
         this.itemSpace = itemSpace;
     }
 
     @Override
     protected float setInterval() {
-        return (int) (mDecoratedChildWidth*((SCALE_RATE-1f)/2f+1)+itemSpace);
+        return (int) (mDecoratedChildWidth * ((SCALE_RATE - 1f) / 2f + 1) + itemSpace);
     }
 
     @Override
@@ -42,14 +41,13 @@ public class ScrollZoomLayoutManager extends CustomLayoutManager {
     }
 
     /**
-     *
      * @param x start positon of the view you want scale
      * @return the scale rate of current scroll offset
      */
-    private float calculateScale(int x){
-        int deltaX = Math.abs(x-(getHorizontalSpace() - mDecoratedChildWidth) / 2);
+    private float calculateScale(int x) {
+        int deltaX = Math.abs(x - (getHorizontalSpace() - mDecoratedChildWidth) / 2);
         float diff = 0f;
-        if((mDecoratedChildWidth-deltaX)>0) diff = mDecoratedChildWidth-deltaX;
-        return (SCALE_RATE-1f)/mDecoratedChildWidth * diff + 1;
+        if ((mDecoratedChildWidth - deltaX) > 0) diff = mDecoratedChildWidth - deltaX;
+        return (SCALE_RATE - 1f) / mDecoratedChildWidth * diff + 1;
     }
 }

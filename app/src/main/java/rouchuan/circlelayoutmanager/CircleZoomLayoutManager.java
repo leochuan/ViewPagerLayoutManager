@@ -1,16 +1,15 @@
 package rouchuan.circlelayoutmanager;
 
-import android.content.Context;
 import android.os.Build;
 import android.view.View;
 
-import rouchuan.customlayoutmanager.CustomLayoutManager;
+import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
  * Created by zixintechno on 12/7/16.
  */
 
-public class CircleZoomLayoutManager extends CustomLayoutManager {
+public class CircleZoomLayoutManager extends ViewPagerLayoutManager {
 
     private static int INTERVAL_ANGLE = 30;// The default interval angle between each items
     private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
@@ -18,12 +17,12 @@ public class CircleZoomLayoutManager extends CustomLayoutManager {
 
     private int mRadius;
 
-    public CircleZoomLayoutManager(Context context) {
-        super(context);
+    public CircleZoomLayoutManager() {
+        super();
     }
 
-    public CircleZoomLayoutManager(Context context, boolean isClockWise) {
-        super(context, isClockWise);
+    public CircleZoomLayoutManager(boolean shouldReverseLayout) {
+        super(shouldReverseLayout);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class CircleZoomLayoutManager extends CustomLayoutManager {
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
         itemView.setRotation(targetOffset);
-        float scale = calculateScale(itemView,targetOffset);
+        float scale = calculateScale(itemView, targetOffset);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -77,9 +76,9 @@ public class CircleZoomLayoutManager extends CustomLayoutManager {
         return DISTANCE_RATIO;
     }
 
-    private float calculateScale(View itemView,float targetOffset){
-        if(targetOffset >= INTERVAL_ANGLE || targetOffset <=-INTERVAL_ANGLE) return 1f;
-        float diff = Math.abs(Math.abs(itemView.getRotation()-INTERVAL_ANGLE)-INTERVAL_ANGLE);
-        return (SCALE_RATE-1f)/-INTERVAL_ANGLE*diff+SCALE_RATE;
+    private float calculateScale(View itemView, float targetOffset) {
+        if (targetOffset >= INTERVAL_ANGLE || targetOffset <= -INTERVAL_ANGLE) return 1f;
+        float diff = Math.abs(Math.abs(itemView.getRotation() - INTERVAL_ANGLE) - INTERVAL_ANGLE);
+        return (SCALE_RATE - 1f) / -INTERVAL_ANGLE * diff + SCALE_RATE;
     }
 }

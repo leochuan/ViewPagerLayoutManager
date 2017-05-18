@@ -1,22 +1,22 @@
 package rouchuan.customlayoutmanager;
 
-import android.content.Context;
 import android.graphics.PointF;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
+
 /**
  * Created by zixintechno on 12/7/16.
  */
 
-public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
+public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager {
 
-    private static int MAX_DISPLAY_ITEM_COUNT = 50;
-
-    protected Context context;
+    private static int MAX_DISPLAY_ITEM_COUNT = 10;
 
     // Size of each items
     protected int mDecoratedChildWidth;
@@ -27,7 +27,9 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     protected int startTop;
     protected float offset; //The delta of property which will change when scroll
 
-    private boolean isClockWise;
+    private boolean shouldReverseLayout;
+    private int mPendingScrollPosition = NO_POSITION;
+    private SavedState mPendingSavedState = null;
 
     protected float interval; //the interval of each item's offset
 
@@ -46,20 +48,19 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     protected abstract void setItemViewProperty(View itemView, float targetOffset);
 
+    public ViewPagerLayoutManager() {
 
-    public CustomLayoutManager(Context context) {
-        this(context, true);
     }
 
-    public CustomLayoutManager(Context context, boolean shouldReverseLayout) {
-        this.context = context;
-        this.isClockWise = shouldReverseLayout;
+    public ViewPagerLayoutManager(boolean shouldReverseLayout) {
+        this.shouldReverseLayout = shouldReverseLayout;
+        setAutoMeasureEnabled(true);
     }
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         if (getItemCount() == 0) {
-            detachAndScrapAttachedViews(recycler);
+            removeAndRecycleAllViews(recycler);
             offset = 0;
             return;
         }
@@ -77,13 +78,28 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             detachAndScrapView(scrap, recycler);
         }
 
+        if (mPendingSavedState != null) {
+            shouldReverseLayout = mPendingSavedState.isReverseLayout;
+            mPendingScrollPosition = mPendingSavedState.position;
+        }
+
+        if (mPendingScrollPosition != NO_POSITION) {
+            offset = mPendingScrollPosition * interval;
+        }
+
         detachAndScrapAttachedViews(recycler);
         handleOutOfRange();
         layoutItems(recycler, state);
+
+        if (!state.isPreLayout()) {
+            mPendingScrollPosition = NO_POSITION;
+        }
+
+        mPendingSavedState = null;
     }
 
     private float getProperty(int position) {
-        return isClockWise ? position * interval : position * -interval;
+        return !shouldReverseLayout ? position * interval : position * -interval;
     }
 
     @Override
@@ -117,12 +133,18 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public Parcelable onSaveInstanceState() {
-        return super.onSaveInstanceState();
+        SavedState savedState = new SavedState();
+        savedState.position = getCurrentPosition();
+        savedState.isReverseLayout = shouldReverseLayout;
+        return savedState;
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
+        if (state instanceof SavedState) {
+            mPendingSavedState = new SavedState((SavedState) state);
+            requestLayout();
+        }
     }
 
     @Override
@@ -132,6 +154,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void scrollToPosition(int position) {
+        mPendingScrollPosition = position;
         offset = position * interval;
         requestLayout();
     }
@@ -141,7 +164,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
         LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(recyclerView.getContext()) {
             @Override
             public PointF computeScrollVectorForPosition(int targetPosition) {
-                return CustomLayoutManager.this.computeScrollVectorForPosition(targetPosition);
+                return ViewPagerLayoutManager.this.computeScrollVectorForPosition(targetPosition);
             }
         };
         linearSmoothScroller.setTargetPosition(position);
@@ -153,7 +176,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
             return null;
         }
         final int firstChildPos = getPosition(getChildAt(0));
-        final float direction = targetPosition < firstChildPos == isClockWise ? -1 / getDistanceRatio() : 1 / getDistanceRatio();
+        final float direction = targetPosition < firstChildPos == !shouldReverseLayout ? -1 / getDistanceRatio() : 1 / getDistanceRatio();
         return new PointF(direction, 0);
     }
 
@@ -164,10 +187,10 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
         }
 
         if (!mSmoothScrollbarEnabled) {
-            return isClockWise ? getCurrentPosition() : getItemCount() - getCurrentPosition() - 1;
+            return !shouldReverseLayout ? getCurrentPosition() : getItemCount() - getCurrentPosition() - 1;
         }
 
-        return isClockWise ? (int) offset : (int) (getMaxOffset() - offset);
+        return !shouldReverseLayout ? (int) offset : (int) (getMaxOffset() - offset);
     }
 
     @Override
@@ -209,7 +232,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
 
         //handle the boundary
         if (targetOffset < getMinOffset()) {
-            willScroll = isClockWise ? (int) (offset * getDistanceRatio()) : 0;
+            willScroll = !shouldReverseLayout ? (int) (offset * getDistanceRatio()) : 0;
         } else if (targetOffset > getMaxOffset()) {
             willScroll = (int) ((getMaxOffset() - offset) * getDistanceRatio());
         }
@@ -233,6 +256,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     private void layoutItems(RecyclerView.Recycler recycler,
                              RecyclerView.State state) {
         if (state.isPreLayout()) return;
+        //// TODO: 18/05/2017 定一个基准 左边摆到小于最小，右边摆到大于最大 
 
         //remove the views which out of range
         for (int i = 0; i < getChildCount(); i++) {
@@ -284,11 +308,11 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     }
 
     private float getMaxOffset() {
-        return isClockWise ? (getItemCount() - 1) * interval : 0;
+        return !shouldReverseLayout ? (getItemCount() - 1) * interval : 0;
     }
 
     private float getMinOffset() {
-        return isClockWise ? 0 : -(getItemCount() - 1) * interval;
+        return !shouldReverseLayout ? 0 : -(getItemCount() - 1) * interval;
     }
 
     private void layoutScrap(View scrap, float targetOffset) {
@@ -336,7 +360,7 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
     }
 
     public int getOffsetCenterView() {
-        return (int) ((getCurrentPosition() * (isClockWise ? interval : -interval) - offset) * getDistanceRatio());
+        return (int) ((getCurrentPosition() * (!shouldReverseLayout ? interval : -interval) - offset) * getDistanceRatio());
     }
 
     /**
@@ -367,5 +391,48 @@ public abstract class CustomLayoutManager extends RecyclerView.LayoutManager {
      */
     public boolean isSmoothScrollbarEnabled() {
         return mSmoothScrollbarEnabled;
+    }
+
+    public static class SavedState implements Parcelable {
+        int position;
+        boolean isReverseLayout;
+
+        SavedState() {
+
+        }
+
+        SavedState(Parcel in) {
+            position = in.readInt();
+            isReverseLayout = in.readInt() == 1;
+        }
+
+        public SavedState(SavedState other) {
+            position = other.position;
+            isReverseLayout = other.isReverseLayout;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(position);
+            dest.writeInt(isReverseLayout ? 1 : 0);
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }
