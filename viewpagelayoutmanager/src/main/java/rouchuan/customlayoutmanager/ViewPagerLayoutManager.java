@@ -16,8 +16,6 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager {
 
-    private static int MAX_DISPLAY_ITEM_COUNT = 10;
-
     // Size of each items
     protected int mDecoratedChildWidth;
     protected int mDecoratedChildHeight;
@@ -49,7 +47,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
     protected abstract void setItemViewProperty(View itemView, float targetOffset);
 
     public ViewPagerLayoutManager() {
-
+        this(false);
     }
 
     public ViewPagerLayoutManager(boolean shouldReverseLayout) {
@@ -256,7 +254,6 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
     private void layoutItems(RecyclerView.Recycler recycler,
                              RecyclerView.State state) {
         if (state.isPreLayout()) return;
-        //// TODO: 18/05/2017 定一个基准 左边摆到小于最小，右边摆到大于最大 
 
         //remove the views which out of range
         for (int i = 0; i < getChildCount(); i++) {
@@ -267,13 +264,16 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
             }
         }
 
-        //add the views which do not attached and in the range
-        int begin = getCurrentPosition() - MAX_DISPLAY_ITEM_COUNT / 2;
-        int end = getCurrentPosition() + MAX_DISPLAY_ITEM_COUNT / 2;
-        if (begin < 0) begin = 0;
+        final int currentPos = getCurrentPosition();
+        final float curOffset = getProperty(currentPos) - offset;
+
+        int start = (int) (currentPos - Math.abs(((curOffset - minRemoveOffset()) / interval))) - 1;
+        int end = (int) (currentPos + Math.abs(((curOffset - maxRemoveOffset()) / interval))) + 1;
+
+        if (start < 0) start = 0;
         if (end > getItemCount()) end = getItemCount();
 
-        for (int i = begin; i < end; i++) {
+        for (int i = start; i < end; i++) {
             if (!removeCondition(getProperty(i) - offset)) {
                 if (findViewByPosition(i) == null) {
                     View scrap = recycler.getViewForPosition(i);
@@ -383,6 +383,15 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
         mSmoothScrollbarEnabled = enabled;
     }
 
+    public void setStackFromEnd(boolean stackFromEnd) {
+        shouldReverseLayout = stackFromEnd;
+        requestLayout();
+    }
+
+    public boolean getStackFromEnd() {
+        return shouldReverseLayout;
+    }
+
     /**
      * Returns the current state of the smooth scrollbar feature. It is enabled by default.
      *
@@ -393,7 +402,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
         return mSmoothScrollbarEnabled;
     }
 
-    public static class SavedState implements Parcelable {
+    private static class SavedState implements Parcelable {
         int position;
         boolean isReverseLayout;
 
