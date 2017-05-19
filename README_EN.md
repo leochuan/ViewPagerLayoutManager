@@ -9,7 +9,8 @@ All you need to concern about is which the property you want to change and how i
 ![Example](resources/circle3.gif "working example") ![Example](resources/circle4.gif "working example")
 
 ## Usage
-#### Gradle
+
+### Gradle
 
 if you want custom your own layout manager please add code below:
 
@@ -22,19 +23,21 @@ or if you want use the effect above please import(No need to import core):
 compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.0'
 ```
 
-#### Attention!!! 
+### Attention!!!
 
-##### Make sure that your item view has the same width and height
+#### Make sure that your item view has the same width and height
 
 
 
-#### Enable springback
+### Enable springback
 
 ```Java
 recyclerView.addOnScrollListener(new CenterScrollListener());
 ```
 
-#### Enable scrollbars
+
+
+### Enable scrollbars
 
 same as recyclerView
 
@@ -50,7 +53,7 @@ same as recyclerView
 
 ## Customize
 
-#### Default Properties
+### Default Properties
 
 ```Java
 protected Context context;
@@ -65,7 +68,8 @@ protected float offset; //The delta of property which will change when scroll
 
 protected float interval; //the interval between each items
 ```
-#### Consturct
+### Consturct
+
 By default there are two constructs.mShouldReverseLayout determine the way how each items align
 
 ```Java
@@ -79,7 +83,8 @@ public CustomLayoutManager(boolean mShouldReverseLayout) {
 }
 ```
 
-#### Methods must be implemented.
+### Methods must be implemented.
+
 It will set the interval of each items.
 Once it was set you can use the variable interval directly
 
@@ -99,7 +104,8 @@ You can set item's properties which is determined by target offset here
 protected abstract void setItemViewProperty(View itemView,float targetOffset);
 ```
 
-#### Methods you can override.
+### Methods you can override.
+
 The max offset value of which the view should be removed
 
 ```Java
@@ -147,7 +153,9 @@ protected float getDistanceRatio(){
    return 1f;
 }
 ```
-### Things to do
+
+
+## Things to do
 
 1. support infinite scroll
 2. optimize performance
@@ -155,7 +163,9 @@ protected float getDistanceRatio(){
 4. support item view with different size
 5. support other effects (long term subject)
 
-## License ##
+
+
+## License
 
     Copyright 2016 shenruochuan
     Licensed under the Apache License, Version 2.0 (the "License");
