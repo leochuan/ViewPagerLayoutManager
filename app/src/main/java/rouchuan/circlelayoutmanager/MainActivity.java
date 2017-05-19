@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.scrollToPosition(5);
+                recyclerView.smoothScrollToPosition(5);
             }
         });
     }
