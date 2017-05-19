@@ -230,7 +230,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
 
         //handle the boundary
         if (targetOffset < getMinOffset()) {
-            willScroll = !shouldReverseLayout ? (int) (offset * getDistanceRatio()) : 0;
+            willScroll = 0;
         } else if (targetOffset > getMaxOffset()) {
             willScroll = (int) ((getMaxOffset() - offset) * getDistanceRatio());
         }

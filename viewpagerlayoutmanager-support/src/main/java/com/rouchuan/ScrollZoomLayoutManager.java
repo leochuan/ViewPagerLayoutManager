@@ -1,4 +1,4 @@
-package rouchuan.circlelayoutmanager;
+package com.rouchuan;
 
 import android.view.View;
 

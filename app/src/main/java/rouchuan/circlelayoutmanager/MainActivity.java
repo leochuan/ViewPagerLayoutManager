@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.rouchuan.CircleLayoutManager;
+import com.rouchuan.CircleZoomLayoutManager;
+import com.rouchuan.GalleryLayoutManager;
+import com.rouchuan.ScrollZoomLayoutManager;
+
 import rouchuan.customlayoutmanager.CenterScrollListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -122,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 21;
+            return 20;
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
