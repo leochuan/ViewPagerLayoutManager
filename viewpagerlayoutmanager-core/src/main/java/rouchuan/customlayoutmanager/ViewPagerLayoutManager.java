@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 /**
- * Created by zixintechno on 12/7/16.
+ * Created by Dajavu on 12/7/16.
  */
 
 public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager {
@@ -30,6 +30,8 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
     private SavedState mPendingSavedState = null;
 
     protected float interval; //the interval of each item's offset
+
+    /* package */ OnPageChangeListener onPageChangeListener;
 
     /**
      * Works the same way as {@link android.widget.AbsListView#setSmoothScrollbarEnabled(boolean)}.
@@ -363,6 +365,10 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
         return (int) ((getCurrentPosition() * (!shouldReverseLayout ? interval : -interval) - offset) * getDistanceRatio());
     }
 
+    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
+        this.onPageChangeListener = onPageChangeListener;
+    }
+
     /**
      * When smooth scrollbar is enabled, the position and size of the scrollbar thumb is computed
      * based on the number of visible pixels in the visible items. This however assumes that all
@@ -443,5 +449,11 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
                 return new SavedState[size];
             }
         };
+    }
+
+    public interface OnPageChangeListener {
+        void onPageSelected(int position);
+
+        void onPageScrollStateChanged(int state);
     }
 }
