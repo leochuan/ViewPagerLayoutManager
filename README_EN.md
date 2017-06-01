@@ -20,7 +20,7 @@ compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.2.0'
 or if you want use the effect above please import(No need to import core):
 
 ```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.0'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.1'
 ```
 
 ### Attention!!!

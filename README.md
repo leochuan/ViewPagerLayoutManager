@@ -19,7 +19,7 @@ compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.2.0'
 如果你想用上面提供的效果，请引入（不需要再引用core）：
 
 ```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.0'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.1'
 ```
 
 ### 注意!!!
