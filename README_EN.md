@@ -15,7 +15,7 @@ All you need to concern about is which the property you want to change and how i
 if you want custom your own layout manager please add code below:
 
 ```Java
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.1.0'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.2.0'
 ```
 or if you want use the effect above please import(No need to import core):
 

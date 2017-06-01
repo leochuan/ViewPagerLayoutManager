@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.smoothScrollToPosition(5);
+                recyclerView.scrollToPosition(5);
             }
         });
     }
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         circleLayoutManager = new CircleLayoutManager();
         circleZoomLayoutManager = new CircleZoomLayoutManager();
-        scrollZoomLayoutManager = new ScrollZoomLayoutManager(Dp2px(10), false);
+        scrollZoomLayoutManager = new ScrollZoomLayoutManager(Dp2px(10));
         galleryLayoutManager = new GalleryLayoutManager(Dp2px(10));
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
