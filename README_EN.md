@@ -35,6 +35,24 @@ compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.0'
 recyclerView.addOnScrollListener(new CenterScrollListener());
 ```
 
+### OnPageChangeListener
+
+Only wrok when enabling springback or you need to implement your own OnScrollListene.
+
+```java
+mLayoutManager.setOnPageChangeListener(new ViewPagerLayoutManager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+```
+
 
 
 ### Enable scrollbars
@@ -48,6 +66,14 @@ same as recyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 ```
+
+### Endless Scroll
+
+```java
+viewPagerLayoutManager.setEnableEndlessScroll(true);
+```
+
+![](resources/endless.gif)
 
 
 
@@ -157,7 +183,7 @@ protected float getDistanceRatio(){
 
 ## Things to do
 
-1. support infinite scroll
+1. ~~support infinite scroll~~
 2. optimize performance
 3. support indicator
 4. support item view with different size

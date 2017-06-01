@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
         recyclerView.setAdapter(new Adapter());
+        circleLayoutManager.setEnableEndlessScroll(true);
     }
 
     private void determineLayoutManager() {

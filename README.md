@@ -34,7 +34,23 @@ compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.0'
 recyclerView.addOnScrollListener(new CenterScrollListener());
 ```
 
+### 滚动监听（只有当启用回弹后才生效）
 
+如果不想启用回弹，请自己给recyclerView添加滚动监听
+
+```java
+mLayoutManager.setOnPageChangeListener(new ViewPagerLayoutManager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+```
 
 ### 展示滚动条
 
@@ -48,9 +64,19 @@ recyclerView.addOnScrollListener(new CenterScrollListener());
         android:layout_height="match_parent" />
 ```
 
+### 无限滚动
+
+```java
+viewPagerLayoutManager.setEnableEndlessScroll(true);
+```
+
+![](resources/endless.gif)
+
 
 
 ## 更新
+
+### 1.1.0
 
 1. 拆分了core与support
 2. 修复了使用Universal-Image-Loader载入图片会导致跳动到第一项
@@ -58,10 +84,16 @@ recyclerView.addOnScrollListener(new CenterScrollListener());
 4. 优化了布局算法的性能
 
 
+### 1.2.0
+
+1. 支持无限滚动
+2. 修复了在shouldReverseLayout为true时，平滑滚动条不显示的bug
+3. 修复了在shouldReverseLayout为true时，scrollToPosition滑动位置错误bug
+
 
 ## 接下来要做的事
 
-1. 支持无限滚动
+1. ~~支持无限滚动~~
 2. 进一步优化性能
 3. 添加indicator
 4. 支持不同大小的子View
