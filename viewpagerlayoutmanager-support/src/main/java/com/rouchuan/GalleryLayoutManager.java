@@ -5,7 +5,7 @@ import android.view.View;
 import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
- * Created by zixintechno on 12/7/16.
+ * Created by Dajavu on 12/7/16.
  */
 
 public class GalleryLayoutManager extends ViewPagerLayoutManager {
@@ -15,8 +15,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     private int itemSpace = 0;
 
     public GalleryLayoutManager(int itemSpace) {
-        super();
-        this.itemSpace = itemSpace;
+        this(itemSpace, false);
     }
 
     public GalleryLayoutManager(int itemSpace, boolean shouldReverseLayout) {

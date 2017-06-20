@@ -5,7 +5,7 @@ import android.view.View;
 import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
- * Created by zixintechno on 12/7/16.
+ * Created by Dajavu on 12/7/16.
  */
 
 public class CircleLayoutManager extends ViewPagerLayoutManager {

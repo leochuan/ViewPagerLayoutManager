@@ -5,20 +5,19 @@ import android.view.View;
 import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
- * Created by zixintechno on 12/7/16.
+ * Created by Dajavu on 12/7/16.
  */
 
-public class ScrollZoomLayoutManager extends ViewPagerLayoutManager {
+public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     private static final float SCALE_RATE = 1.2f;
     private int itemSpace = 0;
 
-    public ScrollZoomLayoutManager(int itemSpace) {
-        super();
-        this.itemSpace = itemSpace;
+    public ScaleLayoutManager(int itemSpace) {
+        this(itemSpace, false);
     }
 
-    public ScrollZoomLayoutManager(int itemSpace, boolean shouldReverseLayout) {
+    public ScaleLayoutManager(int itemSpace, boolean shouldReverseLayout) {
         super(shouldReverseLayout);
         this.itemSpace = itemSpace;
     }

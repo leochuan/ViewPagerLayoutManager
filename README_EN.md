@@ -7,6 +7,7 @@ All you need to concern about is which the property you want to change and how i
 
 ![Example](resources/circle1.gif "working example") ![Example](resources/circle2.gif "working example") 
 ![Example](resources/circle3.gif "working example") ![Example](resources/circle4.gif "working example")
+![Example](resources/circle5.gif "working example")
 
 ## Usage
 
@@ -20,7 +21,7 @@ compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.2.1'
 or if you want use the effect above please import(No need to import core):
 
 ```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.2'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.3'
 ```
 
 ### Attention!!!

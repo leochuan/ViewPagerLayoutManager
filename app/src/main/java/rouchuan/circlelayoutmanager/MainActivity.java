@@ -11,24 +11,27 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.rouchuan.CircleLayoutManager;
-import com.rouchuan.CircleZoomLayoutManager;
+import com.rouchuan.CircleScaleLayoutManager;
+import com.rouchuan.ElevateScaleLayoutManager;
 import com.rouchuan.GalleryLayoutManager;
-import com.rouchuan.ScrollZoomLayoutManager;
+import com.rouchuan.ScaleLayoutManager;
 
 import rouchuan.customlayoutmanager.CenterScrollListener;
 
 public class MainActivity extends AppCompatActivity {
     private final static int CIRCLE = 0;
-    private final static int SCROLL_ZOOM = 1;
-    private final static int CIRCLE_ZOOM = 2;
+    private final static int SCROLL_SCALE = 1;
+    private final static int CIRCLE_SCALE = 2;
     private final static int GALLERY = 3;
+    private final static int ElE_SCALE = 4;
 
     private int mode = -1;
     private RecyclerView recyclerView;
     private CircleLayoutManager circleLayoutManager;
-    private CircleZoomLayoutManager circleZoomLayoutManager;
-    private ScrollZoomLayoutManager scrollZoomLayoutManager;
+    private CircleScaleLayoutManager circleScaleLayoutManager;
+    private ScaleLayoutManager scaleLayoutManager;
     private GalleryLayoutManager galleryLayoutManager;
+    private ElevateScaleLayoutManager elevateScaleLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,31 +58,35 @@ public class MainActivity extends AppCompatActivity {
     private void configureRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         circleLayoutManager = new CircleLayoutManager();
-        circleZoomLayoutManager = new CircleZoomLayoutManager();
-        scrollZoomLayoutManager = new ScrollZoomLayoutManager(Dp2px(10));
+        circleScaleLayoutManager = new CircleScaleLayoutManager();
+        scaleLayoutManager = new ScaleLayoutManager(Dp2px(10));
         galleryLayoutManager = new GalleryLayoutManager(Dp2px(10));
+        elevateScaleLayoutManager = new ElevateScaleLayoutManager(Dp2px(-100));
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
         recyclerView.setAdapter(new Adapter());
         circleLayoutManager.setEnableEndlessScroll(true);
+        elevateScaleLayoutManager.setEnableEndlessScroll(true);
     }
 
     private void determineLayoutManager() {
         mode++;
-        if (mode == 4) mode = 0;
+        if (mode == 5) mode = 0;
         switch (mode) {
             case CIRCLE:
-                changeAndToast(circleLayoutManager, "Now in circleLayoutManager");
+                changeAndToast(circleLayoutManager, "CircleLayoutManager");
                 break;
-            case SCROLL_ZOOM:
-                changeAndToast(scrollZoomLayoutManager, "Now in scrollZoomLayoutManager");
+            case SCROLL_SCALE:
+                changeAndToast(scaleLayoutManager, "ScaleLayoutManager");
                 break;
-            case CIRCLE_ZOOM:
-                changeAndToast(circleZoomLayoutManager, "Now in circleZoomLayoutManager");
+            case CIRCLE_SCALE:
+                changeAndToast(circleScaleLayoutManager, "CircleScaleLayoutManager");
                 break;
             case GALLERY:
-                changeAndToast(galleryLayoutManager, "Now in galleryLayoutManager");
+                changeAndToast(galleryLayoutManager, "GalleryLayoutManager");
                 break;
+            case ElE_SCALE:
+                changeAndToast(elevateScaleLayoutManager, "ElevateScaleLayoutManager");
         }
     }
 

@@ -6,10 +6,10 @@ import android.view.View;
 import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
- * Created by zixintechno on 12/7/16.
+ * Created by Dajavu on 12/7/16.
  */
 
-public class CircleZoomLayoutManager extends ViewPagerLayoutManager {
+public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     private static int INTERVAL_ANGLE = 30;// The default interval angle between each items
     private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
@@ -17,11 +17,11 @@ public class CircleZoomLayoutManager extends ViewPagerLayoutManager {
 
     private int mRadius;
 
-    public CircleZoomLayoutManager() {
+    public CircleScaleLayoutManager() {
         super();
     }
 
-    public CircleZoomLayoutManager(boolean shouldReverseLayout) {
+    public CircleScaleLayoutManager(boolean shouldReverseLayout) {
         super(shouldReverseLayout);
     }
 

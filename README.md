@@ -4,6 +4,7 @@ ViewPager-Layout-Manager
 
 ![Example](resources/circle1.gif "working example") ![Example](resources/circle2.gif "working example") 
 ![Example](resources/circle3.gif "working example") ![Example](resources/circle4.gif "working example")
+![Example](resources/circle5.gif "working example")
 
 ## 用法
 
@@ -19,7 +20,7 @@ compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.2.1'
 如果你想用上面提供的效果，请引入（不需要再引用core）：
 
 ```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.2'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.3'
 ```
 
 ### 注意!!!

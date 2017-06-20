@@ -41,6 +41,10 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
 
     private boolean enableEndlessScroll = false;
 
+    /**
+     *
+     * @return the interval of each item's offset
+     */
     protected abstract float setInterval();
 
     /**
