@@ -39,7 +39,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
      */
     private boolean mSmoothScrollbarEnabled = true;
 
-    private boolean enableEndlessScroll = true;
+    private boolean enableEndlessScroll = false;
 
     protected abstract float setInterval();
 
@@ -280,17 +280,18 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
         int end = (int) (currentPos + Math.abs(((curOffset - maxRemoveOffset()) / interval))) + 1;
 
         if (start < 0 && !enableEndlessScroll) start = 0;
-        if (end > getItemCount() && !enableEndlessScroll) end = getItemCount();
+        final int itemCount = getItemCount();
+        if (end > itemCount && !enableEndlessScroll) end = itemCount;
 
         for (int i = start; i < end; i++) {
             if (!removeCondition(getProperty(i) - offset)) {
+                int realIndex = i;
+                if (i >= itemCount) {
+                    realIndex %= itemCount;
+                } else if (i < 0) {
+                    realIndex += itemCount - (-realIndex) % itemCount;
+                }
                 if (findViewByPosition(i) == null) {
-                    int realIndex = i;
-                    if (i >= getItemCount()) {
-                        realIndex -= getItemCount();
-                    } else if (i < 0) {
-                        realIndex += getItemCount();
-                    }
                     View scrap = recycler.getViewForPosition(realIndex);
                     measureChildWithMargins(scrap, 0, 0);
                     addView(scrap);
@@ -302,9 +303,19 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
         }
 
         if (enableEndlessScroll) {
-            if (getCurrentPositionInternal() == 0) scrollToPosition(getItemCount());
-            else if (getCurrentPositionInternal() == getItemCount() + 1) scrollToPosition(1);
+            if (getCurrentPositionInternal() == 0) {
+                removeAndRecycleAllViews(recycler);
+                internalScrollToPosition(itemCount, recycler, state);
+            } else if (getCurrentPositionInternal() == itemCount + 1) {
+                removeAndRecycleAllViews(recycler);
+                internalScrollToPosition(1, recycler, state);
+            }
         }
+    }
+
+    private void internalScrollToPosition(int position, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        offset = shouldReverseLayout ? position * -interval : position * interval;
+        layoutItems(recycler, state);
     }
 
     private boolean removeCondition(float targetOffset) {
@@ -324,6 +335,8 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
         v.setRotation(0);
         v.setRotationY(0);
         v.setRotationX(0);
+        v.setScaleX(1f);
+        v.setScaleY(1f);
         v.setAlpha(1f);
     }
 

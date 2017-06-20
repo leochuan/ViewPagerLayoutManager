@@ -25,7 +25,7 @@ dependencies {
     compile project(path: ':viewpagerlayoutmanager-core')
 }
 
-version = "1.0.1"
+version = "1.0.2"
 
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
