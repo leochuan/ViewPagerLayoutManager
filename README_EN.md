@@ -12,10 +12,19 @@ All you need to concern about is which the property you want to change and how i
 ## Usage
 
 ### Gradle
+Add code below into the project's build.gradle
+```groovy
+allprojects {
+    repositories {
+        jcenter()
+        maven {url  "http://dl.bintray.com/rouchuan/maven"}
+    }
+}
+```
 
 if you want custom your own layout manager please add code below:
 
-```Java
+```groovy
 compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.3.0'
 ```
 or if you want use the effect above please import(No need to import core):

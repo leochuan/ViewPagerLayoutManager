@@ -9,10 +9,18 @@ ViewPager-Layout-Manager
 ## 用法
 
 ### Gradle
+在项目的build.gradle文件中加入
+```groovy
+allprojects {
+    repositories {
+        maven {url  "http://dl.bintray.com/rouchuan/maven"}
+    }
+}
+```
 
 如果想要自定义效果请在build.gradle文件中引入：
 
-```Java
+```groovy
 compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.3.0'
 ```
 [自定义教程](http://www.jianshu.com/p/b193319d35cf)
