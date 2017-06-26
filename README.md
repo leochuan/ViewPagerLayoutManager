@@ -13,14 +13,14 @@ ViewPager-Layout-Manager
 如果想要自定义效果请在build.gradle文件中引入：
 
 ```Java
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.2.1'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.3.0'
 ```
 [自定义教程](http://www.jianshu.com/p/b193319d35cf)
 
 如果你想用上面提供的效果，请引入（不需要再引用core）：
 
 ```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.0.3'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.3.0'
 ```
 
 ### 注意!!!

@@ -42,7 +42,6 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
     private boolean enableEndlessScroll = false;
 
     /**
-     *
      * @return the interval of each item's offset
      */
     protected abstract float setInterval();
@@ -293,7 +292,9 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
                 if (i >= itemCount) {
                     realIndex %= itemCount;
                 } else if (i < 0) {
-                    realIndex += itemCount - (-realIndex) % itemCount;
+                    int delta = (-realIndex) % itemCount;
+                    if (delta == 0) delta = itemCount;
+                    realIndex = itemCount - delta;
                 }
                 if (findViewByPosition(i) == null) {
                     View scrap = recycler.getViewForPosition(realIndex);
