@@ -23,19 +23,26 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener {
             onPageChangeListener.onPageScrollStateChanged(newState);
         }
 
-        if (!mAutoSet) {
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+        if (newState == RecyclerView.SCROLL_STATE_IDLE){
+            if (mAutoSet) {
+                if (onPageChangeListener != null) {
+                    onPageChangeListener.onPageSelected(((ViewPagerLayoutManager) layoutManager).getCurrentPosition());
+                }
+                mAutoSet = false;
+            } else {
                 final int dx;
                 dx = ((ViewPagerLayoutManager) layoutManager).getOffsetCenterView();
-                recyclerView.smoothScrollBy(dx, 0);
+                if (dx != 0) {
+                    recyclerView.smoothScrollBy(dx, 0);
+                    mAutoSet = true;
+                } else {
+                    if (onPageChangeListener != null) {
+                        onPageChangeListener.onPageSelected(((ViewPagerLayoutManager) layoutManager).getCurrentPosition());
+                    }
+                    mAutoSet = false;
+                }
             }
-            mAutoSet = true;
-        } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-            if (onPageChangeListener != null) {
-                onPageChangeListener.onPageSelected(((ViewPagerLayoutManager) layoutManager).getCurrentPosition());
-            }
-        }
-        if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
+        } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING || newState == RecyclerView.SCROLL_STATE_SETTLING) {
             mAutoSet = false;
         }
     }
