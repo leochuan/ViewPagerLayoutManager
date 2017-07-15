@@ -1,51 +1,57 @@
 ViewPager-Layout-Manager
 ======================
-## [English](README_EN.md)
+[![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager/_latestVersion)
+
+**English** | [中文](README_ZH.md)
+
+A view pager like layout manager with custom ability.
+
+It will handle the recycling under the hood.
+All you need to concern about is which the property you want to change and how it change accroding to the scroll offset.
 
 ![Example](resources/circle1.gif "working example") ![Example](resources/circle2.gif "working example") 
 ![Example](resources/circle3.gif "working example") ![Example](resources/circle4.gif "working example")
-![Example](resources/circle5.gif "working example")
+![Example](resources/rotate.gif "working example")![Example](resources/circle5.gif "working example")
 
-## 用法
+## Usage
 
 ### Gradle
-在项目的build.gradle文件中加入
+Add code below into the project's build.gradle
 ```groovy
 allprojects {
     repositories {
+        jcenter()
         maven {url  "http://dl.bintray.com/rouchuan/maven"}
     }
 }
 ```
 
-如果想要自定义效果请在build.gradle文件中引入：
+if you want custom your own layout manager please add code below:
 
 ```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.3.0'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.3.1'
 ```
-[自定义教程](http://www.jianshu.com/p/b193319d35cf)
-
-如果你想用上面提供的效果，请引入（不需要再引用core）：
+or if you want use the effect above please import(No need to import core):
 
 ```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.3.0'
+compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.3.1'
 ```
 
-### 注意!!!
+### Attention!!!
 
-#### 在定义样式item样式的时候请确保每个子view的大小相同，暂不支持不同大小的子view
+#### Make sure that your item view has the same width and height
 
 
 
-### 启动回弹
+### Enable springback
 
 ```Java
 recyclerView.addOnScrollListener(new CenterScrollListener());
 ```
 
-### 滚动监听（只有当启用回弹后才生效）
+### OnPageChangeListener
 
-如果不想启用回弹，请自己给recyclerView添加滚动监听
+Only wrok when enabling springback or you need to implement your own OnScrollListene.
 
 ```java
 mLayoutManager.setOnPageChangeListener(new ViewPagerLayoutManager.OnPageChangeListener() {
@@ -61,9 +67,11 @@ mLayoutManager.setOnPageChangeListener(new ViewPagerLayoutManager.OnPageChangeLi
         });
 ```
 
-### 展示滚动条
 
-与recyclerView相同，默认平滑滚动，调用setSmoothScrollbarEnabled设置。
+
+### Enable scrollbars
+
+same as recyclerView
 
 ```xml
  <android.support.v7.widget.RecyclerView
@@ -73,7 +81,7 @@ mLayoutManager.setOnPageChangeListener(new ViewPagerLayoutManager.OnPageChangeLi
         android:layout_height="match_parent" />
 ```
 
-### 无限滚动
+### Endless Scroll
 
 ```java
 viewPagerLayoutManager.setEnableEndlessScroll(true);
@@ -83,30 +91,143 @@ viewPagerLayoutManager.setEnableEndlessScroll(true);
 
 
 
-## 更新
+## Customize
+
+### Default Properties
+
+```Java
+protected Context context;
+
+// Size of each items
+protected int mDecoratedChildWidth;
+protected int mDecoratedChildHeight;
+
+protected int startLeft; //position x of first item
+protected int startTop; // position y of first item
+protected float offset; //The delta of property which will change when scroll
+
+protected float interval; //the interval between each items
+```
+### Consturct
+
+By default there are two constructs.mShouldReverseLayout determine the way how each items align
+
+```Java
+//Default pass mShouldReverseLayout true
+public CustomLayoutManager(){
+    this(true);
+}
+
+public CustomLayoutManager(boolean mShouldReverseLayout) {
+    this.mShouldReverseLayout = mShouldReverseLayout;
+}
+```
+
+### Methods must be implemented.
+
+It will set the interval of each items.
+Once it was set you can use the variable interval directly
+
+```Java
+protected abstract float setInterval();
+```
+
+You can set up your own properties or change the default properties like startLeft and startTop here
+
+```Java
+protected abstract void setUp();
+```
+
+You can set item's properties which is determined by target offset here 
+
+```Java
+protected abstract void setItemViewProperty(View itemView,float targetOffset);
+```
+
+### Methods you can override.
+
+The max offset value of which the view should be removed
+
+```Java
+protected float maxRemoveOffset(){
+    return getHorizontalSpace() - startLeft;
+}
+```
+
+The min offset value of which the view should be removed
+
+```Java
+protected abstract minRemoveOffset(){
+    return -mDecoratedChildWidth-getPaddingLeft() - startLeft;
+}
+```
+
+You can calculate and set the postion x of each items here
+
+```Java
+protected int calItemLeftPosition(float targetOffset){
+    return targetOffset;
+}
+```
+
+You can calculate and set the postion y of each items here
+
+```Java
+protected int calItemTopPosition(float targetOffset){
+    return 0;
+}
+```
+
+Return the property which you want to change while scrolling
+
+```Java
+protected float propertyChangeWhenScroll(View itemView){
+    return itemView.getLeft()-startLeft;
+}
+```
+
+It return the (scroll dx / offset);
+
+```Java
+protected float getDistanceRatio(){
+   return 1f;
+}
+```
+
+
+
+## Change Logs
 
 ### 1.1.0
 
-1. 拆分了core与support
-2. 修复了使用Universal-Image-Loader载入图片会导致跳动到第一项
-3. 支持在view初始化完成之前对recyclerView进行scrollToPosition
-4. 优化了布局算法的性能
-
+1. Spliting single library into core and support
+2. Fixing jumping back to first item when loading image with universal-image-loader
+3. Supporting using scrollToPosition before view inflated
+4. Optimizing performance
 
 ### 1.2.0
 
-1. 支持无限滚动
-2. 修复了在shouldReverseLayout为true时，平滑滚动条不显示的bug
-3. 修复了在shouldReverseLayout为true时，scrollToPosition滑动位置错误bug
+1. Supporting endless scroll
+2. Fixing scrollbar does not show when shouldReverseLayout is true
+3. Fixing scrollToPosition scrolls to wrong position when shouldReverseLayout is true
 
+### 1.3.0
 
-## 接下来要做的事
+1. Fixing crash which caused by wrong position calculation when enabling endless scroll
+2. Add ElevateScaleLayoutManager
 
-1. ~~支持无限滚动~~
-2. 进一步优化性能
-3. 添加indicator
-4. 支持不同大小的子View
-5. 给support库添加其他效果(长期的课题)
+### 1.3.1
+
+1. Fixing onPageSelected does not trigger when scrolling back distance equals zero
+2. Add RotateLayoutManager
+
+## Things to do
+
+1. ~~support infinite scroll~~
+2. optimize performance
+3. support indicator
+4. support item view with different size
+5. support other effects (long term subject)
 
 
 

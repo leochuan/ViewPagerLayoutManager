@@ -14,6 +14,7 @@ import com.rouchuan.CircleLayoutManager;
 import com.rouchuan.CircleScaleLayoutManager;
 import com.rouchuan.ElevateScaleLayoutManager;
 import com.rouchuan.GalleryLayoutManager;
+import com.rouchuan.RotateLayoutManager;
 import com.rouchuan.ScaleLayoutManager;
 
 import rouchuan.customlayoutmanager.CenterScrollListener;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private final static int CIRCLE_SCALE = 2;
     private final static int GALLERY = 3;
     private final static int ElE_SCALE = 4;
+    private final static int ROTATE = 5;
 
     private int mode = -1;
     private RecyclerView recyclerView;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ScaleLayoutManager scaleLayoutManager;
     private GalleryLayoutManager galleryLayoutManager;
     private ElevateScaleLayoutManager elevateScaleLayoutManager;
+    private RotateLayoutManager rotateLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         scaleLayoutManager = new ScaleLayoutManager(Dp2px(10));
         galleryLayoutManager = new GalleryLayoutManager(Dp2px(10));
         elevateScaleLayoutManager = new ElevateScaleLayoutManager(Dp2px(-100));
+        rotateLayoutManager = new RotateLayoutManager(Dp2px(50), 180);
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
         recyclerView.setAdapter(new Adapter());
@@ -71,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void determineLayoutManager() {
         mode++;
-        if (mode == 5) mode = 0;
+        if (mode == 6) mode = 0;
         switch (mode) {
             case CIRCLE:
                 changeAndToast(circleLayoutManager, "CircleLayoutManager");
@@ -87,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case ElE_SCALE:
                 changeAndToast(elevateScaleLayoutManager, "ElevateScaleLayoutManager");
+                break;
+            case ROTATE:
+                changeAndToast(rotateLayoutManager, "RotateLayoutManager");
+                break;
         }
     }
 
