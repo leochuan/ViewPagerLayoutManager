@@ -1,6 +1,6 @@
 ViewPager-Layout-Manager
 ======================
-[![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager/_latestVersion)
+[![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager-support/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager-support/_latestVersion)
 
 **English** | [中文](README_ZH.md)
 
@@ -16,14 +16,11 @@ All you need to concern about is which the property you want to change and how i
 ## Usage
 
 ### Gradle
-Add code below into the project's build.gradle
+
+RecyclerView is required so:
+
 ```groovy
-allprojects {
-    repositories {
-        jcenter()
-        maven {url  "http://dl.bintray.com/rouchuan/maven"}
-    }
-}
+compile 'com.android.support:recyclerview-v7:[your version code]'
 ```
 
 if you want custom your own layout manager please add code below:

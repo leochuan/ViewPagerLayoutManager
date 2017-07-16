@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:25.3.1'
+    provided 'com.android.support:recyclerview-v7:25.3.1'
 }
 
 def siteUrl = 'https://github.com/leochuan/ViewPagerLayoutManager'
@@ -92,7 +92,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "viewpager-layout-manager"
+        name = "viewpager-layout-manager-core"
         userOrg = properties.getProperty("bintray.org")
         websiteUrl = siteUrl
         vcsUrl = gitUrl

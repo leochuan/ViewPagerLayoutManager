@@ -1,7 +1,7 @@
 ViewPager-Layout-Manager
 ======================
 
-[![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager/_latestVersion)
+[![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager-support/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager-support/_latestVersion)
 
 [English](README.md) | **中文**
 
@@ -12,13 +12,9 @@ ViewPager-Layout-Manager
 ## 用法
 
 ### Gradle
-在项目的build.gradle文件中加入
+请在项目的引入recyclerview
 ```groovy
-allprojects {
-    repositories {
-        maven {url  "http://dl.bintray.com/rouchuan/maven"}
-    }
-}
+compile 'com.android.support:recyclerview-v7:[自己指定版本号]'
 ```
 
 如果想要自定义效果请在build.gradle文件中引入：
