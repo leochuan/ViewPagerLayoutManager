@@ -72,7 +72,6 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
 
         if (getChildCount() == 0) {
             View scrap = recycler.getViewForPosition(0);
-            addView(scrap);
             measureChildWithMargins(scrap, 0, 0);
             mDecoratedChildWidth = getDecoratedMeasuredWidth(scrap);
             mDecoratedChildHeight = getDecoratedMeasuredHeight(scrap);
@@ -80,7 +79,6 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager 
             startTop = (getVerticalSpace() - mDecoratedChildHeight) / 2;
             interval = setInterval();
             setUp();
-            detachAndScrapView(scrap, recycler);
         }
 
         if (mPendingSavedState != null) {
