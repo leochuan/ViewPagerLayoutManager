@@ -16,22 +16,22 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
     private float angle;
 
     public RotateLayoutManager(int itemSpace) {
-        this(itemSpace, INTERVAL_ANGLE, false);
+        this(itemSpace, INTERVAL_ANGLE, HORIZONTAL, false);
     }
 
     public RotateLayoutManager(int itemSpace, float angle) {
-        this(itemSpace, angle, false);
+        this(itemSpace, angle, HORIZONTAL, false);
     }
 
-    public RotateLayoutManager(int itemSpace, float angle, boolean shouldReverseLayout) {
-        super(shouldReverseLayout);
+    public RotateLayoutManager(int itemSpace, float angle, int orientation, boolean reverseLayout) {
+        super(orientation, reverseLayout);
         this.angle = angle;
         this.itemSpace = itemSpace;
     }
 
     @Override
     protected float setInterval() {
-        return mDecoratedChildWidth + itemSpace;
+        return mDecoratedMeasurement + itemSpace;
     }
 
     @Override

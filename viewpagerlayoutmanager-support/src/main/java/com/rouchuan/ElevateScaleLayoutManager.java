@@ -19,26 +19,18 @@ public class ElevateScaleLayoutManager extends ViewPagerLayoutManager {
     private float minScale;
 
     public ElevateScaleLayoutManager(int itemSpace) {
-        this(itemSpace, false);
+        this(itemSpace, MIN_SCALE, HORIZONTAL, false);
     }
 
-    public ElevateScaleLayoutManager(int itemSpace, float minScale) {
-        this(itemSpace, minScale, false);
-    }
-
-    public ElevateScaleLayoutManager(int itemSpace, boolean shouldReverseLayout) {
-        this(itemSpace, MIN_SCALE, shouldReverseLayout);
-    }
-
-    public ElevateScaleLayoutManager(int itemSpace, float minScale, boolean shouldReverseLayout) {
-        super(shouldReverseLayout);
+    public ElevateScaleLayoutManager(int itemSpace, float minScale, int orientation, boolean reverseLayout) {
+        super(orientation, reverseLayout);
         this.itemSpace = itemSpace;
         this.minScale = minScale;
     }
 
     @Override
     protected float setInterval() {
-        return (mDecoratedChildWidth + itemSpace);
+        return (mDecoratedMeasurement + itemSpace);
     }
 
     @Override
@@ -48,8 +40,8 @@ public class ElevateScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        float scale = calculateScale((int) targetOffset + startLeft);
-        float elevation = calculateElevation((int) targetOffset + startLeft);
+        float scale = calculateScale((int) targetOffset + spaceMain);
+        float elevation = calculateElevation((int) targetOffset + spaceMain);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -59,15 +51,15 @@ public class ElevateScaleLayoutManager extends ViewPagerLayoutManager {
 
     /**
      * @param x start positon of the view you want scale
-     * @return the scale rate of current scroll offset
+     * @return the scale rate of current scroll mOffset
      */
     private float calculateScale(int x) {
-        float deltaX = Math.abs(x - (getHorizontalSpace() - mDecoratedChildWidth) / 2f);
-        return -minScale * deltaX / (getHorizontalSpace() / 2f) + 1f;
+        float deltaX = Math.abs(x - (mOrientationHelper.getTotalSpace()- mDecoratedMeasurement) / 2f);
+        return -minScale * deltaX / (mOrientationHelper.getTotalSpace() / 2f) + 1f;
     }
 
     private int calculateElevation(int x) {
-        int deltaX = (int) Math.abs(x - (getHorizontalSpace() - mDecoratedChildWidth) / 2f);
+        int deltaX = (int) Math.abs(x - (mOrientationHelper.getTotalSpace()- mDecoratedMeasurement) / 2f);
         return Integer.MAX_VALUE - deltaX;
     }
 }

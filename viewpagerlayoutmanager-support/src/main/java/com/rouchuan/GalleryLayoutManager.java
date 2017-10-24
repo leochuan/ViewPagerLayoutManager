@@ -15,17 +15,17 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     private int itemSpace = 0;
 
     public GalleryLayoutManager(int itemSpace) {
-        this(itemSpace, false);
+        this(itemSpace, HORIZONTAL, false);
     }
 
-    public GalleryLayoutManager(int itemSpace, boolean shouldReverseLayout) {
-        super(shouldReverseLayout);
+    public GalleryLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
+        super(orientation, reverseLayout);
         this.itemSpace = itemSpace;
     }
 
     @Override
     protected float setInterval() {
-        return mDecoratedChildWidth + itemSpace;
+        return mDecoratedMeasurement + itemSpace;
     }
 
     @Override

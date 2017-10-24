@@ -18,6 +18,7 @@ import com.rouchuan.RotateLayoutManager;
 import com.rouchuan.ScaleLayoutManager;
 
 import rouchuan.customlayoutmanager.CenterScrollListener;
+import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 public class MainActivity extends AppCompatActivity {
     private final static int CIRCLE = 0;
@@ -60,17 +61,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void configureRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        circleLayoutManager = new CircleLayoutManager();
+        circleLayoutManager = new CircleLayoutManager(false);
         circleScaleLayoutManager = new CircleScaleLayoutManager();
-        scaleLayoutManager = new ScaleLayoutManager(Dp2px(10));
-        galleryLayoutManager = new GalleryLayoutManager(Dp2px(10));
-        elevateScaleLayoutManager = new ElevateScaleLayoutManager(Dp2px(-100));
-        rotateLayoutManager = new RotateLayoutManager(Dp2px(50), 180);
+        scaleLayoutManager = new ScaleLayoutManager(Dp2px(10), ViewPagerLayoutManager.VERTICAL, false);
+        galleryLayoutManager = new GalleryLayoutManager(Dp2px(10), ViewPagerLayoutManager.VERTICAL, false);
+        elevateScaleLayoutManager = new ElevateScaleLayoutManager(Dp2px(-100), 0.5f, ViewPagerLayoutManager.VERTICAL, false);
+        rotateLayoutManager = new RotateLayoutManager(Dp2px(50), 180, ViewPagerLayoutManager.VERTICAL, false);
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
         recyclerView.setAdapter(new Adapter());
-        circleLayoutManager.setEnableEndlessScroll(true);
-        elevateScaleLayoutManager.setEnableEndlessScroll(true);
     }
 
     private void determineLayoutManager() {

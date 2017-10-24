@@ -14,17 +14,17 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     private int itemSpace = 0;
 
     public ScaleLayoutManager(int itemSpace) {
-        this(itemSpace, false);
+        this(itemSpace, HORIZONTAL, false);
     }
 
-    public ScaleLayoutManager(int itemSpace, boolean shouldReverseLayout) {
-        super(shouldReverseLayout);
+    public ScaleLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
+        super(orientation, reverseLayout);
         this.itemSpace = itemSpace;
     }
 
     @Override
     protected float setInterval() {
-        return (int) (mDecoratedChildWidth * ((SCALE_RATE - 1f) / 2f + 1) + itemSpace);
+        return (int) (mDecoratedMeasurement * ((SCALE_RATE - 1f) / 2f + 1) + itemSpace);
     }
 
     @Override
@@ -34,19 +34,19 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        float scale = calculateScale((int) targetOffset + startLeft);
+        float scale = calculateScale((int) targetOffset + spaceMain);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
     }
 
     /**
      * @param x start positon of the view you want scale
-     * @return the scale rate of current scroll offset
+     * @return the scale rate of current scroll mOffset
      */
     private float calculateScale(int x) {
-        int deltaX = Math.abs(x - (getHorizontalSpace() - mDecoratedChildWidth) / 2);
+        int deltaX = Math.abs(x - (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2);
         float diff = 0f;
-        if ((mDecoratedChildWidth - deltaX) > 0) diff = mDecoratedChildWidth - deltaX;
-        return (SCALE_RATE - 1f) / mDecoratedChildWidth * diff + 1;
+        if ((mDecoratedMeasurement - deltaX) > 0) diff = mDecoratedMeasurement - deltaX;
+        return (SCALE_RATE - 1f) / mDecoratedMeasurement * diff + 1;
     }
 }

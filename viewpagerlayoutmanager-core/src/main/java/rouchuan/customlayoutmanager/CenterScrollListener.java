@@ -23,17 +23,20 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener {
             onPageChangeListener.onPageScrollStateChanged(newState);
         }
 
-        if (newState == RecyclerView.SCROLL_STATE_IDLE){
+        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
             if (mAutoSet) {
                 if (onPageChangeListener != null) {
                     onPageChangeListener.onPageSelected(((ViewPagerLayoutManager) layoutManager).getCurrentPosition());
                 }
                 mAutoSet = false;
             } else {
-                final int dx;
-                dx = ((ViewPagerLayoutManager) layoutManager).getOffsetCenterView();
-                if (dx != 0) {
-                    recyclerView.smoothScrollBy(dx, 0);
+                final int delta;
+                delta = ((ViewPagerLayoutManager) layoutManager).getOffsetCenterView();
+                if (delta != 0) {
+                    if (((ViewPagerLayoutManager) layoutManager).getOrientation() == ViewPagerLayoutManager.VERTICAL)
+                        recyclerView.smoothScrollBy(0, delta);
+                    else
+                        recyclerView.smoothScrollBy(delta, 0);
                     mAutoSet = true;
                 } else {
                     if (onPageChangeListener != null) {

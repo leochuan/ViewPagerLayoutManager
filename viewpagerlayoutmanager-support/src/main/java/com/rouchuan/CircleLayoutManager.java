@@ -19,8 +19,8 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         super();
     }
 
-    public CircleLayoutManager(boolean shouldReverseLayout) {
-        super(shouldReverseLayout);
+    public CircleLayoutManager(boolean reverseLayout) {
+        super(HORIZONTAL, reverseLayout);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected void setUp() {
-        mRadius = mDecoratedChildHeight;
+        mRadius = mDecoratedMeasurementInOther;
     }
 
     @Override
@@ -44,12 +44,12 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected int calItemLeftPosition(float targetOffset) {
+    protected int calMainDirection(float targetOffset) {
         return (int) (mRadius * Math.cos(Math.toRadians(90 - targetOffset)));
     }
 
     @Override
-    protected int calItemTopPosition(float targetOffset) {
+    protected int calOtherDirection(float targetOffset) {
         return (int) (mRadius - mRadius * Math.sin(Math.toRadians(90 - targetOffset)));
     }
 
