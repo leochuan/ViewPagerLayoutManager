@@ -45,6 +45,6 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
     }
 
     private float calRotation(float targetOffset) {
-        return -angle / interval * targetOffset;
+        return -angle / mInterval * targetOffset;
     }
 }

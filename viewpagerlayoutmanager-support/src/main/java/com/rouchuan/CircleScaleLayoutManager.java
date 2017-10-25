@@ -11,18 +11,19 @@ import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
-    private static int INTERVAL_ANGLE = 30;// The default interval angle between each items
+    private static int INTERVAL_ANGLE = 30;// The default mInterval angle between each items
     private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
     private static final float SCALE_RATE = 1.2f;
 
     private int mRadius;
 
     public CircleScaleLayoutManager() {
-        super();
+        this(false);
     }
 
     public CircleScaleLayoutManager(boolean reverseLayout) {
         super(HORIZONTAL, reverseLayout);
+        setEnableElevation(true);
     }
 
     @Override
@@ -62,8 +63,13 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.setZ(scale);
+            itemView.setElevation(scale);
         }
+    }
+
+    @Override
+    protected float setViewElevation(View itemView, float targetOffset) {
+        return calculateScale(itemView, targetOffset);
     }
 
     @Override

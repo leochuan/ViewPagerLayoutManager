@@ -1,6 +1,7 @@
 package rouchuan.customlayoutmanager;
 
 import android.graphics.PointF;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
@@ -34,9 +35,9 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
      */
     int mOrientation;
 
-    protected int spaceMain;
+    protected int mSpaceMain;
 
-    protected int spaceInOther;
+    protected int mSpaceInOther;
 
     /**
      * The offset of property which will change while scrolling
@@ -70,27 +71,31 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
     private SavedState mPendingSavedState = null;
 
-    private LayoutHelper mLayoutHelper;
-
-    protected float interval; //the interval of each item's mOffset
+    protected float mInterval; //the mInterval of each item's mOffset
 
     /* package */ OnPageChangeListener onPageChangeListener;
 
     private boolean mRecycleChildrenOnDetach;
 
-    private boolean infinite = false;
+    private boolean mInfinite = false;
+
+    private boolean mEnableViewOrder;
 
     /**
-     * @return the interval of each item's mOffset
+     * @return the mInterval of each item's mOffset
      */
     protected abstract float setInterval();
 
     /**
-     * You can set up your own properties here or change the exist properties like spaceMain and spaceInOther
+     * You can set up your own properties here or change the exist properties like mSpaceMain and mSpaceInOther
      */
     protected abstract void setUp();
 
     protected abstract void setItemViewProperty(View itemView, float targetOffset);
+
+    protected float setViewElevation(View itemView, float targetOffset) {
+        return 0;
+    }
 
     /**
      * Creates a horizontal ViewPagerLayoutManager
@@ -314,9 +319,9 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
             measureChildWithMargins(scrap, 0, 0);
             mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
             mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
-            spaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
-            spaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
-            interval = setInterval();
+            mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
+            mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
+            mInterval = setInterval();
             setUp();
         }
 
@@ -327,7 +332,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
         if (mPendingScrollPosition != NO_POSITION) {
             mOffset = mReverseLayout ?
-                    mPendingScrollPosition * -interval : mPendingScrollPosition * interval;
+                    mPendingScrollPosition * -mInterval : mPendingScrollPosition * mInterval;
         }
 
         detachAndScrapAttachedViews(recycler);
@@ -342,16 +347,13 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     void ensureLayoutState() {
-        if (mLayoutHelper == null) {
-            mLayoutHelper = new LayoutHelper();
-        }
         if (mOrientationHelper == null) {
             mOrientationHelper = OrientationHelper.createOrientationHelper(this, mOrientation);
         }
     }
 
     private float getProperty(int position) {
-        return !mReverseLayout ? position * interval : position * -interval;
+        return !mReverseLayout ? position * mInterval : position * -mInterval;
     }
 
     @Override
@@ -363,7 +365,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     @Override
     public void scrollToPosition(int position) {
         mPendingScrollPosition = position;
-        mOffset = mReverseLayout ? position * -interval : position * interval;
+        mOffset = mReverseLayout ? position * -mInterval : position * mInterval;
         requestLayout();
     }
 
@@ -462,9 +464,9 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         float targetOffset = mOffset + realDx;
 
         //handle the boundary
-        if (!infinite && targetOffset < getMinOffset()) {
+        if (!mInfinite && targetOffset < getMinOffset()) {
             willScroll = 0;
-        } else if (!infinite && targetOffset > getMaxOffset()) {
+        } else if (!mInfinite && targetOffset > getMaxOffset()) {
             willScroll = (int) ((getMaxOffset() - mOffset) * getDistanceRatio());
         }
 
@@ -473,8 +475,8 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         mOffset += realDx;
 
         for (int i = 0; i < getChildCount(); i++) {
-            View scrap = getChildAt(i);
-            float delta = propertyChangeWhenScroll(scrap) - realDx;
+            final View scrap = getChildAt(i);
+            final float delta = propertyChangeWhenScroll(scrap) - realDx;
             layoutScrap(scrap, delta);
         }
 
@@ -485,25 +487,30 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
     private void layoutItems(RecyclerView.Recycler recycler,
                              RecyclerView.State state) {
-        //remove the views which out of range
-        for (int i = 0; i < getChildCount(); i++) {
-            View view = getChildAt(i);
-            int position = getPosition(view);
-            if (removeCondition(getProperty(position) - mOffset)) {
-                removeAndRecycleView(view, recycler);
+        if (mEnableViewOrder && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            detachAndScrapAttachedViews(recycler);
+        } else {
+            //remove the views which is out of range
+            for (int i = 0; i < getChildCount(); i++) {
+                final View view = getChildAt(i);
+                final int position = getPosition(view);
+                if (removeCondition(getProperty(position) - mOffset)) {
+                    removeAndRecycleView(view, recycler);
+                }
             }
         }
 
         final int currentPos = getCurrentPositionInternal();
         final float curOffset = getProperty(currentPos) - mOffset;
 
-        int start = (int) (currentPos - Math.abs(((curOffset - minRemoveOffset()) / interval))) - 1;
-        int end = (int) (currentPos + Math.abs(((curOffset - maxRemoveOffset()) / interval))) + 1;
+        int start = (int) (currentPos - Math.abs(((curOffset - minRemoveOffset()) / mInterval))) - 1;
+        int end = (int) (currentPos + Math.abs(((curOffset - maxRemoveOffset()) / mInterval))) + 1;
 
-        if (start < 0 && !infinite) start = 0;
+        if (start < 0 && !mInfinite) start = 0;
         final int itemCount = getItemCount();
-        if (end > itemCount && !infinite) end = itemCount;
+        if (end > itemCount && !mInfinite) end = itemCount;
 
+        float lastOrderWeight = Float.MIN_VALUE;
         for (int i = start; i < end; i++) {
             if (!removeCondition(getProperty(i) - mOffset)) {
                 int realIndex = i;
@@ -515,17 +522,25 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
                     realIndex = itemCount - delta;
                 }
                 if (findViewByPosition(i) == null) {
-                    View scrap = recycler.getViewForPosition(realIndex);
+                    final View scrap = recycler.getViewForPosition(realIndex);
                     measureChildWithMargins(scrap, 0, 0);
-                    addView(scrap);
                     resetViewProperty(scrap);
-                    float targetOffset = getProperty(i) - mOffset;
+                    final float targetOffset = getProperty(i) - mOffset;
                     layoutScrap(scrap, targetOffset);
+                    final float orderWeight = mEnableViewOrder ? setViewElevation(scrap, targetOffset)
+                            : realIndex;
+                    if (orderWeight > lastOrderWeight) {
+                        addView(scrap);
+                    } else {
+                        addView(scrap, 0);
+                    }
+                    lastOrderWeight = orderWeight;
                 }
             }
         }
 
-        if (infinite) {
+        // handle cycle jump
+        if (mInfinite) {
             if (getCurrentPositionInternal() == 0) {
                 removeAndRecycleAllViews(recycler);
                 internalScrollToPosition(itemCount, recycler, state);
@@ -537,7 +552,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     private void internalScrollToPosition(int position, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        mOffset = mReverseLayout ? position * -interval : position * interval;
+        mOffset = mReverseLayout ? position * -mInterval : position * mInterval;
         layoutItems(recycler, state);
     }
 
@@ -556,23 +571,23 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
     private float getMaxOffset() {
         return !mReverseLayout ?
-                (infinite ? (getItemCount() + 1) : (getItemCount() - 1)) * interval : 0;
+                (mInfinite ? (getItemCount() + 1) : (getItemCount() - 1)) * mInterval : 0;
     }
 
     private float getMinOffset() {
         return !mReverseLayout ?
-                0 : -(infinite ? (getItemCount() + 1) : (getItemCount() - 1)) * interval;
+                0 : -(mInfinite ? (getItemCount() + 1) : (getItemCount() - 1)) * mInterval;
     }
 
     private void layoutScrap(View scrap, float targetOffset) {
         int left = calMainDirection(targetOffset);
         int top = calOtherDirection(targetOffset);
         if (mOrientation == VERTICAL) {
-            layoutDecorated(scrap, spaceInOther + left, spaceMain + top,
-                    spaceInOther + left + mDecoratedMeasurementInOther, spaceMain + top + mDecoratedMeasurement);
+            layoutDecorated(scrap, mSpaceInOther + left, mSpaceMain + top,
+                    mSpaceInOther + left + mDecoratedMeasurementInOther, mSpaceMain + top + mDecoratedMeasurement);
         } else {
-            layoutDecorated(scrap, spaceMain + left, spaceInOther + top,
-                    spaceMain + left + mDecoratedMeasurement, spaceInOther + top + mDecoratedMeasurementInOther);
+            layoutDecorated(scrap, mSpaceMain + left, mSpaceInOther + top,
+                    mSpaceMain + left + mDecoratedMeasurement, mSpaceInOther + top + mDecoratedMeasurementInOther);
         }
         setItemViewProperty(scrap, targetOffset);
     }
@@ -586,17 +601,17 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     protected float maxRemoveOffset() {
-        return mOrientationHelper.getTotalSpace() - spaceMain;
+        return mOrientationHelper.getTotalSpace() - mSpaceMain;
     }
 
     protected float minRemoveOffset() {
-        return -mDecoratedMeasurement - mOrientationHelper.getStartAfterPadding() - spaceMain;
+        return -mDecoratedMeasurement - mOrientationHelper.getStartAfterPadding() - mSpaceMain;
     }
 
     protected float propertyChangeWhenScroll(View itemView) {
         if (mOrientation == VERTICAL)
-            return itemView.getTop() - spaceMain;
-        return itemView.getLeft() - spaceMain;
+            return itemView.getTop() - mSpaceMain;
+        return itemView.getLeft() - mSpaceMain;
     }
 
     protected float getDistanceRatio() {
@@ -605,18 +620,18 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
     public int getCurrentPosition() {
         int position = getCurrentPositionInternal();
-        if (infinite && position > getItemCount()) return position - getItemCount();
-        else if (infinite && position < 0) return position + getItemCount();
+        if (mInfinite && position > getItemCount()) return position - getItemCount();
+        else if (mInfinite && position < 0) return position + getItemCount();
         return position;
     }
 
     private int getCurrentPositionInternal() {
-        return Math.round(Math.abs(mOffset) / interval);
+        return Math.round(Math.abs(mOffset) / mInterval);
     }
 
     public int getOffsetCenterView() {
         return (int) ((getCurrentPositionInternal() * (!mReverseLayout ?
-                interval : -interval) - mOffset) * getDistanceRatio());
+                mInterval : -mInterval) - mOffset) * getDistanceRatio());
     }
 
     public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
@@ -624,7 +639,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     public void setInfinite(boolean enable) {
-        infinite = enable;
+        mInfinite = enable;
     }
 
     /**
@@ -645,6 +660,10 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
      */
     public void setSmoothScrollbarEnabled(boolean enabled) {
         mSmoothScrollbarEnabled = enabled;
+    }
+
+    public void setEnableElevation(boolean mSelectInFront) {
+        this.mEnableViewOrder = mSelectInFront;
     }
 
     /**
@@ -698,10 +717,6 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
                 return new SavedState[size];
             }
         };
-    }
-
-    private static class LayoutHelper {
-
     }
 
     public interface OnPageChangeListener {

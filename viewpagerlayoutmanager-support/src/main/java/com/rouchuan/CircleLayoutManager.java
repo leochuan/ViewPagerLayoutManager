@@ -10,7 +10,7 @@ import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 public class CircleLayoutManager extends ViewPagerLayoutManager {
 
-    private static int INTERVAL_ANGLE = 30;// The default interval angle between each items
+    private static int INTERVAL_ANGLE = 30;// The default mInterval angle between each items
     private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
 
     private int mRadius;

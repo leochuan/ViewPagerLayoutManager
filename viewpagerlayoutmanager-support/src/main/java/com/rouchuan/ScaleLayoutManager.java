@@ -34,7 +34,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        float scale = calculateScale((int) targetOffset + spaceMain);
+        float scale = calculateScale((int) targetOffset + mSpaceMain);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
     }

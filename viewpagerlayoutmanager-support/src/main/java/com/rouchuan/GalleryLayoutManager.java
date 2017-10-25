@@ -40,11 +40,11 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     }
 
     private float calRotationY(float targetOffset) {
-        return -INTERVAL_ANGLE / interval * targetOffset;
+        return -INTERVAL_ANGLE / mInterval * targetOffset;
     }
 
     private float calAlpha(float targetOffset) {
-        float alpha = (MIN_ALPHA - 1f) / interval * Math.abs(targetOffset) + 1f;
+        float alpha = (MIN_ALPHA - 1f) / mInterval * Math.abs(targetOffset) + 1f;
         if (alpha < MIN_ALPHA) alpha = MIN_ALPHA;
         return alpha;
     }

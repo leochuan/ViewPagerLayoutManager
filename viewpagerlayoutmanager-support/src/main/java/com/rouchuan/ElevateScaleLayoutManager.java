@@ -26,6 +26,7 @@ public class ElevateScaleLayoutManager extends ViewPagerLayoutManager {
         super(orientation, reverseLayout);
         this.itemSpace = itemSpace;
         this.minScale = minScale;
+        setEnableElevation(true);
     }
 
     @Override
@@ -40,8 +41,8 @@ public class ElevateScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        float scale = calculateScale((int) targetOffset + spaceMain);
-        float elevation = calculateElevation((int) targetOffset + spaceMain);
+        float scale = calculateScale((int) targetOffset + mSpaceMain);
+        float elevation = calculateElevation((int) targetOffset + mSpaceMain);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -49,17 +50,22 @@ public class ElevateScaleLayoutManager extends ViewPagerLayoutManager {
         }
     }
 
+    @Override
+    protected float setViewElevation(View itemView, float targetOffset) {
+        return (float) calculateElevation((int) targetOffset + mSpaceMain);
+    }
+
     /**
      * @param x start positon of the view you want scale
      * @return the scale rate of current scroll mOffset
      */
     private float calculateScale(int x) {
-        float deltaX = Math.abs(x - (mOrientationHelper.getTotalSpace()- mDecoratedMeasurement) / 2f);
+        float deltaX = Math.abs(x - (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2f);
         return -minScale * deltaX / (mOrientationHelper.getTotalSpace() / 2f) + 1f;
     }
 
     private int calculateElevation(int x) {
-        int deltaX = (int) Math.abs(x - (mOrientationHelper.getTotalSpace()- mDecoratedMeasurement) / 2f);
+        int deltaX = (int) Math.abs(x - (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2f);
         return Integer.MAX_VALUE - deltaX;
     }
 }

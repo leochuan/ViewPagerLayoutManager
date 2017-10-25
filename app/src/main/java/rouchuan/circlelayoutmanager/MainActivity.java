@@ -65,11 +65,12 @@ public class MainActivity extends AppCompatActivity {
         circleScaleLayoutManager = new CircleScaleLayoutManager();
         scaleLayoutManager = new ScaleLayoutManager(Dp2px(10), ViewPagerLayoutManager.VERTICAL, false);
         galleryLayoutManager = new GalleryLayoutManager(Dp2px(10), ViewPagerLayoutManager.VERTICAL, false);
-        elevateScaleLayoutManager = new ElevateScaleLayoutManager(Dp2px(-100), 0.5f, ViewPagerLayoutManager.VERTICAL, false);
+        elevateScaleLayoutManager = new ElevateScaleLayoutManager(Dp2px(-100), 0.5f, ViewPagerLayoutManager.HORIZONTAL, false);
         rotateLayoutManager = new RotateLayoutManager(Dp2px(50), 180, ViewPagerLayoutManager.VERTICAL, false);
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
         recyclerView.setAdapter(new Adapter());
+        elevateScaleLayoutManager.setInfinite(true);
     }
 
     private void determineLayoutManager() {
