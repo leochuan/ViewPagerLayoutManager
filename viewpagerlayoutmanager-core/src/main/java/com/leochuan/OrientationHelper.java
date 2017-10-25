@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package rouchuan.customlayoutmanager;
+package com.leochuan;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

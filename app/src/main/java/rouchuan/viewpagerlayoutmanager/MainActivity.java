@@ -1,24 +1,20 @@
-package rouchuan.circlelayoutmanager;
+package rouchuan.viewpagerlayoutmanager;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.rouchuan.CircleLayoutManager;
-import com.rouchuan.CircleScaleLayoutManager;
-import com.rouchuan.ElevateScaleLayoutManager;
-import com.rouchuan.GalleryLayoutManager;
-import com.rouchuan.RotateLayoutManager;
-import com.rouchuan.ScaleLayoutManager;
-
-import rouchuan.customlayoutmanager.CenterScrollListener;
-import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
+import com.leochuan.CenterScrollListener;
+import com.leochuan.CircleLayoutManager;
+import com.leochuan.CircleScaleLayoutManager;
+import com.leochuan.ElevateScaleLayoutManager;
+import com.leochuan.GalleryLayoutManager;
+import com.leochuan.RotateLayoutManager;
+import com.leochuan.ScaleLayoutManager;
+import com.leochuan.ViewPagerLayoutManager;
 
 public class MainActivity extends AppCompatActivity {
     private final static int CIRCLE = 0;
@@ -61,15 +57,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void configureRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        circleLayoutManager = new CircleLayoutManager(false);
+        circleLayoutManager = new CircleLayoutManager.Builder()
+                .setReverseLayout(true)
+                .build();
         circleScaleLayoutManager = new CircleScaleLayoutManager();
-        scaleLayoutManager = new ScaleLayoutManager(Dp2px(10), ViewPagerLayoutManager.VERTICAL, false);
-        galleryLayoutManager = new GalleryLayoutManager(Dp2px(10), ViewPagerLayoutManager.VERTICAL, false);
-        elevateScaleLayoutManager = new ElevateScaleLayoutManager(Dp2px(-100), 0.5f, ViewPagerLayoutManager.HORIZONTAL, false);
-        rotateLayoutManager = new RotateLayoutManager(Dp2px(50), 180, ViewPagerLayoutManager.VERTICAL, false);
+        scaleLayoutManager = new ScaleLayoutManager(Util.Dp2px(this, 10), ViewPagerLayoutManager.VERTICAL, false);
+        galleryLayoutManager = new GalleryLayoutManager(Util.Dp2px(this, 10), ViewPagerLayoutManager.VERTICAL, false);
+        elevateScaleLayoutManager = new ElevateScaleLayoutManager(Util.Dp2px(this, -100), 0.5f,
+                ViewPagerLayoutManager.HORIZONTAL, false);
+        rotateLayoutManager = new RotateLayoutManager(Util.Dp2px(this, 50), 180, ViewPagerLayoutManager.VERTICAL, false);
         recyclerView.addOnScrollListener(new CenterScrollListener());
         determineLayoutManager();
-        recyclerView.setAdapter(new Adapter());
+        recyclerView.setAdapter(new DataAdapter());
         elevateScaleLayoutManager.setInfinite(true);
     }
 
@@ -103,56 +102,5 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
     }
 
-    private int Dp2px(float dp) {
-        final float scale = getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
 
-    class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MyViewHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.my_image, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            int index = (position + 1) % 6;
-            int res = 0;
-            switch (index) {
-                case 0:
-                    res = R.mipmap.item1;
-                    break;
-                case 1:
-                    res = R.mipmap.item2;
-                    break;
-                case 2:
-                    res = R.mipmap.item3;
-                    break;
-                case 3:
-                    res = R.mipmap.item4;
-                    break;
-                case 4:
-                    res = R.mipmap.item5;
-                    break;
-                case 5:
-                    res = R.mipmap.item6;
-                    break;
-            }
-            ((MyViewHolder) holder).imageView.setImageResource(res);
-        }
-
-        @Override
-        public int getItemCount() {
-            return 20;
-        }
-
-        class MyViewHolder extends RecyclerView.ViewHolder {
-            ImageView imageView;
-
-            public MyViewHolder(View itemView) {
-                super(itemView);
-                imageView = (ImageView) itemView.findViewById(R.id.image);
-            }
-        }
-    }
 }

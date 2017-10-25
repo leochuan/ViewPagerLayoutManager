@@ -1,9 +1,7 @@
-package com.rouchuan;
+package com.leochuan;
 
 import android.os.Build;
 import android.view.View;
-
-import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
  * Created by Dajavu on 12/7/16.
@@ -26,7 +24,7 @@ public class ElevateScaleLayoutManager extends ViewPagerLayoutManager {
         super(orientation, reverseLayout);
         this.itemSpace = itemSpace;
         this.minScale = minScale;
-        setEnableElevation(true);
+        setEnableBringCenterToFront(true);
     }
 
     @Override

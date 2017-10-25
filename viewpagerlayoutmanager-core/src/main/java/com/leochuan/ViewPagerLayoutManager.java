@@ -1,4 +1,4 @@
-package rouchuan.customlayoutmanager;
+package com.leochuan;
 
 import android.graphics.PointF;
 import android.os.Build;
@@ -8,6 +8,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -79,7 +80,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
     private boolean mInfinite = false;
 
-    private boolean mEnableViewOrder;
+    private boolean mEnableBringCenterToFront;
 
     /**
      * @return the mInterval of each item's mOffset
@@ -465,7 +466,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
         //handle the boundary
         if (!mInfinite && targetOffset < getMinOffset()) {
-            willScroll = 0;
+            willScroll -= (targetOffset - getMinOffset()) * getDistanceRatio();
         } else if (!mInfinite && targetOffset > getMaxOffset()) {
             willScroll = (int) ((getMaxOffset() - mOffset) * getDistanceRatio());
         }
@@ -487,7 +488,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
     private void layoutItems(RecyclerView.Recycler recycler,
                              RecyclerView.State state) {
-        if (mEnableViewOrder && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (mEnableBringCenterToFront && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             detachAndScrapAttachedViews(recycler);
         } else {
             //remove the views which is out of range
@@ -527,7 +528,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
                     resetViewProperty(scrap);
                     final float targetOffset = getProperty(i) - mOffset;
                     layoutScrap(scrap, targetOffset);
-                    final float orderWeight = mEnableViewOrder ? setViewElevation(scrap, targetOffset)
+                    final float orderWeight = mEnableBringCenterToFront ? setViewElevation(scrap, targetOffset)
                             : realIndex;
                     if (orderWeight > lastOrderWeight) {
                         addView(scrap);
@@ -580,8 +581,8 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     private void layoutScrap(View scrap, float targetOffset) {
-        int left = calMainDirection(targetOffset);
-        int top = calOtherDirection(targetOffset);
+        final int left = calMainDirection(targetOffset);
+        final int top = calOtherDirection(targetOffset);
         if (mOrientation == VERTICAL) {
             layoutDecorated(scrap, mSpaceInOther + left, mSpaceMain + top,
                     mSpaceInOther + left + mDecoratedMeasurementInOther, mSpaceMain + top + mDecoratedMeasurement);
@@ -639,7 +640,16 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     public void setInfinite(boolean enable) {
+        assertNotInLayoutOrScroll(null);
+        if (enable == mInfinite) {
+            return;
+        }
         mInfinite = enable;
+        requestLayout();
+    }
+
+    public boolean getInfinite() {
+        return mInfinite;
     }
 
     /**
@@ -662,8 +672,17 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         mSmoothScrollbarEnabled = enabled;
     }
 
-    public void setEnableElevation(boolean mSelectInFront) {
-        this.mEnableViewOrder = mSelectInFront;
+    public void setEnableBringCenterToFront(boolean bringCenterToTop) {
+        assertNotInLayoutOrScroll(null);
+        if (mEnableBringCenterToFront == bringCenterToTop) {
+            return;
+        }
+        this.mEnableBringCenterToFront = bringCenterToTop;
+        requestLayout();
+    }
+
+    public boolean getEnableBringCenterToFront() {
+        return mEnableBringCenterToFront;
     }
 
     /**
@@ -672,7 +691,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
      * @return True if smooth scrollbar is enabled, false otherwise.
      * @see #setSmoothScrollbarEnabled(boolean)
      */
-    public boolean isSmoothScrollbarEnabled() {
+    public boolean getSmoothScrollbarEnabled() {
         return mSmoothScrollbarEnabled;
     }
 

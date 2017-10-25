@@ -1,4 +1,4 @@
-package rouchuan.customlayoutmanager;
+package com.leochuan;
 
 import android.support.v7.widget.RecyclerView;
 

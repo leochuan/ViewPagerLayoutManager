@@ -1,9 +1,7 @@
-package com.rouchuan;
+package com.leochuan;
 
 import android.os.Build;
 import android.view.View;
-
-import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
  * Created by Dajavu on 12/7/16.
@@ -23,7 +21,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     public CircleScaleLayoutManager(boolean reverseLayout) {
         super(HORIZONTAL, reverseLayout);
-        setEnableElevation(true);
+        setEnableBringCenterToFront(true);
     }
 
     @Override

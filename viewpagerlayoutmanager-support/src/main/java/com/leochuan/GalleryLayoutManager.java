@@ -1,8 +1,6 @@
-package com.rouchuan;
+package com.leochuan;
 
 import android.view.View;
-
-import rouchuan.customlayoutmanager.ViewPagerLayoutManager;
 
 /**
  * Created by Dajavu on 12/7/16.
