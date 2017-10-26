@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">ViewPagerLayoutManager</string>
     <string name="setting">Setting</string>
+    <string name="circle_layout_manger">Circle LayoutManager</string>
+    <string name="circle_scale_layout_manager">Circle Scale LayoutManager</string>
+    <string name="elevate_scale_layout_manager">Elevate Scale LayoutManager</string>
+    <string name="gallery_layout_manager">Gallery LayoutManager</string>
+    <string name="rotate_layout_manager">Rotate LayoutManager</string>
+    <string name="scale_layout_manager">Scale LayoutManager</string>
+
     <string name="radius">Radius</string>
     <string name="rotate_speed">Rotate Speed</string>
     <string name="angle_interval">Interval Angle</string>

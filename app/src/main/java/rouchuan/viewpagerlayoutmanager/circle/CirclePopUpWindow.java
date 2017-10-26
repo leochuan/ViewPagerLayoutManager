@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
-import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -17,16 +17,16 @@ import com.leochuan.CircleLayoutManager;
 import java.util.Locale;
 
 import rouchuan.viewpagerlayoutmanager.R;
+import rouchuan.viewpagerlayoutmanager.SettingPopUpWindow;
 import rouchuan.viewpagerlayoutmanager.Util;
-
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
  * Created by Dajavu on 25/10/2017.
  */
 
 @SuppressLint("InflateParams")
-class CirclePopUpWindow extends PopupWindow
+@SuppressWarnings("FieldCanBeLocal")
+class CirclePopUpWindow extends SettingPopUpWindow
         implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
 
     private CircleLayoutManager circleLayoutManager;
@@ -45,9 +45,9 @@ class CirclePopUpWindow extends PopupWindow
         this.circleLayoutManager = circleLayoutManager;
         this.recyclerView = recyclerView;
         setOutsideTouchable(true);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.dialog_circle_setting, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_circle_setting, null);
         setWidth(Util.Dp2px(context, 400));
+        setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         setContentView(view);
 
         scrollListener = new CenterScrollListener();
@@ -138,6 +138,7 @@ class CirclePopUpWindow extends PopupWindow
                 circleLayoutManager.setEnableBringCenterToFront(isChecked);
                 break;
             case R.id.s_reverse:
+                circleLayoutManager.scrollToPosition(0);
                 circleLayoutManager.setReverseLayout(isChecked);
         }
     }

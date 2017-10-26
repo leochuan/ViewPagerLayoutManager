@@ -88,6 +88,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/toggle_reverse"
+            android:textColor="#fff" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/s_reverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/toggle_infinite"
             android:textColor="#fff" />
 
@@ -129,24 +147,6 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/s_scroll_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/toggle_reverse"
-            android:textColor="#fff" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/s_reverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end" />

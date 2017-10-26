@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="rouchuan.viewpagerlayoutmanager.circle.CircleLayoutActivity">
+        <activity android:name="rouchuan.viewpagerlayoutmanager.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="rouchuan.viewpagerlayoutmanager.MainActivity" />
+        <activity android:name="rouchuan.viewpagerlayoutmanager.circle.CircleLayoutActivity"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>
