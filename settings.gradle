@@ -1,1 +1,1 @@
-include ':app', ':viewpagerlayoutmanager-core', ':viewpagerlayoutmanager-support'
+include ':app', ':viewpagerlayoutmanager-core', ':viewpagerlayoutmanager'

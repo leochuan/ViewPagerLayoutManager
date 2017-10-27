@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "rouchuan.circlelayoutmanager"
-        minSdkVersion 11
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -28,5 +28,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
-    compile project(path: ':viewpagerlayoutmanager-support')
+    compile project(path: ':viewpagerlayoutmanager')
 }

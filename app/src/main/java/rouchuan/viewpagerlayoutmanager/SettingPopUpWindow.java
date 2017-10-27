@@ -1,6 +1,7 @@
 package rouchuan.viewpagerlayoutmanager;
 
 import android.content.Context;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 /**
@@ -10,5 +11,8 @@ import android.widget.PopupWindow;
 public abstract class SettingPopUpWindow extends PopupWindow {
     public SettingPopUpWindow(Context context) {
         super(context);
+        setOutsideTouchable(true);
+        setWidth(Util.Dp2px(context, 400));
+        setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
     }
 }

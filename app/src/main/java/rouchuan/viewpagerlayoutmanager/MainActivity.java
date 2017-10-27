@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 
 import rouchuan.viewpagerlayoutmanager.circle.CircleLayoutActivity;
+import rouchuan.viewpagerlayoutmanager.circlescale.CircleScaleLayoutActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public final static String INTENT_TITLE = "title";
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(CircleLayoutActivity.class, ((AppCompatButton)v).getText());
                 break;
             case R.id.bt_circle_scale:
+                startActivity(CircleScaleLayoutActivity.class, ((AppCompatButton)v).getText());
                 break;
             case R.id.bt_elevate_scale:
                 break;

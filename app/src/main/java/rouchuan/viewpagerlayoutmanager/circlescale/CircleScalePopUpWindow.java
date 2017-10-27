@@ -1,4 +1,4 @@
-package rouchuan.viewpagerlayoutmanager.circle;
+package rouchuan.viewpagerlayoutmanager.circlescale;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,37 +11,37 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.leochuan.CenterScrollListener;
-import com.leochuan.CircleLayoutManager;
+import com.leochuan.CircleScaleLayoutManager;
 
 import rouchuan.viewpagerlayoutmanager.R;
 import rouchuan.viewpagerlayoutmanager.SettingPopUpWindow;
 import rouchuan.viewpagerlayoutmanager.Util;
 
 /**
- * Created by Dajavu on 25/10/2017.
+ * Created by Dajavu on 27/10/2017.
  */
 
 @SuppressLint("InflateParams")
 @SuppressWarnings("FieldCanBeLocal")
-class CirclePopUpWindow extends SettingPopUpWindow
+public class CircleScalePopUpWindow extends SettingPopUpWindow
         implements SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
 
-    private CircleLayoutManager circleLayoutManager;
+    private CircleScaleLayoutManager circleScaleLayoutManager;
     private RecyclerView recyclerView;
     private TextView radiusValue;
     private TextView intervalValue;
     private TextView speedValue;
-    private SwitchCompat centerInFront;
+    private TextView centerScaleValue;
     private SwitchCompat infinite;
     private SwitchCompat autoCenter;
     private SwitchCompat reverse;
     private CenterScrollListener scrollListener;
 
-    CirclePopUpWindow(Context context, CircleLayoutManager circleLayoutManager, RecyclerView recyclerView) {
+    CircleScalePopUpWindow(Context context, CircleScaleLayoutManager circleScaleLayoutManager, RecyclerView recyclerView) {
         super(context);
-        this.circleLayoutManager = circleLayoutManager;
+        this.circleScaleLayoutManager = circleScaleLayoutManager;
         this.recyclerView = recyclerView;
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_circle_setting, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_circle_scale_setting, null);
         setContentView(view);
 
         scrollListener = new CenterScrollListener();
@@ -49,12 +49,13 @@ class CirclePopUpWindow extends SettingPopUpWindow
         SeekBar radius = (SeekBar) view.findViewById(R.id.sb_radius);
         SeekBar interval = (SeekBar) view.findViewById(R.id.sb_interval);
         SeekBar speed = (SeekBar) view.findViewById(R.id.sb_speed);
+        SeekBar centerScale = (SeekBar) view.findViewById(R.id.sb_center_scale);
 
         radiusValue = (TextView) view.findViewById(R.id.radius_value);
         intervalValue = (TextView) view.findViewById(R.id.interval_value);
         speedValue = (TextView) view.findViewById(R.id.speed_value);
+        centerScaleValue = (TextView) view.findViewById(R.id.center_scale_value);
 
-        centerInFront = (SwitchCompat) view.findViewById(R.id.s_center_in_front);
         infinite = (SwitchCompat) view.findViewById(R.id.s_infinite);
         autoCenter = (SwitchCompat) view.findViewById(R.id.s_auto_center);
         reverse = (SwitchCompat) view.findViewById(R.id.s_reverse);
@@ -62,21 +63,22 @@ class CirclePopUpWindow extends SettingPopUpWindow
         radius.setOnSeekBarChangeListener(this);
         interval.setOnSeekBarChangeListener(this);
         speed.setOnSeekBarChangeListener(this);
+        centerScale.setOnSeekBarChangeListener(this);
 
         final int maxRadius = Util.Dp2px(radius.getContext(), 400);
-        radius.setProgress((int) (circleLayoutManager.getRadius() * 1f / maxRadius * 100));
-        interval.setProgress((int) (circleLayoutManager.getAngleInterval() / 0.9f));
-        speed.setProgress((int) (circleLayoutManager.getRotateSpeed() / 0.005f));
+        radius.setProgress((int) (circleScaleLayoutManager.getRadius() * 1f / maxRadius * 100));
+        interval.setProgress((int) (circleScaleLayoutManager.getAngleInterval() / 0.9f));
+        speed.setProgress((int) (circleScaleLayoutManager.getRotateSpeed() / 0.005f));
+        centerScale.setProgress((int) (circleScaleLayoutManager.getCenterScale() * 200f / 3 - 100f / 3));
 
-        radiusValue.setText(String.valueOf(circleLayoutManager.getRadius()));
-        intervalValue.setText(String.valueOf(circleLayoutManager.getAngleInterval()));
-        speedValue.setText(Util.formatFloat(circleLayoutManager.getRotateSpeed()));
+        radiusValue.setText(String.valueOf(circleScaleLayoutManager.getRadius()));
+        intervalValue.setText(String.valueOf(circleScaleLayoutManager.getAngleInterval()));
+        speedValue.setText(Util.formatFloat(circleScaleLayoutManager.getRotateSpeed()));
+        centerScaleValue.setText(Util.formatFloat(circleScaleLayoutManager.getCenterScale()));
 
-        centerInFront.setChecked(circleLayoutManager.getEnableBringCenterToFront());
-        infinite.setChecked(circleLayoutManager.getInfinite());
-        reverse.setChecked(circleLayoutManager.getReverseLayout());
+        infinite.setChecked(circleScaleLayoutManager.getInfinite());
+        reverse.setChecked(circleScaleLayoutManager.getReverseLayout());
 
-        centerInFront.setOnCheckedChangeListener(this);
         infinite.setOnCheckedChangeListener(this);
         autoCenter.setOnCheckedChangeListener(this);
         reverse.setOnCheckedChangeListener(this);
@@ -88,17 +90,22 @@ class CirclePopUpWindow extends SettingPopUpWindow
             case R.id.sb_radius:
                 final int maxRadius = Util.Dp2px(seekBar.getContext(), 400);
                 final int radius = (int) (progress / 100f * maxRadius);
-                circleLayoutManager.setRadius(radius);
+                circleScaleLayoutManager.setRadius(radius);
                 radiusValue.setText(String.valueOf(radius));
                 break;
             case R.id.sb_interval:
                 final int interval = (int) (progress * 0.9f);
-                circleLayoutManager.setAngleInterval(interval);
+                circleScaleLayoutManager.setAngleInterval(interval);
                 intervalValue.setText(String.valueOf(interval));
+                break;
+            case R.id.sb_center_scale:
+                final float scale = (progress + 100f / 3) * 3 / 200;
+                circleScaleLayoutManager.setCenterScale(scale);
+                centerScaleValue.setText(Util.formatFloat(scale));
                 break;
             case R.id.sb_speed:
                 final float speed = progress * 0.005f;
-                circleLayoutManager.setRotateSpeed(speed);
+                circleScaleLayoutManager.setRotateSpeed(speed);
                 speedValue.setText(Util.formatFloat(speed));
                 break;
         }
@@ -119,7 +126,7 @@ class CirclePopUpWindow extends SettingPopUpWindow
         switch (buttonView.getId()) {
             case R.id.s_infinite:
                 recyclerView.scrollToPosition(0);
-                circleLayoutManager.setInfinite(isChecked);
+                circleScaleLayoutManager.setInfinite(isChecked);
                 break;
             case R.id.s_auto_center:
                 if (isChecked) {
@@ -128,12 +135,9 @@ class CirclePopUpWindow extends SettingPopUpWindow
                     recyclerView.removeOnScrollListener(scrollListener);
                 }
                 break;
-            case R.id.s_center_in_front:
-                circleLayoutManager.setEnableBringCenterToFront(isChecked);
-                break;
             case R.id.s_reverse:
-                circleLayoutManager.scrollToPosition(0);
-                circleLayoutManager.setReverseLayout(isChecked);
+                circleScaleLayoutManager.scrollToPosition(0);
+                circleScaleLayoutManager.setReverseLayout(isChecked);
         }
     }
 }

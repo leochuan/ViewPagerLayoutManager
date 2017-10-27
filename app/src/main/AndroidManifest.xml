@@ -16,7 +16,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="rouchuan.viewpagerlayoutmanager.circle.CircleLayoutActivity"
+        <activity android:name=".circle.CircleLayoutActivity"
+            android:parentActivityName=".MainActivity"/>
+
+        <activity android:name=".circlescale.CircleScaleLayoutActivity"
             android:parentActivityName=".MainActivity"/>
     </application>
 

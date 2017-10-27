@@ -60,28 +60,36 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     }
 
     public void setRadius(int radius) {
+        assertNotInLayoutOrScroll(null);
+        if (this.radius == radius) return;
         this.radius = radius;
         removeAllViews();
-        requestLayout();
     }
 
     public void setAngleInterval(int angleInterval) {
+        assertNotInLayoutOrScroll(null);
+        if (this.angleInterval == angleInterval) return;
         this.angleInterval = angleInterval;
         removeAllViews();
-        requestLayout();
     }
 
     public void setRotateSpeed(float rotateSpeed) {
+        assertNotInLayoutOrScroll(null);
+        if (this.rotateSpeed == rotateSpeed) return;
         this.rotateSpeed = rotateSpeed;
         requestLayout();
     }
 
     public void setMaxRemoveAngle(float maxRemoveAngle) {
+        assertNotInLayoutOrScroll(null);
+        if (this.maxRemoveAngle == maxRemoveAngle) return;
         this.maxRemoveAngle = maxRemoveAngle;
         requestLayout();
     }
 
     public void setMinRemoveAngle(float minRemoveAngle) {
+        assertNotInLayoutOrScroll(null);
+        if (this.minRemoveAngle == minRemoveAngle) return;
         this.minRemoveAngle = minRemoveAngle;
         requestLayout();
     }
@@ -93,7 +101,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected void setUp() {
-        radius = radius == Integer.MIN_VALUE ? mDecoratedMeasurementInOther : radius;
+        radius = radius == Builder.INVALID_VALUE ? mDecoratedMeasurementInOther : radius;
     }
 
     @Override
@@ -127,9 +135,10 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        if (getEnableBringCenterToFront())
+        if (getEnableBringCenterToFront() && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return calculateElevation(targetOffset);
-        else return super.setViewElevation(itemView, targetOffset);
+        }
+        return super.setViewElevation(itemView, targetOffset);
     }
 
     @Override

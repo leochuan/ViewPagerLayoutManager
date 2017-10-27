@@ -11,8 +11,9 @@
     <string name="radius">Radius</string>
     <string name="rotate_speed">Rotate Speed</string>
     <string name="angle_interval">Interval Angle</string>
+    <string name="center_scale">Center Scale</string>
     <string name="toggle_infinite">Toggle Infinite</string>
     <string name="toggle_bring_center_in_front">Toggle Bring Center In Front</string>
-    <string name="toggle_scroll_back">Toggle Scroll Back</string>
+    <string name="toggle_auto_center">Toggle Auto Center</string>
     <string name="toggle_reverse">Toggle Reverse</string>
 </resources>

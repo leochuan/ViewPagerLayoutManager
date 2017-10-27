@@ -64,6 +64,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/center_scale"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/center_scale_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textColor="#fff" />
+    </FrameLayout>
+
+    <SeekBar
+        android:id="@+id/sb_center_scale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/rotate_speed"
             android:textColor="#fff" />
 
@@ -111,24 +135,6 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/s_infinite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/toggle_bring_center_in_front"
-            android:textColor="#fff" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/s_center_in_front"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end" />
