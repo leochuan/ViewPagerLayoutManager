@@ -66,11 +66,11 @@ class CirclePopUpWindow extends SettingPopUpWindow
         final int maxRadius = Util.Dp2px(radius.getContext(), 400);
         radius.setProgress((int) (circleLayoutManager.getRadius() * 1f / maxRadius * 100));
         interval.setProgress((int) (circleLayoutManager.getAngleInterval() / 0.9f));
-        speed.setProgress((int) (circleLayoutManager.getRotateSpeed() / 0.005f));
+        speed.setProgress((int) (circleLayoutManager.getMoveSpeed() / 0.005f));
 
         radiusValue.setText(String.valueOf(circleLayoutManager.getRadius()));
         intervalValue.setText(String.valueOf(circleLayoutManager.getAngleInterval()));
-        speedValue.setText(Util.formatFloat(circleLayoutManager.getRotateSpeed()));
+        speedValue.setText(Util.formatFloat(circleLayoutManager.getMoveSpeed()));
 
         centerInFront.setChecked(circleLayoutManager.getEnableBringCenterToFront());
         infinite.setChecked(circleLayoutManager.getInfinite());
@@ -98,7 +98,7 @@ class CirclePopUpWindow extends SettingPopUpWindow
                 break;
             case R.id.sb_speed:
                 final float speed = progress * 0.005f;
-                circleLayoutManager.setRotateSpeed(speed);
+                circleLayoutManager.setMoveSpeed(speed);
                 speedValue.setText(Util.formatFloat(speed));
                 break;
         }

@@ -16,11 +16,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/radius"
+            android:text="@string/item_space"
             android:textColor="#fff" />
 
         <TextView
-            android:id="@+id/radius_value"
+            android:id="@+id/item_space"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -28,7 +28,7 @@
     </FrameLayout>
 
     <SeekBar
-        android:id="@+id/sb_radius"
+        android:id="@+id/sb_item_space"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -40,11 +40,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/angle_interval"
+            android:text="@string/center_scale"
             android:textColor="#fff" />
 
         <TextView
-            android:id="@+id/interval_value"
+            android:id="@+id/center_scale_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -52,7 +52,7 @@
     </FrameLayout>
 
     <SeekBar
-        android:id="@+id/sb_interval"
+        android:id="@+id/sb_center_scale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -124,11 +124,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/toggle_bring_center_in_front"
+            android:text="@string/change_orientation"
             android:textColor="#fff" />
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/s_center_in_front"
+            android:id="@+id/s_change_orientation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end" />

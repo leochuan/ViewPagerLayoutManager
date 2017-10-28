@@ -12,7 +12,7 @@ public abstract class SettingPopUpWindow extends PopupWindow {
     public SettingPopUpWindow(Context context) {
         super(context);
         setOutsideTouchable(true);
-        setWidth(Util.Dp2px(context, 400));
+        setWidth(Util.Dp2px(context, 320));
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
     }
 }

@@ -8,7 +8,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -83,14 +82,14 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     private boolean mEnableBringCenterToFront;
 
     /**
+     * ugly code for fix bug caused by float
+     */
+    private boolean mIntegerDy = false;
+
+    /**
      * @return the mInterval of each item's mOffset
      */
     protected abstract float setInterval();
-
-    /**
-     * You can set up your own properties here or change the exist properties like mSpaceMain and mSpaceInOther
-     */
-    protected abstract void setUp();
 
     protected abstract void setItemViewProperty(View itemView, float targetOffset);
 
@@ -199,7 +198,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
      * @return Current orientation,  either {@link #HORIZONTAL} or {@link #VERTICAL}
      * @see #setOrientation(int)
      */
-    public int getOrientation() {
+    int getOrientation() {
         return mOrientation;
     }
 
@@ -209,7 +208,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
      *
      * @param orientation {@link #HORIZONTAL} or {@link #VERTICAL}
      */
-    public void setOrientation(int orientation) {
+    void setOrientation(int orientation) {
         if (orientation != HORIZONTAL && orientation != VERTICAL) {
             throw new IllegalArgumentException("invalid orientation:" + orientation);
         }
@@ -219,7 +218,21 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         }
         mOrientation = orientation;
         mOrientationHelper = null;
-        requestLayout();
+        removeAllViews();
+    }
+
+    /**
+     * see {@link #mIntegerDy}
+     */
+    public boolean isIntegerDy() {
+        return mIntegerDy;
+    }
+
+    /**
+     * see {@link #mIntegerDy}
+     */
+    public void setIntegerDy(boolean mIntegerDy) {
+        this.mIntegerDy = mIntegerDy;
     }
 
     /**
@@ -259,7 +272,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
             return;
         }
         mReverseLayout = reverseLayout;
-        requestLayout();
+        removeAllViews();
     }
 
     /**
@@ -351,6 +364,13 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         if (mOrientationHelper == null) {
             mOrientationHelper = OrientationHelper.createOrientationHelper(this, mOrientation);
         }
+    }
+
+    /**
+     * You can set up your own properties here or change the exist properties like mSpaceMain and mSpaceInOther
+     */
+    protected void setUp() {
+
     }
 
     private float getProperty(int position) {
@@ -462,6 +482,9 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         int willScroll = dy;
 
         float realDx = dy / getDistanceRatio();
+        if (Math.abs(realDx) < 0.00000001f) {
+            return 0;
+        }
         float targetOffset = mOffset + realDx;
 
         //handle the boundary
@@ -471,7 +494,11 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
             willScroll = (int) ((getMaxOffset() - mOffset) * getDistanceRatio());
         }
 
-        realDx = willScroll / getDistanceRatio();
+        if (mIntegerDy) {
+            realDx = (int) (willScroll / getDistanceRatio());
+        } else {
+            realDx = willScroll / getDistanceRatio();
+        }
 
         mOffset += realDx;
 

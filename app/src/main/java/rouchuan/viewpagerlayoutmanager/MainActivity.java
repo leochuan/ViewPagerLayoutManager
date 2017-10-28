@@ -8,6 +8,7 @@ import android.view.View;
 
 import rouchuan.viewpagerlayoutmanager.circle.CircleLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.circlescale.CircleScaleLayoutActivity;
+import rouchuan.viewpagerlayoutmanager.scale.ScaleLayoutActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public final static String INTENT_TITLE = "title";
@@ -28,10 +29,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_circle:
-                startActivity(CircleLayoutActivity.class, ((AppCompatButton)v).getText());
+                startActivity(CircleLayoutActivity.class, v);
                 break;
             case R.id.bt_circle_scale:
-                startActivity(CircleScaleLayoutActivity.class, ((AppCompatButton)v).getText());
+                startActivity(CircleScaleLayoutActivity.class, v);
                 break;
             case R.id.bt_elevate_scale:
                 break;
@@ -40,13 +41,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt_rotate:
                 break;
             case R.id.bt_scale:
+                startActivity(ScaleLayoutActivity.class, v);
                 break;
         }
     }
 
-    private void startActivity(Class clz, CharSequence title) {
+    private void startActivity(Class clz, View view) {
         Intent intent = new Intent(this, clz);
-        intent.putExtra(INTENT_TITLE, title);
+        if (view instanceof AppCompatButton) {
+            intent.putExtra(INTENT_TITLE, ((AppCompatButton) view).getText());
+        }
         startActivity(intent);
     }
 }

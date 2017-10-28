@@ -4,7 +4,8 @@ import android.os.Build;
 import android.view.View;
 
 /**
- * A layoutManager which layouts item in a circle and will change the child's centerScale while scrolling
+ * An implementation of {@link ViewPagerLayoutManager}
+ * which layouts item in a circle and will change the child's centerScale while scrolling
  */
 
 @SuppressWarnings("WeakerAccess")
@@ -12,7 +13,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     private int radius;
     private int angleInterval;
-    private float rotateSpeed;
+    private float moveSpeed;
     private float centerScale;
     private float maxRemoveAngle;
     private float minRemoveAngle;
@@ -26,18 +27,18 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
     }
 
     public CircleScaleLayoutManager(Builder builder) {
-        this(builder.radius, builder.angleInterval, builder.centerScale, builder.rotateSpeed,
+        this(builder.radius, builder.angleInterval, builder.centerScale, builder.moveSpeed,
                 builder.maxRemoveAngle, builder.minRemoveAngle, builder.reverseLayout);
     }
 
-    private CircleScaleLayoutManager(int radius, int angleInterval, float centerScale, float rotateSpeed,
+    private CircleScaleLayoutManager(int radius, int angleInterval, float centerScale, float moveSpeed,
                                      float max, float min, boolean reverseLayout) {
         super(HORIZONTAL, reverseLayout);
         setEnableBringCenterToFront(true);
         this.radius = radius;
         this.angleInterval = angleInterval;
         this.centerScale = centerScale;
-        this.rotateSpeed = rotateSpeed;
+        this.moveSpeed = moveSpeed;
         this.maxRemoveAngle = max;
         this.minRemoveAngle = min;
     }
@@ -54,8 +55,8 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         return centerScale;
     }
 
-    public float getRotateSpeed() {
-        return rotateSpeed;
+    public float getMoveSpeed() {
+        return moveSpeed;
     }
 
     public float getMaxRemoveAngle() {
@@ -87,11 +88,10 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         requestLayout();
     }
 
-    public void setRotateSpeed(float rotateSpeed) {
+    public void setMoveSpeed(float moveSpeed) {
         assertNotInLayoutOrScroll(null);
-        if (this.rotateSpeed == rotateSpeed) return;
-        this.rotateSpeed = rotateSpeed;
-        requestLayout();
+        if (this.moveSpeed == moveSpeed) return;
+        this.moveSpeed = moveSpeed;
     }
 
     public void setMaxRemoveAngle(float maxRemoveAngle) {
@@ -164,7 +164,8 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float getDistanceRatio() {
-        return 1 / rotateSpeed;
+        if (moveSpeed == 0) return Float.MAX_VALUE;
+        return 1 / moveSpeed;
     }
 
     private float calculateScale(View itemView, float targetOffset) {
@@ -186,7 +187,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         private int radius;
         private int angleInterval;
         private float centerScale;
-        private float rotateSpeed;
+        private float moveSpeed;
         private float maxRemoveAngle;
         private float minRemoveAngle;
         private boolean reverseLayout;
@@ -195,7 +196,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
             radius = INVALID_VALUE;
             angleInterval = INTERVAL_ANGLE;
             centerScale = SCALE_RATE;
-            rotateSpeed = 1 / DISTANCE_RATIO;
+            moveSpeed = 1 / DISTANCE_RATIO;
             maxRemoveAngle = 90;
             minRemoveAngle = -90;
             reverseLayout = false;
@@ -216,8 +217,8 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
             return this;
         }
 
-        public Builder setRotateSpeed(int rotateSpeed) {
-            this.rotateSpeed = rotateSpeed;
+        public Builder setMoveSpeed(int moveSpeed) {
+            this.moveSpeed = moveSpeed;
             return this;
         }
 
@@ -237,8 +238,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         }
 
         public CircleScaleLayoutManager build() {
-            return new CircleScaleLayoutManager(radius, angleInterval, centerScale,
-                    rotateSpeed, maxRemoveAngle, minRemoveAngle, reverseLayout);
+            return new CircleScaleLayoutManager(this);
         }
     }
 }

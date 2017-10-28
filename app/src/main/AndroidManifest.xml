@@ -21,6 +21,9 @@
 
         <activity android:name=".circlescale.CircleScaleLayoutActivity"
             android:parentActivityName=".MainActivity"/>
+
+        <activity android:name=".scale.ScaleLayoutActivity"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

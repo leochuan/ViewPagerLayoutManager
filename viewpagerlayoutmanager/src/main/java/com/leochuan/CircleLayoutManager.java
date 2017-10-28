@@ -4,7 +4,8 @@ import android.os.Build;
 import android.view.View;
 
 /**
- * A layoutManager which layouts item in a circle
+ * An implementation of {@link ViewPagerLayoutManager}
+ * which layouts item in a circle
  */
 
 @SuppressWarnings("WeakerAccess")
@@ -12,7 +13,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     private int radius;
     private int angleInterval;
-    private float rotateSpeed;
+    private float moveSpeed;
     private float maxRemoveAngle;
     private float minRemoveAngle;
 
@@ -25,16 +26,16 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     }
 
     public CircleLayoutManager(Builder builder) {
-        this(builder.radius, builder.angleInterval, builder.rotateSpeed, builder.maxRemoveAngle,
+        this(builder.radius, builder.angleInterval, builder.moveSpeed, builder.maxRemoveAngle,
                 builder.minRemoveAngle, builder.reverseLayout);
     }
 
-    private CircleLayoutManager(int radius, int angleInterval, float rotateSpeed,
+    private CircleLayoutManager(int radius, int angleInterval, float moveSpeed,
                                 float max, float min, boolean reverseLayout) {
         super(HORIZONTAL, reverseLayout);
         this.radius = radius;
         this.angleInterval = angleInterval;
-        this.rotateSpeed = rotateSpeed;
+        this.moveSpeed = moveSpeed;
         this.maxRemoveAngle = max;
         this.minRemoveAngle = min;
     }
@@ -47,8 +48,8 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         return angleInterval;
     }
 
-    public float getRotateSpeed() {
-        return rotateSpeed;
+    public float getMoveSpeed() {
+        return moveSpeed;
     }
 
     public float getMaxRemoveAngle() {
@@ -73,11 +74,10 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         removeAllViews();
     }
 
-    public void setRotateSpeed(float rotateSpeed) {
+    public void setMoveSpeed(float moveSpeed) {
         assertNotInLayoutOrScroll(null);
-        if (this.rotateSpeed == rotateSpeed) return;
-        this.rotateSpeed = rotateSpeed;
-        requestLayout();
+        if (this.moveSpeed == moveSpeed) return;
+        this.moveSpeed = moveSpeed;
     }
 
     public void setMaxRemoveAngle(float maxRemoveAngle) {
@@ -148,7 +148,8 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float getDistanceRatio() {
-        return 1 / rotateSpeed;
+        if (moveSpeed == 0) return Float.MAX_VALUE;
+        return 1 / moveSpeed;
     }
 
     private float calculateElevation(float targetOffset) {
@@ -162,7 +163,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
         private int radius;
         private int angleInterval;
-        private float rotateSpeed;
+        private float moveSpeed;
         private float maxRemoveAngle;
         private float minRemoveAngle;
         private boolean reverseLayout;
@@ -170,7 +171,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         public Builder() {
             radius = INVALID_VALUE;
             angleInterval = INTERVAL_ANGLE;
-            rotateSpeed = 1 / DISTANCE_RATIO;
+            moveSpeed = 1 / DISTANCE_RATIO;
             maxRemoveAngle = 90;
             minRemoveAngle = -90;
             reverseLayout = false;
@@ -186,8 +187,8 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
             return this;
         }
 
-        public Builder setRotateSpeed(int rotateSpeed) {
-            this.rotateSpeed = rotateSpeed;
+        public Builder setMoveSpeed(int moveSpeed) {
+            this.moveSpeed = moveSpeed;
             return this;
         }
 
@@ -207,8 +208,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         }
 
         public CircleLayoutManager build() {
-            return new CircleLayoutManager(radius, angleInterval,
-                    rotateSpeed, maxRemoveAngle, minRemoveAngle, reverseLayout);
+            return new CircleLayoutManager(this);
         }
     }
 }
