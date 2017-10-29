@@ -10,16 +10,16 @@ import android.widget.ImageView;
  * Created by Dajavu on 25/10/2017.
  */
 
-public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private static int COUNT = 20;
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.my_image, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(DataAdapter.ViewHolder holder, int position) {
         int index = (position + 1) % 6;
         int res = 0;
         switch (index) {
@@ -42,7 +42,7 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 res = R.mipmap.item6;
                 break;
         }
-        ((ViewHolder) holder).imageView.setImageResource(res);
+        holder.imageView.setImageResource(res);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class DataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return COUNT;
     }
 
-    private class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
         ViewHolder(View itemView) {

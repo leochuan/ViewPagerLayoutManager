@@ -18,7 +18,7 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
  * Please make sure your child view have the same size.
  */
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         implements RecyclerView.SmoothScroller.ScrollVectorProvider {
 
@@ -85,6 +85,10 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
      * ugly code for fix bug caused by float
      */
     private boolean mIntegerDy = false;
+
+    private int mLeftItems;
+
+    private int mRightItems;
 
     /**
      * @return the mInterval of each item's mOffset
@@ -163,7 +167,8 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
             return new SavedState(mPendingSavedState);
         }
         SavedState savedState = new SavedState();
-        savedState.position = getCurrentPositionInternal();
+        savedState.position = mPendingScrollPosition;
+        savedState.offset = mOffset;
         savedState.isReverseLayout = mReverseLayout;
         return savedState;
     }
@@ -337,11 +342,14 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
             mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
             mInterval = setInterval();
             setUp();
+            mLeftItems = (int) Math.abs(minRemoveOffset() / mInterval) + 1;
+            mRightItems = (int) Math.abs(maxRemoveOffset() / mInterval) + 1;
         }
 
         if (mPendingSavedState != null) {
             mReverseLayout = mPendingSavedState.isReverseLayout;
             mPendingScrollPosition = mPendingSavedState.position;
+            mOffset = mPendingSavedState.offset;
         }
 
         if (mPendingScrollPosition != NO_POSITION) {
@@ -350,7 +358,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         }
 
         detachAndScrapAttachedViews(recycler);
-        layoutItems(recycler, state);
+        layoutItems(recycler);
     }
 
     @Override
@@ -374,7 +382,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     private float getProperty(int position) {
-        return !mReverseLayout ? position * mInterval : position * -mInterval;
+        return mReverseLayout ? position * -mInterval : position * mInterval;
     }
 
     @Override
@@ -427,10 +435,11 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
         if (!mSmoothScrollbarEnabled) {
             return !mReverseLayout ?
-                    getCurrentPositionInternal() : getItemCount() - getCurrentPositionInternal() - 1;
+                    getCurrentPosition() : getItemCount() - getCurrentPosition() - 1;
         }
 
-        return !mReverseLayout ? (int) mOffset : (int) (Math.abs(getMinOffset()) + mOffset);
+        final float realOffset = getOffsetOfRightAdapterPosition();
+        return !mReverseLayout ? (int) realOffset : (int) ((getItemCount() - 1) * mInterval + realOffset);
     }
 
     private int computeScrollExtent() {
@@ -442,8 +451,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
             return 1;
         }
 
-        return !mReverseLayout ?
-                (int) (getMaxOffset() / getItemCount()) : (int) Math.abs(getMinOffset() / getItemCount());
+        return (int) mInterval;
     }
 
     private int computeScrollRange() {
@@ -455,7 +463,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
             return getItemCount();
         }
 
-        return !mReverseLayout ? (int) getMaxOffset() : (int) Math.abs(getMinOffset());
+        return (int) (getItemCount() * mInterval);
     }
 
     @Override
@@ -502,61 +510,71 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
         mOffset += realDx;
 
+        // we re-layout all current views in the right place
         for (int i = 0; i < getChildCount(); i++) {
             final View scrap = getChildAt(i);
             final float delta = propertyChangeWhenScroll(scrap) - realDx;
             layoutScrap(scrap, delta);
         }
 
-        layoutItems(recycler, state);
+        //handle recycle
+        layoutItems(recycler);
 
         return willScroll;
     }
 
-    private void layoutItems(RecyclerView.Recycler recycler,
-                             RecyclerView.State state) {
+    private void layoutItems(RecyclerView.Recycler recycler) {
         if (mEnableBringCenterToFront && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             detachAndScrapAttachedViews(recycler);
         } else {
-            //remove the views which is out of range
+            // cause getPosition() return the adapter position, 
+            // so we need to calculate the right offset
+            final float rightOffset = getOffsetOfRightAdapterPosition();
+            
+            //remove the views which are out of range
             for (int i = 0; i < getChildCount(); i++) {
                 final View view = getChildAt(i);
                 final int position = getPosition(view);
-                if (removeCondition(getProperty(position) - mOffset)) {
+                if (removeCondition(getProperty(position) - rightOffset)) {
                     removeAndRecycleView(view, recycler);
                 }
             }
         }
 
-        final int currentPos = getCurrentPositionInternal();
-        final float curOffset = getProperty(currentPos) - mOffset;
+        //make sure that current position start from 0 to 1
+        final int currentPos = mReverseLayout ?
+                -getCurrentPositionOffset() : getCurrentPositionOffset();
+        int start = currentPos - mLeftItems;
+        int end = currentPos + mRightItems;
 
-        int start = (int) (currentPos - Math.abs(((curOffset - minRemoveOffset()) / mInterval))) - 1;
-        int end = (int) (currentPos + Math.abs(((curOffset - maxRemoveOffset()) / mInterval))) + 1;
-
-        if (start < 0 && !mInfinite) start = 0;
         final int itemCount = getItemCount();
-        if (end > itemCount && !mInfinite) end = itemCount;
+        if (!mInfinite) {
+            if (start < 0) start = 0;
+            if (end > itemCount) end = itemCount;
+        }
 
         float lastOrderWeight = Float.MIN_VALUE;
         for (int i = start; i < end; i++) {
             if (!removeCondition(getProperty(i) - mOffset)) {
-                int realIndex = i;
+                // start and end zero base on current position, 
+                // so we need to calculate the adapter position
+                int adapterPosition = i;
                 if (i >= itemCount) {
-                    realIndex %= itemCount;
+                    adapterPosition %= itemCount;
                 } else if (i < 0) {
-                    int delta = (-realIndex) % itemCount;
+                    int delta = (-adapterPosition) % itemCount;
                     if (delta == 0) delta = itemCount;
-                    realIndex = itemCount - delta;
+                    adapterPosition = itemCount - delta;
                 }
-                if (findViewByPosition(i) == null) {
-                    final View scrap = recycler.getViewForPosition(realIndex);
+                if (findViewByPosition(adapterPosition) == null) {
+                    final View scrap = recycler.getViewForPosition(adapterPosition);
                     measureChildWithMargins(scrap, 0, 0);
                     resetViewProperty(scrap);
+                    // we need i to calculate the real offset of current view
                     final float targetOffset = getProperty(i) - mOffset;
                     layoutScrap(scrap, targetOffset);
                     final float orderWeight = mEnableBringCenterToFront ? setViewElevation(scrap, targetOffset)
-                            : realIndex;
+                            : adapterPosition;
                     if (orderWeight > lastOrderWeight) {
                         addView(scrap);
                     } else {
@@ -566,22 +584,6 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
                 }
             }
         }
-
-        // handle cycle jump
-        if (mInfinite) {
-            if (getCurrentPositionInternal() == 0) {
-                removeAndRecycleAllViews(recycler);
-                internalScrollToPosition(itemCount, recycler, state);
-            } else if (getCurrentPositionInternal() == itemCount + 1) {
-                removeAndRecycleAllViews(recycler);
-                internalScrollToPosition(1, recycler, state);
-            }
-        }
-    }
-
-    private void internalScrollToPosition(int position, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        mOffset = mReverseLayout ? position * -mInterval : position * mInterval;
-        layoutItems(recycler, state);
     }
 
     private boolean removeCondition(float targetOffset) {
@@ -598,13 +600,11 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     private float getMaxOffset() {
-        return !mReverseLayout ?
-                (mInfinite ? (getItemCount() + 1) : (getItemCount() - 1)) * mInterval : 0;
+        return !mReverseLayout ? (getItemCount() - 1) * mInterval : 0;
     }
 
     private float getMinOffset() {
-        return !mReverseLayout ?
-                0 : -(mInfinite ? (getItemCount() + 1) : (getItemCount() - 1)) * mInterval;
+        return !mReverseLayout ? 0 : -(getItemCount() - 1) * mInterval;
     }
 
     private void layoutScrap(View scrap, float targetOffset) {
@@ -628,10 +628,18 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         return mOrientation == VERTICAL ? (int) targetOffset : 0;
     }
 
+    /**
+     * when the target offset reach this,
+     * the view will be removed and recycled in {@link #layoutItems(RecyclerView.Recycler)}
+     */
     protected float maxRemoveOffset() {
         return mOrientationHelper.getTotalSpace() - mSpaceMain;
     }
 
+    /**
+     * when the target offset reach this,
+     * the view will be removed and recycled in {@link #layoutItems(RecyclerView.Recycler)}
+     */
     protected float minRemoveOffset() {
         return -mDecoratedMeasurement - mOrientationHelper.getStartAfterPadding() - mSpaceMain;
     }
@@ -647,19 +655,52 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     public int getCurrentPosition() {
-        int position = getCurrentPositionInternal();
-        if (mInfinite && position > getItemCount()) return position - getItemCount();
-        else if (mInfinite && position < 0) return position + getItemCount();
+        int position = getCurrentPositionOffset();
+        if (!mInfinite) return Math.abs(position);
+        position = !mReverseLayout ?
+                //take care of position = getItemCount()
+                (position >= 0 ?
+                        position % getItemCount() :
+                        getItemCount() + position % getItemCount()) :
+                (position > 0 ?
+                        getItemCount() - position % getItemCount() :
+                        -position % getItemCount());
         return position;
     }
 
-    private int getCurrentPositionInternal() {
-        return Math.round(Math.abs(mOffset) / mInterval);
+    private int getCurrentPositionOffset() {
+        return Math.round(mOffset / mInterval);
     }
 
-    public int getOffsetCenterView() {
-        return (int) ((getCurrentPositionInternal() * (!mReverseLayout ?
-                mInterval : -mInterval) - mOffset) * getDistanceRatio());
+    /**
+     * Sometimes we need to get the right offset of matching adapter position
+     * cause when {@link #mInfinite} is set true, there will be no limitation of {@link #mOffset}
+     */
+    private float getOffsetOfRightAdapterPosition() {
+        if (mReverseLayout)
+            return mInfinite ?
+                    (mOffset <= 0 ?
+                            (mOffset % (mInterval * getItemCount())) :
+                            (getItemCount() * -mInterval + mOffset % (mInterval * getItemCount()))) :
+                    mOffset;
+        else
+            return mInfinite ?
+                    (mOffset >= 0 ?
+                            (mOffset % (mInterval * getItemCount())) :
+                            (getItemCount() * mInterval + mOffset % (mInterval * getItemCount()))) :
+                    mOffset;
+    }
+
+    /**
+     * used by {@link CenterScrollListener} to center the current view
+     *
+     * @return the dy between center and current position
+     */
+    public int getOffsetToCenter() {
+        if (mInfinite)
+            return (int) ((getCurrentPositionOffset() * mInterval - mOffset) * getDistanceRatio());
+        return (int) ((getCurrentPosition() *
+                (!mReverseLayout ? mInterval : -mInterval) - mOffset) * getDistanceRatio());
     }
 
     public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
@@ -724,6 +765,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
     private static class SavedState implements Parcelable {
         int position;
+        float offset;
         boolean isReverseLayout;
 
         SavedState() {
@@ -732,11 +774,13 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
         SavedState(Parcel in) {
             position = in.readInt();
+            offset = in.readFloat();
             isReverseLayout = in.readInt() == 1;
         }
 
         public SavedState(SavedState other) {
             position = other.position;
+            offset = other.offset;
             isReverseLayout = other.isReverseLayout;
         }
 
@@ -748,6 +792,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(position);
+            dest.writeFloat(offset);
             dest.writeInt(isReverseLayout ? 1 : 0);
         }
 

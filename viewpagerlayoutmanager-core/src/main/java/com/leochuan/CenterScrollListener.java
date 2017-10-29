@@ -31,7 +31,7 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener {
                 mAutoSet = false;
             } else {
                 final int delta;
-                delta = ((ViewPagerLayoutManager) layoutManager).getOffsetCenterView();
+                delta = ((ViewPagerLayoutManager) layoutManager).getOffsetToCenter();
                 if (delta != 0) {
                     if (((ViewPagerLayoutManager) layoutManager).getOrientation() == ViewPagerLayoutManager.VERTICAL)
                         recyclerView.smoothScrollBy(0, delta);

@@ -65,8 +65,8 @@ public class ScalePopUpWindow extends SettingPopUpWindow
         centerScale.setOnSeekBarChangeListener(this);
 
         itemSpace.setProgress(scaleLayoutManager.getItemSpace() / 2);
-        speed.setProgress((int) (scaleLayoutManager.getMoveSpeed() / 0.05f));
-        centerScale.setProgress((int) (scaleLayoutManager.getCenterScale() * 200f / 3 - 100f / 3));
+        speed.setProgress(Math.round(scaleLayoutManager.getMoveSpeed() / 0.05f));
+        centerScale.setProgress(Math.round(scaleLayoutManager.getCenterScale() * 200f / 3 - 100f / 3));
 
         itemSpaceValue.setText(String.valueOf(scaleLayoutManager.getItemSpace()));
         speedValue.setText(Util.formatFloat(scaleLayoutManager.getMoveSpeed()));

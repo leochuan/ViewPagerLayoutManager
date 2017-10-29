@@ -64,9 +64,9 @@ class CirclePopUpWindow extends SettingPopUpWindow
         speed.setOnSeekBarChangeListener(this);
 
         final int maxRadius = Util.Dp2px(radius.getContext(), 400);
-        radius.setProgress((int) (circleLayoutManager.getRadius() * 1f / maxRadius * 100));
-        interval.setProgress((int) (circleLayoutManager.getAngleInterval() / 0.9f));
-        speed.setProgress((int) (circleLayoutManager.getMoveSpeed() / 0.005f));
+        radius.setProgress(Math.round(circleLayoutManager.getRadius() * 1f / maxRadius * 100));
+        interval.setProgress(Math.round(circleLayoutManager.getAngleInterval() / 0.9f));
+        speed.setProgress(Math.round(circleLayoutManager.getMoveSpeed() / 0.005f));
 
         radiusValue.setText(String.valueOf(circleLayoutManager.getRadius()));
         intervalValue.setText(String.valueOf(circleLayoutManager.getAngleInterval()));
@@ -87,12 +87,12 @@ class CirclePopUpWindow extends SettingPopUpWindow
         switch (seekBar.getId()) {
             case R.id.sb_radius:
                 final int maxRadius = Util.Dp2px(seekBar.getContext(), 400);
-                final int radius = (int) (progress / 100f * maxRadius);
+                final int radius = Math.round(progress / 100f * maxRadius);
                 circleLayoutManager.setRadius(radius);
                 radiusValue.setText(String.valueOf(radius));
                 break;
             case R.id.sb_interval:
-                final int interval = (int) (progress * 0.9f);
+                final int interval = Math.round(progress * 0.9f);
                 circleLayoutManager.setAngleInterval(interval);
                 intervalValue.setText(String.valueOf(interval));
                 break;
