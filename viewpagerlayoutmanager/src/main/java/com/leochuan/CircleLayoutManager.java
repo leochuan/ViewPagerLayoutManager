@@ -8,7 +8,7 @@ import android.view.View;
  * which layouts item in a circle
  */
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess","unused"})
 public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     private int radius;

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 
+import rouchuan.viewpagerlayoutmanager.carousel.CarouselLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.circle.CircleLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.circlescale.CircleScaleLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.gallery.GalleryLayoutActivity;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(CircleScaleLayoutActivity.class, v);
                 break;
             case R.id.bt_elevate_scale:
+                startActivity(CarouselLayoutActivity.class, v);
                 break;
             case R.id.bt_gallery:
                 startActivity(GalleryLayoutActivity.class, v);

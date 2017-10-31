@@ -8,7 +8,7 @@ import android.view.View;
  * which layouts item in a circle and will change the child's centerScale while scrolling
  */
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess","unused"})
 public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     private int radius;

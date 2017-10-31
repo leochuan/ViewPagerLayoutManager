@@ -15,21 +15,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".circle.CircleLayoutActivity"
             android:parentActivityName=".MainActivity" />
-
         <activity
             android:name=".circlescale.CircleScaleLayoutActivity"
             android:parentActivityName=".MainActivity" />
-
         <activity
             android:name=".scale.ScaleLayoutActivity"
             android:parentActivityName=".MainActivity" />
-
         <activity
             android:name=".gallery.GalleryLayoutActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".carousel.CarouselLayoutActivity"
             android:parentActivityName=".MainActivity" />
     </application>
 

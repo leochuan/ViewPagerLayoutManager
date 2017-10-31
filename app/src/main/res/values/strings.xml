@@ -13,6 +13,7 @@
     <string name="move_speed">Move Speed</string>
     <string name="angle_interval">Interval Angle</string>
     <string name="center_scale">Center Scale</string>
+    <string name="min_scale">Min Scale</string>
     <string name="max_alpha">Max Alpha</string>
     <string name="min_alpha">Min Alpha</string>
     <string name="toggle_infinite">Toggle Infinite</string>

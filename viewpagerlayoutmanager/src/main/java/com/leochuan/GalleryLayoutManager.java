@@ -7,7 +7,7 @@ import android.view.View;
  * which will change rotate x or rotate y
  */
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess","unused"})
 public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
     private int itemSpace;

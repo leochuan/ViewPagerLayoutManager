@@ -1,42 +1,44 @@
 package com.leochuan;
 
+import android.os.Build;
 import android.view.View;
 
 /**
  * An implementation of {@link ViewPagerLayoutManager}
- * which zooms the center item
+ * which layouts items like carousel
  */
 
-@SuppressWarnings({"WeakerAccess","unused"})
-public class ScaleLayoutManager extends ViewPagerLayoutManager {
+@SuppressWarnings({"WeakerAccess", "unused"})
+public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
     private int itemSpace;
-    private float centerScale;
+    private float minScale;
     private float moveSpeed;
 
-    public ScaleLayoutManager(int itemSpace) {
+    public CarouselLayoutManager(int itemSpace) {
         this(new Builder(itemSpace));
     }
 
-    public ScaleLayoutManager(int itemSpace, int orientation) {
+    public CarouselLayoutManager(int itemSpace, int orientation) {
         this(new Builder(itemSpace).setOrientation(orientation));
     }
 
-    public ScaleLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
+    public CarouselLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
         this(new Builder(itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
     }
 
-    public ScaleLayoutManager(Builder builder) {
-        this(builder.itemSpace, builder.centerScale,
+    public CarouselLayoutManager(Builder builder) {
+        this(builder.itemSpace, builder.minScale,
                 builder.orientation, builder.moveSpeed, builder.reverseLayout);
     }
 
-    private ScaleLayoutManager(int itemSpace, float centerScale, int orientation,
-                               float moveSpeed, boolean reverseLayout) {
+    private CarouselLayoutManager(int itemSpace, float minScale, int orientation,
+                                  float moveSpeed, boolean reverseLayout) {
         super(orientation, reverseLayout);
+        setEnableBringCenterToFront(true);
         setIntegerDy(true);
         this.itemSpace = itemSpace;
-        this.centerScale = centerScale;
+        this.minScale = minScale;
         this.moveSpeed = moveSpeed;
     }
 
@@ -44,8 +46,8 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         return itemSpace;
     }
 
-    public float getCenterScale() {
-        return centerScale;
+    public float getMinScale() {
+        return minScale;
     }
 
     public int getOrientation() {
@@ -63,10 +65,11 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         removeAllViews();
     }
 
-    public void setCenterScale(float centerScale) {
+    public void setMinScale(float minScale) {
         assertNotInLayoutOrScroll(null);
-        if (this.centerScale == centerScale) return;
-        this.centerScale = centerScale;
+        if (minScale > 1f) minScale = 1f;
+        if (this.minScale == minScale) return;
+        this.minScale = minScale;
         removeAllViews();
     }
 
@@ -82,7 +85,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setInterval() {
-        return mDecoratedMeasurement * ((centerScale - 1) / 2 + 1) + itemSpace;
+        return (mDecoratedMeasurement - itemSpace);
     }
 
     @Override
@@ -90,6 +93,9 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         float scale = calculateScale(targetOffset + mSpaceMain);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            itemView.setElevation(scale);
+        }
     }
 
     @Override
@@ -98,30 +104,29 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         return 1 / moveSpeed;
     }
 
-    /**
-     * @param x start positon of the view you want scale
-     * @return the scale rate of current scroll mOffset
-     */
+    @Override
+    protected float setViewElevation(View itemView, float targetOffset) {
+        return itemView.getScaleX();
+    }
+
     private float calculateScale(float x) {
         float deltaX = Math.abs(x - (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2f);
-        float diff = 0f;
-        if ((mDecoratedMeasurement - deltaX) > 0) diff = mDecoratedMeasurement - deltaX;
-        return (centerScale - 1f) / mDecoratedMeasurement * diff + 1;
+        return (minScale - 1) * deltaX / (mOrientationHelper.getTotalSpace() / 2f) + 1f;
     }
 
     public static class Builder {
-        private static final float SCALE_RATE = 1.2f;
         private static final float DEFAULT_SPEED = 1f;
+        private static final float MIN_SCALE = 0.5f;
         private int itemSpace;
         private int orientation;
-        private float centerScale;
+        private float minScale;
         private float moveSpeed;
         private boolean reverseLayout;
 
         public Builder(int itemSpace) {
             this.itemSpace = itemSpace;
             orientation = HORIZONTAL;
-            centerScale = SCALE_RATE;
+            minScale = MIN_SCALE;
             this.moveSpeed = DEFAULT_SPEED;
             reverseLayout = false;
         }
@@ -131,8 +136,8 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
             return this;
         }
 
-        public Builder setCenterScale(float centerScale) {
-            this.centerScale = centerScale;
+        public Builder setMinScale(float minScale) {
+            this.minScale = minScale;
             return this;
         }
 
@@ -146,9 +151,8 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
             return this;
         }
 
-        public ScaleLayoutManager build() {
-            return new ScaleLayoutManager(this);
+        public CarouselLayoutManager build() {
+            return new CarouselLayoutManager(this);
         }
     }
 }
-
