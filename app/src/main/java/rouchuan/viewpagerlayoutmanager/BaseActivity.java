@@ -79,4 +79,11 @@ public abstract class BaseActivity<V extends ViewPagerLayoutManager, S extends S
     public RecyclerView getRecyclerView() {
         return recyclerView;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (settingPopUpWindow != null && settingPopUpWindow.isShowing())
+            settingPopUpWindow.dismiss();
+    }
 }
