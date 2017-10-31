@@ -530,7 +530,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
             // cause getPosition() return the adapter position, 
             // so we need to calculate the right offset
             final float rightOffset = getOffsetOfRightAdapterPosition();
-            
+
             //remove the views which are out of range
             for (int i = 0; i < getChildCount(); i++) {
                 final View view = getChildAt(i);
@@ -608,8 +608,8 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     private void layoutScrap(View scrap, float targetOffset) {
-        final int left = calMainDirection(targetOffset);
-        final int top = calOtherDirection(targetOffset);
+        final int left = calItemLeft(scrap, targetOffset);
+        final int top = calItemTop(scrap, targetOffset);
         if (mOrientation == VERTICAL) {
             layoutDecorated(scrap, mSpaceInOther + left, mSpaceMain + top,
                     mSpaceInOther + left + mDecoratedMeasurementInOther, mSpaceMain + top + mDecoratedMeasurement);
@@ -620,11 +620,11 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         setItemViewProperty(scrap, targetOffset);
     }
 
-    protected int calMainDirection(float targetOffset) {
+    protected int calItemLeft(View itemView, float targetOffset) {
         return mOrientation == VERTICAL ? 0 : (int) targetOffset;
     }
 
-    protected int calOtherDirection(float targetOffset) {
+    protected int calItemTop(View itemView, float targetOffset) {
         return mOrientation == VERTICAL ? (int) targetOffset : 0;
     }
 

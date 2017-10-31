@@ -1,6 +1,5 @@
 package com.leochuan;
 
-import android.os.Build;
 import android.view.View;
 
 /**
@@ -35,7 +34,6 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     private ScaleLayoutManager(int itemSpace, float centerScale, int orientation,
                                float moveSpeed, boolean reverseLayout) {
         super(orientation, reverseLayout);
-        setEnableBringCenterToFront(true);
         setIntegerDy(true);
         this.itemSpace = itemSpace;
         this.centerScale = centerScale;
@@ -69,7 +67,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         assertNotInLayoutOrScroll(null);
         if (this.centerScale == centerScale) return;
         this.centerScale = centerScale;
-        requestLayout();
+        removeAllViews();
     }
 
     public void setOrientation(int orientation) {
@@ -84,25 +82,14 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setInterval() {
-        return (int) (mDecoratedMeasurement * ((centerScale - 1f) / 2f + 1) + itemSpace);
+        return mDecoratedMeasurement * ((centerScale - 1) / 2 + 1) + itemSpace;
     }
 
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        float scale = calculateScale((int) targetOffset + mSpaceMain);
+        float scale = calculateScale(targetOffset + mSpaceMain);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.setElevation(scale);
-        }
-    }
-
-    @Override
-    protected float setViewElevation(View itemView, float targetOffset) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return calculateScale((int) targetOffset + mSpaceMain);
-        }
-        return super.setViewElevation(itemView, targetOffset);
     }
 
     @Override
@@ -115,8 +102,8 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
      * @param x start positon of the view you want scale
      * @return the scale rate of current scroll mOffset
      */
-    private float calculateScale(int x) {
-        int deltaX = Math.abs(x - (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2);
+    private float calculateScale(float x) {
+        float deltaX = Math.abs(x - (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2f);
         float diff = 0f;
         if ((mDecoratedMeasurement - deltaX) > 0) diff = mDecoratedMeasurement - deltaX;
         return (centerScale - 1f) / mDecoratedMeasurement * diff + 1;

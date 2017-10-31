@@ -8,6 +8,7 @@ import android.view.View;
 
 import rouchuan.viewpagerlayoutmanager.circle.CircleLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.circlescale.CircleScaleLayoutActivity;
+import rouchuan.viewpagerlayoutmanager.gallery.GalleryLayoutActivity;
 import rouchuan.viewpagerlayoutmanager.scale.ScaleLayoutActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt_elevate_scale:
                 break;
             case R.id.bt_gallery:
+                startActivity(GalleryLayoutActivity.class, v);
                 break;
             case R.id.bt_rotate:
                 break;

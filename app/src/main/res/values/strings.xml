@@ -13,9 +13,12 @@
     <string name="move_speed">Move Speed</string>
     <string name="angle_interval">Interval Angle</string>
     <string name="center_scale">Center Scale</string>
+    <string name="max_alpha">Max Alpha</string>
+    <string name="min_alpha">Min Alpha</string>
     <string name="toggle_infinite">Toggle Infinite</string>
     <string name="toggle_bring_center_in_front">Toggle Bring Center In Front</string>
     <string name="toggle_auto_center">Toggle Auto Center</string>
     <string name="toggle_reverse">Toggle Reverse</string>
+    <string name="flip_rotate">Flip Rotate</string>
     <string name="change_orientation">Change Orientation</string>
 </resources>

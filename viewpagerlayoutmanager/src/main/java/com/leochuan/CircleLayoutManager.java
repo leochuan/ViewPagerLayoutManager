@@ -115,12 +115,12 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected int calMainDirection(float targetOffset) {
+    protected int calItemLeft(View itemView, float targetOffset) {
         return (int) (radius * Math.cos(Math.toRadians(90 - targetOffset)));
     }
 
     @Override
-    protected int calOtherDirection(float targetOffset) {
+    protected int calItemTop(View itemView, float targetOffset) {
         return (int) (radius - radius * Math.sin(Math.toRadians(90 - targetOffset)));
     }
 

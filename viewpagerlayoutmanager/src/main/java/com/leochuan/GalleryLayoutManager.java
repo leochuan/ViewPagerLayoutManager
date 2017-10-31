@@ -3,22 +3,122 @@ package com.leochuan;
 import android.view.View;
 
 /**
- * Created by Dajavu on 12/7/16.
+ * An implementation of {@link ViewPagerLayoutManager}
+ * which will change rotate x or rotate y
  */
 
+@SuppressWarnings("WeakerAccess")
 public class GalleryLayoutManager extends ViewPagerLayoutManager {
-    private static float INTERVAL_ANGLE = 30f;
-    private static float MIN_ALPHA = 0.5f;
 
-    private int itemSpace = 0;
+    private int itemSpace;
+    private float moveSpeed;
+    private float maxAlpha;
+    private float minAlpha;
+    private float angle;
+    private boolean flipRotate;
 
     public GalleryLayoutManager(int itemSpace) {
-        this(itemSpace, HORIZONTAL, false);
+        this(new Builder(itemSpace));
+    }
+
+    public GalleryLayoutManager(int itemSpace, int orientation) {
+        this(new Builder(itemSpace).setOrientation(orientation));
     }
 
     public GalleryLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
+        this(new Builder(itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
+    }
+
+    public GalleryLayoutManager(Builder builder) {
+        this(builder.itemSpace, builder.angle, builder.maxAlpha, builder.minAlpha,
+                builder.orientation, builder.moveSpeed, builder.flipRotate, builder.reverseLayout);
+    }
+
+    private GalleryLayoutManager(int itemSpace, float angle, float maxAlpha, float minAlpha,
+                                 int orientation, float moveSpeed, boolean flipRotate, boolean reverseLayout) {
         super(orientation, reverseLayout);
+        setIntegerDy(true);
         this.itemSpace = itemSpace;
+        this.moveSpeed = moveSpeed;
+        this.angle = angle;
+        this.maxAlpha = maxAlpha;
+        this.minAlpha = minAlpha;
+        this.flipRotate = flipRotate;
+    }
+
+    public int getItemSpace() {
+        return itemSpace;
+    }
+
+    public float getMaxAlpha() {
+        return maxAlpha;
+    }
+
+    public float getMinAlpha() {
+        return minAlpha;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
+    public int getOrientation() {
+        return super.getOrientation();
+    }
+
+    public float getMoveSpeed() {
+        return moveSpeed;
+    }
+
+    public boolean getFlipRotate() {
+        return flipRotate;
+    }
+
+    public void setItemSpace(int itemSpace) {
+        assertNotInLayoutOrScroll(null);
+        if (this.itemSpace == itemSpace) return;
+        this.itemSpace = itemSpace;
+        removeAllViews();
+    }
+
+    public void setOrientation(int orientation) {
+        super.setOrientation(orientation);
+    }
+
+    public void setMoveSpeed(float moveSpeed) {
+        assertNotInLayoutOrScroll(null);
+        if (this.moveSpeed == moveSpeed) return;
+        this.moveSpeed = moveSpeed;
+    }
+
+    public void setMaxAlpha(float maxAlpha) {
+        assertNotInLayoutOrScroll(null);
+        if (maxAlpha > 1) maxAlpha = 1;
+        if (this.maxAlpha == maxAlpha) return;
+        this.maxAlpha = maxAlpha;
+        requestLayout();
+    }
+
+    public void setMinAlpha(float minAlpha) {
+        assertNotInLayoutOrScroll(null);
+        if (minAlpha < 0) minAlpha = 0;
+        if (this.minAlpha == minAlpha) return;
+        this.minAlpha = minAlpha;
+        requestLayout();
+    }
+
+    public void setAngle(float angle) {
+        assertNotInLayoutOrScroll(null);
+        if (this.angle == angle) return;
+        this.angle = angle;
+        requestLayout();
+    }
+
+    public void setFlipRotate(boolean flipRotate) {
+        assertNotInLayoutOrScroll(null);
+        if (this.flipRotate == flipRotate) return;
+        this.flipRotate = flipRotate;
+        requestLayout();
     }
 
     @Override
@@ -27,23 +127,108 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected void setUp() {
-
-    }
-
-    @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        itemView.setRotationY(calRotationY(targetOffset));
+        final float rotation = calRotation(targetOffset);
+        if (getOrientation() == HORIZONTAL) {
+            if (flipRotate)
+                itemView.setRotationX(rotation);
+            else
+                itemView.setRotationY(rotation);
+        } else {
+            if (flipRotate)
+                itemView.setRotationY(-rotation);
+            else
+                itemView.setRotationX(-rotation);
+        }
         itemView.setAlpha(calAlpha(targetOffset));
     }
 
-    private float calRotationY(float targetOffset) {
-        return -INTERVAL_ANGLE / mInterval * targetOffset;
+    @Override
+    protected float getDistanceRatio() {
+        if (moveSpeed == 0) return Float.MAX_VALUE;
+        return 1 / moveSpeed;
+    }
+
+    private float calRotation(float targetOffset) {
+        return -angle / mInterval * targetOffset;
     }
 
     private float calAlpha(float targetOffset) {
-        float alpha = (MIN_ALPHA - 1f) / mInterval * Math.abs(targetOffset) + 1f;
-        if (alpha < MIN_ALPHA) alpha = MIN_ALPHA;
+        float alpha = (minAlpha - maxAlpha) / mInterval * Math.abs(targetOffset) + maxAlpha;
+        if (alpha < minAlpha) alpha = minAlpha;
         return alpha;
+    }
+
+    public static class Builder {
+        private static float INTERVAL_ANGLE = 30f;
+        private static final float DEFAULT_SPEED = 1f;
+        private static float MIN_ALPHA = 0.5f;
+        private static float MAX_ALPHA = 1f;
+
+        private int itemSpace;
+        private float moveSpeed;
+        private int orientation;
+        private float maxAlpha;
+        private float minAlpha;
+        private float angle;
+        private boolean flipRotate;
+        private boolean reverseLayout;
+
+        public Builder(int itemSpace) {
+            this.itemSpace = itemSpace;
+            orientation = HORIZONTAL;
+            angle = INTERVAL_ANGLE;
+            maxAlpha = MAX_ALPHA;
+            minAlpha = MIN_ALPHA;
+            this.moveSpeed = DEFAULT_SPEED;
+            reverseLayout = false;
+            flipRotate = false;
+        }
+
+        public Builder setItemSpace(int itemSpace) {
+            this.itemSpace = itemSpace;
+            return this;
+        }
+
+        public Builder setMoveSpeed(float moveSpeed) {
+            this.moveSpeed = moveSpeed;
+            return this;
+        }
+
+        public Builder setOrientation(int orientation) {
+            this.orientation = orientation;
+            return this;
+        }
+
+        public Builder setMaxAlpha(float maxAlpha) {
+            if (maxAlpha > 1) maxAlpha = 1;
+            this.maxAlpha = maxAlpha;
+            return this;
+        }
+
+        public Builder setMinAlpha(float minAlpha) {
+            if (minAlpha < 0) minAlpha = 0;
+            this.minAlpha = minAlpha;
+            return this;
+        }
+
+        public Builder setAngle(float angle) {
+            this.angle = angle;
+            return this;
+        }
+
+        public Builder setFlipRotate(boolean flipRotate) {
+            this.flipRotate = flipRotate;
+            return this;
+        }
+
+        public Builder setReverseLayout(boolean reverseLayout) {
+            this.reverseLayout = reverseLayout;
+            return this;
+        }
+
+        public GalleryLayoutManager build() {
+            return new GalleryLayoutManager(this);
+        }
     }
 }
