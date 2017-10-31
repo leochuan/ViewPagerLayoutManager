@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="8dp"
-        android:text="@string/elevate_scale_layout_manager"
+        android:text="@string/carousel_layout_manager"
         app:textAllCaps="false" />
 
     <android.support.v7.widget.AppCompatButton

@@ -70,7 +70,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         if (minScale > 1f) minScale = 1f;
         if (this.minScale == minScale) return;
         this.minScale = minScale;
-        removeAllViews();
+        requestLayout();
     }
 
     public void setOrientation(int orientation) {
@@ -117,6 +117,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
     public static class Builder {
         private static final float DEFAULT_SPEED = 1f;
         private static final float MIN_SCALE = 0.5f;
+
         private int itemSpace;
         private int orientation;
         private float minScale;

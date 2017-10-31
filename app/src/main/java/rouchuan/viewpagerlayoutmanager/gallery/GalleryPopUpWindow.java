@@ -34,6 +34,7 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
     private TextView minAlphaValue;
     private TextView maxAlphaValue;
     private TextView angleValue;
+    private SwitchCompat centerInFront;
     private SwitchCompat changeOrientation;
     private SwitchCompat autoCenter;
     private SwitchCompat infinite;
@@ -62,6 +63,7 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
         maxAlphaValue = (TextView) view.findViewById(R.id.max_alpha_value);
         angleValue = (TextView) view.findViewById(R.id.angle_value);
 
+        centerInFront = (SwitchCompat) view.findViewById(R.id.s_center_in_front);
         changeOrientation = (SwitchCompat) view.findViewById(R.id.s_change_orientation);
         autoCenter = (SwitchCompat) view.findViewById(R.id.s_auto_center);
         infinite = (SwitchCompat) view.findViewById(R.id.s_infinite);
@@ -74,7 +76,7 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
         maxAlpha.setOnSeekBarChangeListener(this);
         angle.setOnSeekBarChangeListener(this);
 
-        itemSpace.setProgress(galleryLayoutManager.getItemSpace() / 2);
+        itemSpace.setProgress(galleryLayoutManager.getItemSpace() / 4 + 50);
         speed.setProgress(Math.round(galleryLayoutManager.getMoveSpeed() / 0.05f));
         maxAlpha.setProgress(Math.round(galleryLayoutManager.getMaxAlpha() * 100));
         minAlpha.setProgress(Math.round(galleryLayoutManager.getMinAlpha() * 100));
@@ -86,11 +88,13 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
         maxAlphaValue.setText(Util.formatFloat(galleryLayoutManager.getMaxAlpha()));
         angleValue.setText(Util.formatFloat(galleryLayoutManager.getAngle()));
 
+        centerInFront.setChecked(galleryLayoutManager.getEnableBringCenterToFront());
         changeOrientation.setChecked(galleryLayoutManager.getOrientation() == ViewPagerLayoutManager.VERTICAL);
         reverse.setChecked(galleryLayoutManager.getReverseLayout());
         flipRotate.setChecked(galleryLayoutManager.getFlipRotate());
         infinite.setChecked(galleryLayoutManager.getInfinite());
 
+        centerInFront.setOnCheckedChangeListener(this);
         changeOrientation.setOnCheckedChangeListener(this);
         autoCenter.setOnCheckedChangeListener(this);
         reverse.setOnCheckedChangeListener(this);
@@ -102,7 +106,7 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         switch (seekBar.getId()) {
             case R.id.sb_item_space:
-                int itemSpace = progress * 2;
+                int itemSpace = (progress - 50) * 4;
                 galleryLayoutManager.setItemSpace(itemSpace);
                 itemSpaceValue.setText(String.valueOf(itemSpace));
                 break;
@@ -164,6 +168,9 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
                 break;
             case R.id.s_flip:
                 galleryLayoutManager.setFlipRotate(isChecked);
+            case R.id.s_center_in_front:
+                galleryLayoutManager.setEnableBringCenterToFront(isChecked);
+                break;
         }
     }
 }

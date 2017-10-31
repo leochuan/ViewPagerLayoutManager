@@ -8,7 +8,7 @@ import android.view.View;
  * which layouts item in a circle
  */
 
-@SuppressWarnings({"WeakerAccess","unused"})
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     private int radius;
@@ -135,10 +135,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        if (getEnableBringCenterToFront() && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return calculateElevation(targetOffset);
-        }
-        return super.setViewElevation(itemView, targetOffset);
+        return calculateElevation(targetOffset);
     }
 
     @Override

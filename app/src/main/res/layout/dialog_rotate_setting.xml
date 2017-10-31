@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/angle_interval"
+            android:text="@string/rotate_angle"
             android:textColor="#fff" />
 
         <TextView
@@ -52,55 +52,7 @@
     </FrameLayout>
 
     <SeekBar
-        android:id="@+id/sb_interval"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/max_alpha"
-            android:textColor="#fff" />
-
-        <TextView
-            android:id="@+id/max_alpha_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textColor="#fff" />
-    </FrameLayout>
-
-    <SeekBar
-        android:id="@+id/sb_max_alpha"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/min_alpha"
-            android:textColor="#fff" />
-
-        <TextView
-            android:id="@+id/min_alpha_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:textColor="#fff" />
-    </FrameLayout>
-
-    <SeekBar
-        android:id="@+id/sb_min_alpha"
+        android:id="@+id/sb_angle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -190,47 +142,29 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/toggle_reverse_rotate"
+            android:textColor="#fff" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/s_reverse_rotate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/toggle_auto_center"
             android:textColor="#fff" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/s_auto_center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/toggle_bring_center_in_front"
-            android:textColor="#fff" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/s_center_in_front"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/flip_rotate"
-            android:textColor="#fff" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/s_flip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end" />

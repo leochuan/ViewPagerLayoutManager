@@ -112,6 +112,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     public static class Builder {
         private static final float SCALE_RATE = 1.2f;
         private static final float DEFAULT_SPEED = 1f;
+
         private int itemSpace;
         private int orientation;
         private float centerScale;

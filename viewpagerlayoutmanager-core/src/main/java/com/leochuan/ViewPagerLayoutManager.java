@@ -97,6 +97,11 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
 
     protected abstract void setItemViewProperty(View itemView, float targetOffset);
 
+    /**
+     * cause elevation is not support below api 21,
+     * so you can set your elevation here for supporting it below api 21
+     * or you can just setElevation in {@link #setItemViewProperty(View, float)}
+     */
     protected float setViewElevation(View itemView, float targetOffset) {
         return 0;
     }
@@ -573,8 +578,9 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
                     // we need i to calculate the real offset of current view
                     final float targetOffset = getProperty(i) - mOffset;
                     layoutScrap(scrap, targetOffset);
-                    final float orderWeight = mEnableBringCenterToFront ? setViewElevation(scrap, targetOffset)
-                            : adapterPosition;
+                    final float orderWeight =
+                            (mEnableBringCenterToFront && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
+                                    setViewElevation(scrap, targetOffset) : adapterPosition;
                     if (orderWeight > lastOrderWeight) {
                         addView(scrap);
                     } else {

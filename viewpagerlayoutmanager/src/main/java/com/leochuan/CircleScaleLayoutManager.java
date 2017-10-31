@@ -8,7 +8,7 @@ import android.view.View;
  * which layouts item in a circle and will change the child's centerScale while scrolling
  */
 
-@SuppressWarnings({"WeakerAccess","unused"})
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     private int radius;
@@ -151,10 +151,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return calculateElevation(targetOffset);
-        }
-        return super.setViewElevation(itemView, targetOffset);
+        return calculateElevation(targetOffset);
     }
 
     @Override

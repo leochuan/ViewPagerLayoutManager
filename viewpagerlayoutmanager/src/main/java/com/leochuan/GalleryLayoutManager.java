@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.os.Build;
 import android.view.View;
 
 /**
@@ -7,7 +8,7 @@ import android.view.View;
  * which will change rotate x or rotate y
  */
 
-@SuppressWarnings({"WeakerAccess","unused"})
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
     private int itemSpace;
@@ -140,7 +141,17 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
             else
                 itemView.setRotationX(-rotation);
         }
-        itemView.setAlpha(calAlpha(targetOffset));
+        final float alpha = calAlpha(targetOffset);
+        itemView.setAlpha(alpha);
+        if (getEnableBringCenterToFront() &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            itemView.setElevation(alpha);
+        }
+    }
+
+    @Override
+    protected float setViewElevation(View itemView, float targetOffset) {
+        return calAlpha(targetOffset);
     }
 
     @Override

@@ -3,7 +3,7 @@
     <string name="setting">Setting</string>
     <string name="circle_layout_manger">Circle LayoutManager</string>
     <string name="circle_scale_layout_manager">Circle Scale LayoutManager</string>
-    <string name="elevate_scale_layout_manager">Elevate Scale LayoutManager</string>
+    <string name="carousel_layout_manager">Carousel LayoutManager</string>
     <string name="gallery_layout_manager">Gallery LayoutManager</string>
     <string name="rotate_layout_manager">Rotate LayoutManager</string>
     <string name="scale_layout_manager">Scale LayoutManager</string>
@@ -13,11 +13,13 @@
     <string name="move_speed">Move Speed</string>
     <string name="angle_interval">Interval Angle</string>
     <string name="center_scale">Center Scale</string>
+    <string name="rotate_angle">Rotate Angle</string>
     <string name="min_scale">Min Scale</string>
     <string name="max_alpha">Max Alpha</string>
     <string name="min_alpha">Min Alpha</string>
     <string name="toggle_infinite">Toggle Infinite</string>
     <string name="toggle_bring_center_in_front">Toggle Bring Center In Front</string>
+    <string name="toggle_reverse_rotate">Toggle Reverse Rotate</string>
     <string name="toggle_auto_center">Toggle Auto Center</string>
     <string name="toggle_reverse">Toggle Reverse</string>
     <string name="flip_rotate">Flip Rotate</string>

@@ -30,6 +30,9 @@
         <activity
             android:name=".carousel.CarouselLayoutActivity"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".rotate.RotateLayoutActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>
