@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">VPLM</string>
+    <string name="setting">设置</string>
+    <string name="circle_layout_manger">Circle LayoutManager</string>
+    <string name="circle_scale_layout_manager">Circle Scale LayoutManager</string>
+    <string name="carousel_layout_manager">Carousel LayoutManager</string>
+    <string name="gallery_layout_manager">Gallery LayoutManager</string>
+    <string name="rotate_layout_manager">Rotate LayoutManager</string>
+    <string name="scale_layout_manager">Scale LayoutManager</string>
+
+    <string name="radius">半径</string>
+    <string name="item_space">间距</string>
+    <string name="move_speed">滚动速度</string>
+    <string name="angle_interval">间隔角度</string>
+    <string name="center_scale">中心缩放比</string>
+    <string name="rotate_angle">旋转角度</string>
+    <string name="min_scale">最小缩放比</string>
+    <string name="max_alpha">最大透明度</string>
+    <string name="min_alpha">最小透明度</string>
+    <string name="toggle_infinite">无限滚动</string>
+    <string name="toggle_bring_center_in_front">中心靠前排列</string>
+    <string name="toggle_reverse_rotate">逆向旋转</string>
+    <string name="toggle_auto_center">自动归位</string>
+    <string name="toggle_reverse">翻转排列</string>
+    <string name="flip_rotate">交换翻转方向</string>
+    <string name="change_orientation">改变朝向</string>
+</resources>
