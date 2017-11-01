@@ -2,6 +2,8 @@
 
 [English](README.md) | **中文**
 
+![logo](static/logo.png)
+
 VPLM 实现了一些常见的动画效果，如果你有什么别的想要的效果欢迎给我提ISSUE以及PR
 
 ![circle](static/circle.gif) ![circle_scale](static/circle_scale.gif) ![carousel](static/carousel.gif) ![gallery](static/gallery.gif) ![rotate](static/rotate.gif) ![scale](static/scale.gif)

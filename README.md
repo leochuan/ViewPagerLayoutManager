@@ -2,6 +2,8 @@
 
 **English** | [中文](README_ZH.md)
 
+![logo](static/logo.png)
+
 VPLM is a `ViewPager` like `LayoutManager` which implements some common animations. If you need some other effects feel free to raise an issue or PR.
 
 ![circle](static/circle.gif) ![circle_scale](static/circle_scale.gif) ![carousel](static/carousel.gif) ![gallery](static/gallery.gif) ![rotate](static/rotate.gif) ![scale](static/scale.gif)
@@ -10,7 +12,7 @@ VPLM is a `ViewPager` like `LayoutManager` which implements some common animatio
 
 ![customize](static/customize.gif)
 
-Each layoutmanager has bunch of different properties to customize.
+Each `layoutmanager` has bunch of different properties to customize.
 
 Such as:
 * radius
@@ -61,7 +63,7 @@ Maven:
 ## Quick Start
 Make sure that each item has the same size, or something unpredictable may happen.
 
-You can warm up your layoutmanager by builder.
+You can warm up your layoutmanager by `Builder`.
 
 ```java
 new CircleLayoutManager.Builder()
