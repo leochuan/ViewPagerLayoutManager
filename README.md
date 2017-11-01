@@ -1,244 +1,85 @@
-ViewPager-Layout-Manager
-======================
-[![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager-support/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager-support/_latestVersion)
+# ViewPager-LayoutManager [![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager/_latestVersion)
 
 **English** | [中文](README_ZH.md)
 
-A view pager like layout manager with custom ability.
+VPLM is a `ViewPager` like `LayoutManager` which implements some common animations. If you need some other effects feel free to raise an issue or PR.
 
-It will handle the recycling under the hood.
-All you need to concern about is which the property you want to change and how it change accroding to the scroll offset.
+![circle](static/circle.gif) ![circle_scale](static/circle_scale.gif) ![carousel](static/carousel.gif) ![gallery](static/gallery.gif) ![rotate](static/rotate.gif) ![scale](static/scale.gif)
 
-![Example](resources/circle1.gif "working example") ![Example](resources/circle2.gif "working example") 
-![Example](resources/circle3.gif "working example") ![Example](resources/circle4.gif "working example")
-![Example](resources/rotate.gif "working example")![Example](resources/circle5.gif "working example")
+## Customzie
 
-## Usage
+![customize](static/customize.gif)
 
-### Gradle
+Each layoutmanager has bunch of different properties to customize.
 
-RecyclerView is required so:
+Such as:
+* radius
+* scroll speed
+* space
+* orientation
 
-```groovy
-compile 'com.android.support:recyclerview-v7:[your version code]'
-```
+Run the demo to see more details.
 
-if you want custom your own layout manager please add code below:
+## Infinite Scroll
 
-```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-core:1.3.1'
-```
-or if you want use the effect above please import(No need to import core):
+![infinite](static/infinite.gif)
 
-```groovy
-compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager-support:1.3.1'
-```
+## Auto Center
 
-### Attention!!!
+![auto_center](static/auto_center.gif)
 
-#### Make sure that your item view has the same width and height
-
-
-
-### Enable springback
-
-```Java
+You can make the current position move to center automaticlly by:
+```java
 recyclerView.addOnScrollListener(new CenterScrollListener());
 ```
 
-### OnPageChangeListener
+## Download
 
-Only wrok when enabling springback or you need to implement your own OnScrollListene.
+Gradle:
 
-```java
-mLayoutManager.setOnPageChangeListener(new ViewPagerLayoutManager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                
-            }
+```groovy
+repositories {
+  jcenter()
+}
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+dependencies {
+  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.0'
+}
 ```
 
-
-
-### Enable scrollbars
-
-same as recyclerView
+Maven:
 
 ```xml
- <android.support.v7.widget.RecyclerView
-        android:scrollbars="horizontal"
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+<dependency>
+  <groupId>rouchuan.viewpagerlayoutmanager</groupId>
+  <artifactId>viewpagerlayoutmanager</artifactId>
+  <version>2.0.0</version>
+  <type>pom</type>
+</dependency>
 ```
 
-### Endless Scroll
+## Quick Start
+Make sure that each item has the same size, or something unpredictable may happen.
+
+You can warm up your layoutmanager by builder.
 
 ```java
-viewPagerLayoutManager.setEnableEndlessScroll(true);
+new CircleLayoutManager.Builder()
+                .setAngleInterval(mAngle)
+                .setMaxRemoveAngle(mMaxRemoveAngle)
+                .setMinRemoveAngle(mMinRemoveAngle)
+                .setMoveSpeed(mSpeed)
+                .setRadius(mRadius)
+                .setReverseLayout(true)
+                .build();
 ```
 
-![](resources/endless.gif)
+Or just simply call the construct.
 
-
-
-## Customize
-
-### Default Properties
-
-```Java
-protected Context context;
-
-// Size of each items
-protected int mDecoratedChildWidth;
-protected int mDecoratedChildHeight;
-
-protected int startLeft; //position x of first item
-protected int startTop; // position y of first item
-protected float offset; //The delta of property which will change when scroll
-
-protected float interval; //the interval between each items
+```java
+new CircleLayoutManager();
 ```
-### Consturct
-
-By default there are two constructs.mShouldReverseLayout determine the way how each items align
-
-```Java
-//Default pass mShouldReverseLayout true
-public CustomLayoutManager(){
-    this(true);
-}
-
-public CustomLayoutManager(boolean mShouldReverseLayout) {
-    this.mShouldReverseLayout = mShouldReverseLayout;
-}
-```
-
-### Methods must be implemented.
-
-It will set the interval of each items.
-Once it was set you can use the variable interval directly
-
-```Java
-protected abstract float setInterval();
-```
-
-You can set up your own properties or change the default properties like startLeft and startTop here
-
-```Java
-protected abstract void setUp();
-```
-
-You can set item's properties which is determined by target offset here 
-
-```Java
-protected abstract void setItemViewProperty(View itemView,float targetOffset);
-```
-
-### Methods you can override.
-
-The max offset value of which the view should be removed
-
-```Java
-protected float maxRemoveOffset(){
-    return getHorizontalSpace() - startLeft;
-}
-```
-
-The min offset value of which the view should be removed
-
-```Java
-protected abstract minRemoveOffset(){
-    return -mDecoratedChildWidth-getPaddingLeft() - startLeft;
-}
-```
-
-You can calculate and set the postion x of each items here
-
-```Java
-protected int calItemLeftPosition(float targetOffset){
-    return targetOffset;
-}
-```
-
-You can calculate and set the postion y of each items here
-
-```Java
-protected int calItemTopPosition(float targetOffset){
-    return 0;
-}
-```
-
-Return the property which you want to change while scrolling
-
-```Java
-protected float propertyChangeWhenScroll(View itemView){
-    return itemView.getLeft()-startLeft;
-}
-```
-
-It return the (scroll dx / offset);
-
-```Java
-protected float getDistanceRatio(){
-   return 1f;
-}
-```
-
-
-
-## Change Logs
-
-### 1.1.0
-
-1. Spliting single library into core and support
-2. Fixing jumping back to first item when loading image with universal-image-loader
-3. Supporting using scrollToPosition before view inflated
-4. Optimizing performance
-
-### 1.2.0
-
-1. Supporting endless scroll
-2. Fixing scrollbar does not show when shouldReverseLayout is true
-3. Fixing scrollToPosition scrolls to wrong position when shouldReverseLayout is true
-
-### 1.3.0
-
-1. Fixing crash which caused by wrong position calculation when enabling endless scroll
-2. Add ElevateScaleLayoutManager
-
-### 1.3.1
-
-1. Fixing onPageSelected does not trigger when scrolling back distance equals zero
-2. Add RotateLayoutManager
-
-## Things to do
-
-1. ~~support infinite scroll~~
-2. optimize performance
-3. support indicator
-4. support item view with different size
-5. support other effects (long term subject)
-
-
 
 ## License
 
-    Copyright 2016 shenruochuan
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-    
-    http://www.apache.org/licenses/LICENSE-2.0
-    
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+Apache-2.0. See [LICENSE](LICENSE) file for detail

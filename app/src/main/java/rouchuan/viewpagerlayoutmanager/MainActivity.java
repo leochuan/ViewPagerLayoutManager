@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.bt_gallery).setOnClickListener(this);
         findViewById(R.id.bt_rotate).setOnClickListener(this);
         findViewById(R.id.bt_scale).setOnClickListener(this);
+
     }
 
     @Override
