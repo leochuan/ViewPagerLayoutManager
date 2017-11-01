@@ -145,13 +145,13 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         itemView.setAlpha(alpha);
         if (getEnableBringCenterToFront() &&
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.setElevation(alpha);
+            itemView.setElevation(alpha * 5);
         }
     }
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        return calAlpha(targetOffset);
+        return calAlpha(targetOffset) * 5;
     }
 
     @Override

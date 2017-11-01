@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ViewPagerLayoutManager</string>
+    <string name="app_name">VPLM</string>
     <string name="setting">Setting</string>
     <string name="circle_layout_manger">Circle LayoutManager</string>
     <string name="circle_scale_layout_manager">Circle Scale LayoutManager</string>

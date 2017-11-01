@@ -4,7 +4,8 @@ import android.support.v7.widget.RecyclerView;
 
 
 /**
- * Created by Dajavu on 16/8/18.
+ * A {@link android.support.v7.widget.RecyclerView.OnScrollListener} which helps {@link ViewPagerLayoutManager}
+ * to center the current position
  */
 public class CenterScrollListener extends RecyclerView.OnScrollListener {
     private boolean mAutoSet = false;

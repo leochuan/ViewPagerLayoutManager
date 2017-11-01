@@ -94,7 +94,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.setElevation(scale);
+            itemView.setElevation(scale * 5);
         }
     }
 
@@ -106,7 +106,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        return itemView.getScaleX();
+        return itemView.getScaleX() * 5;
     }
 
     private float calculateScale(float x) {

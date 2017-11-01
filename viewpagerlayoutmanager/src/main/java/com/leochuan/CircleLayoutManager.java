@@ -150,7 +150,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     }
 
     private float calculateElevation(float targetOffset) {
-        return 360 - Math.abs(targetOffset);
+        return (360 - Math.abs(targetOffset)) / 36;
     }
 
     public static class Builder {
