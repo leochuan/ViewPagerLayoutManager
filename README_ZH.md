@@ -60,7 +60,12 @@ Maven:
 
 ## 快速开始
 
+使用前请确保每一个`view`的大小都相同，不然可能会发生不可预料的错误。
+
+
+
 你可以通过新建一个`Builder`来设置各种属性:
+
 ```java
 new CircleLayoutManager.Builder()
                 .setAngleInterval(mAngle)
