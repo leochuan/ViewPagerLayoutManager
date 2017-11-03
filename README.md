@@ -1,4 +1,4 @@
-# ViewPager-LayoutManager [![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager/_latestVersion)
+# ViewPager-LayoutManager [![Download](https://api.bintray.com/packages/rouchuan/maven/viewpager-layout-manager/images/download.svg) ](https://bintray.com/rouchuan/maven/viewpager-layout-manager/_latestVersion) ![build](https://travis-ci.org/leochuan/ViewPagerLayoutManager.svg?branch=master)
 
 **English** | [中文](README_ZH.md)
 
