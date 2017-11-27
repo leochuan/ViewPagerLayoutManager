@@ -285,27 +285,6 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         removeAllViews();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public View findViewByPosition(int position) {
-        final int childCount = getChildCount();
-        if (childCount == 0) {
-            return null;
-        }
-        final int firstChild = getPosition(getChildAt(0));
-        final int viewPosition = position - firstChild;
-        if (viewPosition >= 0 && viewPosition < childCount) {
-            final View child = getChildAt(viewPosition);
-            if (getPosition(child) == position) {
-                return child; // in pre-layout, this may not match
-            }
-        }
-        // fallback to traversal. This might be necessary in pre-layout.
-        return super.findViewByPosition(position);
-    }
-
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
         LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(recyclerView.getContext());
@@ -529,22 +508,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     }
 
     private void layoutItems(RecyclerView.Recycler recycler) {
-        if (mEnableBringCenterToFront && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            detachAndScrapAttachedViews(recycler);
-        } else {
-            // cause getPosition() return the adapter position, 
-            // so we need to calculate the right offset
-            final float rightOffset = getOffsetOfRightAdapterPosition();
-
-            //remove the views which are out of range
-            for (int i = 0; i < getChildCount(); i++) {
-                final View view = getChildAt(i);
-                final int position = getPosition(view);
-                if (removeCondition(getProperty(position) - rightOffset)) {
-                    removeAndRecycleView(view, recycler);
-                }
-            }
-        }
+        detachAndScrapAttachedViews(recycler);
 
         //make sure that current position start from 0 to 1
         final int currentPos = mReverseLayout ?
@@ -561,7 +525,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         float lastOrderWeight = Float.MIN_VALUE;
         for (int i = start; i < end; i++) {
             if (!removeCondition(getProperty(i) - mOffset)) {
-                // start and end zero base on current position, 
+                // start and end base on current position,
                 // so we need to calculate the adapter position
                 int adapterPosition = i;
                 if (i >= itemCount) {
@@ -571,23 +535,21 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
                     if (delta == 0) delta = itemCount;
                     adapterPosition = itemCount - delta;
                 }
-                if (findViewByPosition(adapterPosition) == null) {
-                    final View scrap = recycler.getViewForPosition(adapterPosition);
-                    measureChildWithMargins(scrap, 0, 0);
-                    resetViewProperty(scrap);
-                    // we need i to calculate the real offset of current view
-                    final float targetOffset = getProperty(i) - mOffset;
-                    layoutScrap(scrap, targetOffset);
-                    final float orderWeight =
-                            (mEnableBringCenterToFront && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
-                                    setViewElevation(scrap, targetOffset) : adapterPosition;
-                    if (orderWeight > lastOrderWeight) {
-                        addView(scrap);
-                    } else {
-                        addView(scrap, 0);
-                    }
-                    lastOrderWeight = orderWeight;
+                final View scrap = recycler.getViewForPosition(adapterPosition);
+                measureChildWithMargins(scrap, 0, 0);
+                resetViewProperty(scrap);
+                // we need i to calculate the real offset of current view
+                final float targetOffset = getProperty(i) - mOffset;
+                layoutScrap(scrap, targetOffset);
+                final float orderWeight =
+                        (mEnableBringCenterToFront && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
+                                setViewElevation(scrap, targetOffset) : adapterPosition;
+                if (orderWeight > lastOrderWeight) {
+                    addView(scrap);
+                } else {
+                    addView(scrap, 0);
                 }
+                lastOrderWeight = orderWeight;
             }
         }
     }
