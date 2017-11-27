@@ -46,19 +46,19 @@ public class CircleScalePopUpWindow extends SettingPopUpWindow
 
         scrollListener = new CenterScrollListener();
 
-        SeekBar radius = (SeekBar) view.findViewById(R.id.sb_radius);
-        SeekBar interval = (SeekBar) view.findViewById(R.id.sb_interval);
-        SeekBar speed = (SeekBar) view.findViewById(R.id.sb_speed);
-        SeekBar centerScale = (SeekBar) view.findViewById(R.id.sb_center_scale);
+        SeekBar radius = view.findViewById(R.id.sb_radius);
+        SeekBar interval = view.findViewById(R.id.sb_interval);
+        SeekBar speed = view.findViewById(R.id.sb_speed);
+        SeekBar centerScale = view.findViewById(R.id.sb_center_scale);
 
-        radiusValue = (TextView) view.findViewById(R.id.radius_value);
-        intervalValue = (TextView) view.findViewById(R.id.interval_value);
-        speedValue = (TextView) view.findViewById(R.id.speed_value);
-        centerScaleValue = (TextView) view.findViewById(R.id.center_scale_value);
+        radiusValue = view.findViewById(R.id.radius_value);
+        intervalValue = view.findViewById(R.id.interval_value);
+        speedValue = view.findViewById(R.id.speed_value);
+        centerScaleValue = view.findViewById(R.id.center_scale_value);
 
-        infinite = (SwitchCompat) view.findViewById(R.id.s_infinite);
-        autoCenter = (SwitchCompat) view.findViewById(R.id.s_auto_center);
-        reverse = (SwitchCompat) view.findViewById(R.id.s_reverse);
+        infinite = view.findViewById(R.id.s_infinite);
+        autoCenter = view.findViewById(R.id.s_auto_center);
+        reverse = view.findViewById(R.id.s_reverse);
 
         radius.setOnSeekBarChangeListener(this);
         interval.setOnSeekBarChangeListener(this);

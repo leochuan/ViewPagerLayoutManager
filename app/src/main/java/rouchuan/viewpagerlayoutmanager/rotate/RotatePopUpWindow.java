@@ -48,19 +48,19 @@ public class RotatePopUpWindow extends SettingPopUpWindow
 
         scrollListener = new CenterScrollListener();
 
-        SeekBar itemSpace = (SeekBar) view.findViewById(R.id.sb_item_space);
-        SeekBar speed = (SeekBar) view.findViewById(R.id.sb_speed);
-        SeekBar angle = (SeekBar) view.findViewById(R.id.sb_angle);
+        SeekBar itemSpace = view.findViewById(R.id.sb_item_space);
+        SeekBar speed = view.findViewById(R.id.sb_speed);
+        SeekBar angle = view.findViewById(R.id.sb_angle);
 
-        itemSpaceValue = (TextView) view.findViewById(R.id.item_space);
-        speedValue = (TextView) view.findViewById(R.id.speed_value);
-        angleValue = (TextView) view.findViewById(R.id.angle_value);
+        itemSpaceValue = view.findViewById(R.id.item_space);
+        speedValue = view.findViewById(R.id.speed_value);
+        angleValue = view.findViewById(R.id.angle_value);
 
-        reverseRotate = (SwitchCompat) view.findViewById(R.id.s_reverse_rotate);
-        changeOrientation = (SwitchCompat) view.findViewById(R.id.s_change_orientation);
-        autoCenter = (SwitchCompat) view.findViewById(R.id.s_auto_center);
-        infinite = (SwitchCompat) view.findViewById(R.id.s_infinite);
-        reverse = (SwitchCompat) view.findViewById(R.id.s_reverse);
+        reverseRotate = view.findViewById(R.id.s_reverse_rotate);
+        changeOrientation = view.findViewById(R.id.s_change_orientation);
+        autoCenter = view.findViewById(R.id.s_auto_center);
+        infinite = view.findViewById(R.id.s_infinite);
+        reverse = view.findViewById(R.id.s_reverse);
 
         itemSpace.setOnSeekBarChangeListener(this);
         speed.setOnSeekBarChangeListener(this);

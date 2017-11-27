@@ -47,18 +47,18 @@ public class ScalePopUpWindow extends SettingPopUpWindow
 
         scrollListener = new CenterScrollListener();
 
-        SeekBar itemSpace = (SeekBar) view.findViewById(R.id.sb_item_space);
-        SeekBar speed = (SeekBar) view.findViewById(R.id.sb_speed);
-        SeekBar centerScale = (SeekBar) view.findViewById(R.id.sb_center_scale);
+        SeekBar itemSpace = view.findViewById(R.id.sb_item_space);
+        SeekBar speed = view.findViewById(R.id.sb_speed);
+        SeekBar centerScale = view.findViewById(R.id.sb_center_scale);
 
-        itemSpaceValue = (TextView) view.findViewById(R.id.item_space);
-        speedValue = (TextView) view.findViewById(R.id.speed_value);
-        centerScaleValue = (TextView) view.findViewById(R.id.center_scale_value);
+        itemSpaceValue = view.findViewById(R.id.item_space);
+        speedValue = view.findViewById(R.id.speed_value);
+        centerScaleValue = view.findViewById(R.id.center_scale_value);
 
-        changeOrientation = (SwitchCompat) view.findViewById(R.id.s_change_orientation);
-        autoCenter = (SwitchCompat) view.findViewById(R.id.s_auto_center);
-        infinite = (SwitchCompat) view.findViewById(R.id.s_infinite);
-        reverse = (SwitchCompat) view.findViewById(R.id.s_reverse);
+        changeOrientation = view.findViewById(R.id.s_change_orientation);
+        autoCenter = view.findViewById(R.id.s_auto_center);
+        infinite = view.findViewById(R.id.s_infinite);
+        reverse = view.findViewById(R.id.s_reverse);
 
         itemSpace.setOnSeekBarChangeListener(this);
         speed.setOnSeekBarChangeListener(this);

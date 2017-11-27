@@ -51,24 +51,24 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
 
         scrollListener = new CenterScrollListener();
 
-        SeekBar itemSpace = (SeekBar) view.findViewById(R.id.sb_item_space);
-        SeekBar speed = (SeekBar) view.findViewById(R.id.sb_speed);
-        SeekBar minAlpha = (SeekBar) view.findViewById(R.id.sb_min_alpha);
-        SeekBar maxAlpha = (SeekBar) view.findViewById(R.id.sb_max_alpha);
-        SeekBar angle = (SeekBar) view.findViewById(R.id.sb_interval);
+        SeekBar itemSpace = view.findViewById(R.id.sb_item_space);
+        SeekBar speed = view.findViewById(R.id.sb_speed);
+        SeekBar minAlpha = view.findViewById(R.id.sb_min_alpha);
+        SeekBar maxAlpha = view.findViewById(R.id.sb_max_alpha);
+        SeekBar angle = view.findViewById(R.id.sb_interval);
 
-        itemSpaceValue = (TextView) view.findViewById(R.id.item_space);
-        speedValue = (TextView) view.findViewById(R.id.speed_value);
-        minAlphaValue = (TextView) view.findViewById(R.id.min_alpha_value);
-        maxAlphaValue = (TextView) view.findViewById(R.id.max_alpha_value);
-        angleValue = (TextView) view.findViewById(R.id.angle_value);
+        itemSpaceValue = view.findViewById(R.id.item_space);
+        speedValue = view.findViewById(R.id.speed_value);
+        minAlphaValue = view.findViewById(R.id.min_alpha_value);
+        maxAlphaValue = view.findViewById(R.id.max_alpha_value);
+        angleValue = view.findViewById(R.id.angle_value);
 
-        centerInFront = (SwitchCompat) view.findViewById(R.id.s_center_in_front);
-        changeOrientation = (SwitchCompat) view.findViewById(R.id.s_change_orientation);
-        autoCenter = (SwitchCompat) view.findViewById(R.id.s_auto_center);
-        infinite = (SwitchCompat) view.findViewById(R.id.s_infinite);
-        reverse = (SwitchCompat) view.findViewById(R.id.s_reverse);
-        flipRotate = (SwitchCompat) view.findViewById(R.id.s_flip);
+        centerInFront = view.findViewById(R.id.s_center_in_front);
+        changeOrientation = view.findViewById(R.id.s_change_orientation);
+        autoCenter = view.findViewById(R.id.s_auto_center);
+        infinite = view.findViewById(R.id.s_infinite);
+        reverse = view.findViewById(R.id.s_reverse);
+        flipRotate = view.findViewById(R.id.s_flip);
 
         itemSpace.setOnSeekBarChangeListener(this);
         speed.setOnSeekBarChangeListener(this);

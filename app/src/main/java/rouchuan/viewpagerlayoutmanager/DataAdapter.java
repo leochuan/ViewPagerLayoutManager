@@ -12,9 +12,9 @@ import android.widget.Toast;
  */
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
-    private int[] images = {R.drawable.item1, R.drawable.item2, R.drawable.item3,
-            R.drawable.item4, R.drawable.item5, R.drawable.item6, R.drawable.item7,
-            R.drawable.item8, R.drawable.item9, R.drawable.item10};
+    private int[] images = {R.drawable.item1, R.drawable.item2, R.drawable.item3};
+//            R.drawable.item4, R.drawable.item5, R.drawable.item6, R.drawable.item7,
+//            R.drawable.item8, R.drawable.item9, R.drawable.item10};
 
     @Override
     public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,7 +37,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         ViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.image);
+            imageView = itemView.findViewById(R.id.image);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
