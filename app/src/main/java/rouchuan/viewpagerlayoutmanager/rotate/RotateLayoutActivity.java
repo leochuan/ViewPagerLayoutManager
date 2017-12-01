@@ -1,11 +1,9 @@
 package rouchuan.viewpagerlayoutmanager.rotate;
 
 import com.leochuan.RotateLayoutManager;
-import com.leochuan.ScaleLayoutManager;
 
 import rouchuan.viewpagerlayoutmanager.BaseActivity;
 import rouchuan.viewpagerlayoutmanager.Util;
-import rouchuan.viewpagerlayoutmanager.scale.ScalePopUpWindow;
 
 /**
  * Created by Dajavu on 27/10/2017.
@@ -15,7 +13,7 @@ public class RotateLayoutActivity extends BaseActivity<RotateLayoutManager, Rota
 
     @Override
     protected RotateLayoutManager createLayoutManager() {
-        return new RotateLayoutManager(Util.Dp2px(this, 10));
+        return new RotateLayoutManager(this, Util.Dp2px(this, 10));
     }
 
     @Override

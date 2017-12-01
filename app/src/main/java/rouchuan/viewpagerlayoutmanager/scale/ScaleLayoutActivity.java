@@ -13,7 +13,7 @@ public class ScaleLayoutActivity extends BaseActivity<ScaleLayoutManager, ScaleP
 
     @Override
     protected ScaleLayoutManager createLayoutManager() {
-        return new ScaleLayoutManager(Util.Dp2px(this, 10));
+        return new ScaleLayoutManager(this, Util.Dp2px(this, 10));
     }
 
     @Override

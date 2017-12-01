@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.content.Context;
 import android.view.View;
 
 /**
@@ -15,26 +16,26 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
     private float moveSpeed;
     private boolean reverseRotate;
 
-    public RotateLayoutManager(int itemSpace) {
-        this(new Builder(itemSpace));
+    public RotateLayoutManager(Context context, int itemSpace) {
+        this(new Builder(context, itemSpace));
     }
 
-    public RotateLayoutManager(int itemSpace, int orientation) {
-        this(new Builder(itemSpace).setOrientation(orientation));
+    public RotateLayoutManager(Context context, int itemSpace, int orientation) {
+        this(new Builder(context, itemSpace).setOrientation(orientation));
     }
 
-    public RotateLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
-        this(new Builder(itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
+    public RotateLayoutManager(Context context, int itemSpace, int orientation, boolean reverseLayout) {
+        this(new Builder(context, itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
     }
 
     public RotateLayoutManager(Builder builder) {
-        this(builder.itemSpace, builder.angle,
+        this(builder.context, builder.itemSpace, builder.angle,
                 builder.orientation, builder.moveSpeed, builder.reverseRotate, builder.reverseLayout);
     }
 
-    private RotateLayoutManager(int itemSpace, float angle, int orientation,
+    private RotateLayoutManager(Context context, int itemSpace, float angle, int orientation,
                                 float moveSpeed, boolean reverseRotate, boolean reverseLayout) {
-        super(orientation, reverseLayout);
+        super(context, orientation, reverseLayout);
         setIntegerDy(true);
         this.itemSpace = itemSpace;
         this.angle = angle;
@@ -124,8 +125,10 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
         private float moveSpeed;
         private boolean reverseRotate;
         private boolean reverseLayout;
+        private Context context;
 
-        public Builder(int itemSpace) {
+        public Builder(Context context, int itemSpace) {
+            this.context = context;
             this.itemSpace = itemSpace;
             orientation = HORIZONTAL;
             angle = INTERVAL_ANGLE;

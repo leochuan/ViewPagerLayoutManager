@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.content.Context;
 import android.view.View;
 
 /**
@@ -7,33 +8,33 @@ import android.view.View;
  * which zooms the center item
  */
 
-@SuppressWarnings({"WeakerAccess","unused"})
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     private int itemSpace;
     private float centerScale;
     private float moveSpeed;
 
-    public ScaleLayoutManager(int itemSpace) {
-        this(new Builder(itemSpace));
+    public ScaleLayoutManager(Context context, int itemSpace) {
+        this(new Builder(context, itemSpace));
     }
 
-    public ScaleLayoutManager(int itemSpace, int orientation) {
-        this(new Builder(itemSpace).setOrientation(orientation));
+    public ScaleLayoutManager(Context context, int itemSpace, int orientation) {
+        this(new Builder(context, itemSpace).setOrientation(orientation));
     }
 
-    public ScaleLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
-        this(new Builder(itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
+    public ScaleLayoutManager(Context context, int itemSpace, int orientation, boolean reverseLayout) {
+        this(new Builder(context, itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
     }
 
     public ScaleLayoutManager(Builder builder) {
-        this(builder.itemSpace, builder.centerScale,
+        this(builder.context, builder.itemSpace, builder.centerScale,
                 builder.orientation, builder.moveSpeed, builder.reverseLayout);
     }
 
-    private ScaleLayoutManager(int itemSpace, float centerScale, int orientation,
+    private ScaleLayoutManager(Context context, int itemSpace, float centerScale, int orientation,
                                float moveSpeed, boolean reverseLayout) {
-        super(orientation, reverseLayout);
+        super(context, orientation, reverseLayout);
         setIntegerDy(true);
         this.itemSpace = itemSpace;
         this.centerScale = centerScale;
@@ -118,9 +119,11 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         private float centerScale;
         private float moveSpeed;
         private boolean reverseLayout;
+        private Context context;
 
-        public Builder(int itemSpace) {
+        public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
+            this.context = context;
             orientation = HORIZONTAL;
             centerScale = SCALE_RATE;
             this.moveSpeed = DEFAULT_SPEED;

@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.content.Context;
 import android.os.Build;
 import android.view.View;
 
@@ -18,26 +19,26 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     private float angle;
     private boolean flipRotate;
 
-    public GalleryLayoutManager(int itemSpace) {
-        this(new Builder(itemSpace));
+    public GalleryLayoutManager(Context context, int itemSpace) {
+        this(new Builder(context, itemSpace));
     }
 
-    public GalleryLayoutManager(int itemSpace, int orientation) {
-        this(new Builder(itemSpace).setOrientation(orientation));
+    public GalleryLayoutManager(Context context, int itemSpace, int orientation) {
+        this(new Builder(context, itemSpace).setOrientation(orientation));
     }
 
-    public GalleryLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
-        this(new Builder(itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
+    public GalleryLayoutManager(Context context, int itemSpace, int orientation, boolean reverseLayout) {
+        this(new Builder(context, itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
     }
 
     public GalleryLayoutManager(Builder builder) {
-        this(builder.itemSpace, builder.angle, builder.maxAlpha, builder.minAlpha,
+        this(builder.context, builder.itemSpace, builder.angle, builder.maxAlpha, builder.minAlpha,
                 builder.orientation, builder.moveSpeed, builder.flipRotate, builder.reverseLayout);
     }
 
-    private GalleryLayoutManager(int itemSpace, float angle, float maxAlpha, float minAlpha,
+    private GalleryLayoutManager(Context context, int itemSpace, float angle, float maxAlpha, float minAlpha,
                                  int orientation, float moveSpeed, boolean flipRotate, boolean reverseLayout) {
-        super(orientation, reverseLayout);
+        super(context, orientation, reverseLayout);
         setIntegerDy(true);
         this.itemSpace = itemSpace;
         this.moveSpeed = moveSpeed;
@@ -184,9 +185,11 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         private float angle;
         private boolean flipRotate;
         private boolean reverseLayout;
+        private Context context;
 
-        public Builder(int itemSpace) {
+        public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
+            this.context = context;
             orientation = HORIZONTAL;
             angle = INTERVAL_ANGLE;
             maxAlpha = MAX_ALPHA;

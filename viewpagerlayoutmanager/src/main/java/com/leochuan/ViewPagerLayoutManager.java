@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.content.Context;
 import android.graphics.PointF;
 import android.os.Build;
 import android.os.Parcel;
@@ -19,7 +20,7 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
  */
 
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
-public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
+public abstract class ViewPagerLayoutManager extends LinearLayoutManager
         implements RecyclerView.SmoothScroller.ScrollVectorProvider {
 
     public static final int HORIZONTAL = OrientationHelper.HORIZONTAL;
@@ -109,15 +110,16 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
     /**
      * Creates a horizontal ViewPagerLayoutManager
      */
-    public ViewPagerLayoutManager() {
-        this(HORIZONTAL, false);
+    public ViewPagerLayoutManager(Context context) {
+        this(context, HORIZONTAL, false);
     }
 
     /**
      * @param orientation   Layout orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}
      * @param reverseLayout When set to true, layouts from end to start
      */
-    public ViewPagerLayoutManager(int orientation, boolean reverseLayout) {
+    public ViewPagerLayoutManager(Context context, int orientation, boolean reverseLayout) {
+        super(context);
         setOrientation(orientation);
         setReverseLayout(reverseLayout);
         setAutoMeasureEnabled(true);
@@ -208,7 +210,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
      * @return Current orientation,  either {@link #HORIZONTAL} or {@link #VERTICAL}
      * @see #setOrientation(int)
      */
-    int getOrientation() {
+    public int getOrientation() {
         return mOrientation;
     }
 
@@ -218,7 +220,7 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
      *
      * @param orientation {@link #HORIZONTAL} or {@link #VERTICAL}
      */
-    void setOrientation(int orientation) {
+    public void setOrientation(int orientation) {
         if (orientation != HORIZONTAL && orientation != VERTICAL) {
             throw new IllegalArgumentException("invalid orientation:" + orientation);
         }
@@ -317,18 +319,17 @@ public abstract class ViewPagerLayoutManager extends RecyclerView.LayoutManager
         ensureLayoutState();
         resolveShouldLayoutReverse();
 
-        if (getChildCount() == 0) {
-            View scrap = recycler.getViewForPosition(0);
-            measureChildWithMargins(scrap, 0, 0);
-            mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
-            mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
-            mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
-            mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
-            mInterval = setInterval();
-            setUp();
-            mLeftItems = (int) Math.abs(minRemoveOffset() / mInterval) + 1;
-            mRightItems = (int) Math.abs(maxRemoveOffset() / mInterval) + 1;
-        }
+        //make sure properties are correct while measure more than once
+        View scrap = recycler.getViewForPosition(0);
+        measureChildWithMargins(scrap, 0, 0);
+        mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
+        mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
+        mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
+        mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
+        mInterval = setInterval();
+        setUp();
+        mLeftItems = (int) Math.abs(minRemoveOffset() / mInterval) + 1;
+        mRightItems = (int) Math.abs(maxRemoveOffset() / mInterval) + 1;
 
         if (mPendingSavedState != null) {
             mReverseLayout = mPendingSavedState.isReverseLayout;

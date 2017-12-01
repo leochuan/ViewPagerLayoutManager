@@ -12,7 +12,7 @@ public class CircleScaleLayoutActivity extends BaseActivity<CircleScaleLayoutMan
 
     @Override
     protected CircleScaleLayoutManager createLayoutManager() {
-        return new CircleScaleLayoutManager();
+        return new CircleScaleLayoutManager(this);
     }
 
     @Override

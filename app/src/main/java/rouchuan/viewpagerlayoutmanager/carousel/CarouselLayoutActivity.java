@@ -13,7 +13,7 @@ public class CarouselLayoutActivity extends BaseActivity<CarouselLayoutManager, 
 
     @Override
     protected CarouselLayoutManager createLayoutManager() {
-        return new CarouselLayoutManager(Util.Dp2px(this, 100));
+        return new CarouselLayoutManager(this, Util.Dp2px(this, 100));
     }
 
     @Override

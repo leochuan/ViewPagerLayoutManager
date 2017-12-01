@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.content.Context;
 import android.os.Build;
 import android.view.View;
 
@@ -18,22 +19,22 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
     private float maxRemoveAngle;
     private float minRemoveAngle;
 
-    public CircleScaleLayoutManager() {
-        this(new Builder());
+    public CircleScaleLayoutManager(Context context) {
+        this(new Builder(context));
     }
 
-    public CircleScaleLayoutManager(boolean reverseLayout) {
-        this(new Builder().setReverseLayout(reverseLayout));
+    public CircleScaleLayoutManager(Context context, boolean reverseLayout) {
+        this(new Builder(context).setReverseLayout(reverseLayout));
     }
 
     public CircleScaleLayoutManager(Builder builder) {
-        this(builder.radius, builder.angleInterval, builder.centerScale, builder.moveSpeed,
+        this(builder.context, builder.radius, builder.angleInterval, builder.centerScale, builder.moveSpeed,
                 builder.maxRemoveAngle, builder.minRemoveAngle, builder.reverseLayout);
     }
 
-    private CircleScaleLayoutManager(int radius, int angleInterval, float centerScale, float moveSpeed,
+    private CircleScaleLayoutManager(Context context, int radius, int angleInterval, float centerScale, float moveSpeed,
                                      float max, float min, boolean reverseLayout) {
-        super(HORIZONTAL, reverseLayout);
+        super(context, HORIZONTAL, reverseLayout);
         setEnableBringCenterToFront(true);
         this.radius = radius;
         this.angleInterval = angleInterval;
@@ -188,8 +189,10 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         private float maxRemoveAngle;
         private float minRemoveAngle;
         private boolean reverseLayout;
+        private Context context;
 
-        public Builder() {
+        public Builder(Context context) {
+            this.context = context;
             radius = INVALID_VALUE;
             angleInterval = INTERVAL_ANGLE;
             centerScale = SCALE_RATE;

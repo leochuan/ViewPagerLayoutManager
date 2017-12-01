@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.content.Context;
 import android.os.Build;
 import android.view.View;
 
@@ -15,26 +16,26 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
     private float minScale;
     private float moveSpeed;
 
-    public CarouselLayoutManager(int itemSpace) {
-        this(new Builder(itemSpace));
+    public CarouselLayoutManager(Context context, int itemSpace) {
+        this(new Builder(context, itemSpace));
     }
 
-    public CarouselLayoutManager(int itemSpace, int orientation) {
-        this(new Builder(itemSpace).setOrientation(orientation));
+    public CarouselLayoutManager(Context context, int itemSpace, int orientation) {
+        this(new Builder(context, itemSpace).setOrientation(orientation));
     }
 
-    public CarouselLayoutManager(int itemSpace, int orientation, boolean reverseLayout) {
-        this(new Builder(itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
+    public CarouselLayoutManager(Context context, int itemSpace, int orientation, boolean reverseLayout) {
+        this(new Builder(context, itemSpace).setOrientation(orientation).setReverseLayout(reverseLayout));
     }
 
     public CarouselLayoutManager(Builder builder) {
-        this(builder.itemSpace, builder.minScale,
+        this(builder.context, builder.itemSpace, builder.minScale,
                 builder.orientation, builder.moveSpeed, builder.reverseLayout);
     }
 
-    private CarouselLayoutManager(int itemSpace, float minScale, int orientation,
+    private CarouselLayoutManager(Context context, int itemSpace, float minScale, int orientation,
                                   float moveSpeed, boolean reverseLayout) {
-        super(orientation, reverseLayout);
+        super(context, orientation, reverseLayout);
         setEnableBringCenterToFront(true);
         setIntegerDy(true);
         this.itemSpace = itemSpace;
@@ -118,14 +119,16 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         private static final float DEFAULT_SPEED = 1f;
         private static final float MIN_SCALE = 0.5f;
 
+        private Context context;
         private int itemSpace;
         private int orientation;
         private float minScale;
         private float moveSpeed;
         private boolean reverseLayout;
 
-        public Builder(int itemSpace) {
+        public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
+            this.context = context;
             orientation = HORIZONTAL;
             minScale = MIN_SCALE;
             this.moveSpeed = DEFAULT_SPEED;

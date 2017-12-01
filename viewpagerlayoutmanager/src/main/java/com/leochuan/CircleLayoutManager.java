@@ -1,5 +1,6 @@
 package com.leochuan;
 
+import android.content.Context;
 import android.os.Build;
 import android.view.View;
 
@@ -17,22 +18,22 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     private float maxRemoveAngle;
     private float minRemoveAngle;
 
-    public CircleLayoutManager() {
-        this(new Builder());
+    public CircleLayoutManager(Context context) {
+        this(new Builder(context));
     }
 
-    public CircleLayoutManager(boolean reverseLayout) {
-        this(new Builder().setReverseLayout(reverseLayout));
+    public CircleLayoutManager(Context context, boolean reverseLayout) {
+        this(new Builder(context).setReverseLayout(reverseLayout));
     }
 
     public CircleLayoutManager(Builder builder) {
-        this(builder.radius, builder.angleInterval, builder.moveSpeed, builder.maxRemoveAngle,
+        this(builder.context, builder.radius, builder.angleInterval, builder.moveSpeed, builder.maxRemoveAngle,
                 builder.minRemoveAngle, builder.reverseLayout);
     }
 
-    private CircleLayoutManager(int radius, int angleInterval, float moveSpeed,
+    private CircleLayoutManager(Context context, int radius, int angleInterval, float moveSpeed,
                                 float max, float min, boolean reverseLayout) {
-        super(HORIZONTAL, reverseLayout);
+        super(context, HORIZONTAL, reverseLayout);
         this.radius = radius;
         this.angleInterval = angleInterval;
         this.moveSpeed = moveSpeed;
@@ -164,8 +165,10 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         private float maxRemoveAngle;
         private float minRemoveAngle;
         private boolean reverseLayout;
+        private Context context;
 
-        public Builder() {
+        public Builder(Context context) {
+            this.context = context;
             radius = INVALID_VALUE;
             angleInterval = INTERVAL_ANGLE;
             moveSpeed = 1 / DISTANCE_RATIO;
