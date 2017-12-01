@@ -6,13 +6,12 @@
   <artifactId>viewpagerlayoutmanager</artifactId>
   <version>2.0.1</version>
   <packaging>aar</packaging>
-  <name>ViewPager Layout Manager</name>
+  <name>Viewpager Layout Manager</name>
   <url>https://github.com/leochuan/ViewPagerLayoutManager</url>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
     </license>
   </licenses>
   <developers>
@@ -22,4 +21,9 @@
       <email>ruochuan.leo@gmail.com</email>
     </developer>
   </developers>
+  <scm>
+    <connection>https://github.com/leochuan/ViewPagerLayoutManager.git</connection>
+    <developerConnection>https://github.com/leochuan/ViewPagerLayoutManager.git</developerConnection>
+    <url>https://github.com/leochuan/ViewPagerLayoutManager</url>
+  </scm>
 </project>

@@ -26,20 +26,20 @@ dependencies {
 }
 
 apply plugin: 'maven'
+def currentVersion = '2.0.1'
 task createPom << {
     pom {
         project {
             groupId 'rouchuan.viewpagerlayoutmanager'
             artifactId 'viewpagerlayoutmanager'
-            version '2.0.1'
+            version currentVersion
             packaging 'aar'
-            name 'ViewPager Layout Manager'
+            name 'Viewpager Layout Manager'
             url "https://github.com/leochuan/ViewPagerLayoutManager"
             licenses {
                 license {
                     name 'The Apache Software License, Version 2.0'
                     url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
                 }
             }
             developers {
@@ -49,7 +49,22 @@ task createPom << {
                     email 'ruochuan.leo@gmail.com'
                 }
             }
+            scm {
+                connection 'https://github.com/leochuan/ViewPagerLayoutManager.git'
+                developerConnection 'https://github.com/leochuan/ViewPagerLayoutManager.git'
+                url 'https://github.com/leochuan/ViewPagerLayoutManager'
+            }
         }
-    }.writeTo("pom.xml")
+    }.writeTo("viewpagerlayoutmanager-${currentVersion}.pom")
 }
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = currentVersion
+}
+
+artifacts {
+    archives sourcesJar
+}
+
 build.dependsOn('createPom')

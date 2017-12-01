@@ -1,6 +1,6 @@
 {
   "package": {
-    "name": "ViewPagerLayoutManager",
+    "name": "viewpager-layout-manager",
     "repo": "maven",
     "subject": "rouchuan",
     "desc": "ViewPager like LayoutManager which supports some awesome animations and infinite scroll.",
@@ -28,13 +28,13 @@
       "matrixParams": { "override": 1 }
     },
     {
-      "includePattern": "viewpagerlayoutmanager/build/(.*\\.pom)",
+      "includePattern": "viewpagerlayoutmanager/(.*\\.pom)",
       "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.1/$1",
       "matrixParams": { "override": 1 }
     },
     {
-      "includePattern": "viewpagerlayoutmanager/build/(.*release\\.aar)",
-      "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.1/$1",
+      "includePattern": "viewpagerlayoutmanager/build/outputs/aar/(.*release\\.aar)",
+      "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.1/viewpagerlayoutmanager-2.0.1.aar",
       "matrixParams": { "override": 1 }
     }
   ],
