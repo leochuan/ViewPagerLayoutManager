@@ -1,13 +1,21 @@
 language: android
-
 jdk: oraclejdk8
-
 sudo: false
-
 android:
-    components:
-    - build-tools-26.0.2
-    - android-26
-
+  components:
+  - build-tools-26.0.2
+  - android-26
 script:
-- ./gradlew build
+  - "./gradlew build"
+deploy:
+  - provider: releases
+    skip_cleanup: true
+    file: "app/build/outputs/apk/debug/app-debug.apk"
+    api_key:
+      secure: VEFF5IWyypoYuu2s4fYDG8HujOFdD8mTKBa8FmJJOyOQxZXorhcrRRyoJUNno/cpVmJWmevS0AXcBLAlolh5R51YVnAIeb0AVcKNW3C4CCiy1F6J744PNAe59AivSTwY9ZwBDMKhm/u4gmVEmXPkomHT87mBuvFwrVxLDo6nmKb6hEX9zCx9ju/Qa+mhO7PyuYOhcAO1hA1I1kAdZALvzlCvl3rHsF6a5hrKuUfPlyeFy53B3GcW6Zv7UAmS0ZWaA91WgINofQblk06UatTNz911ih6cPdTnbbNePNHzOOWaXC9bAQ7Cs6IQVoNc/1CYK72mO/zD2w+uge5W7VzLX1yuSyOIKKDKz2sulH6oQP6q1QeVPqqBa2qhEfS82V7LXhJOIMSzKFd597S94bOO/Y+YFoqS1A8DAFXwNAJv9go39/k7IXu+gmGFTic8E9Gfc/z7t1VHJjNRuyS1uZRcj9hfd7kGJz/oz4Ps8UuePX6CRwxxwRrZeLU200mCZ0KmSqM1bBzPiWANT+d/zPhPfDjYBqNDIRvuNHFkRaR3Mw8HeF4b5R3FI1aInih7XkFc3t58AZYtuCsbSy3y8hG8aQiOYrHV3V3ixpV3kODocmChXzrHy7inHSr00rDPJWwssfop31T1dOTqlilg4ZpNFHzAN3jgZp+BeNZL7sKjHeI=
+  - provider: bintray
+    skip_cleanup: true
+    file: "descriptor.json"
+    user: leochuan
+    key:
+      secure: ZWcynDHi8BaoHu+aBpZnJWrg1o9+2QTL1/DBbDSiZLqEUlIWAk0NcOaYgSurlzdEajRKsJM6DAL2wuA9MwH6YM8hXdXbiV6q2KdnXsvGNcwtYwa30nfYhXdrg1BDwnHo03QYF/kIE+swKq9Ef88qgMxwQVMXl7isNrq6w5EsEG31IurfGbytDd9bkwewP3d0DqpzOzPAzFz2Qtz0gRGRViXGbbuqVWAawEk+2Wy1IXeMLsxxPQZ/itqlKGLix3ehfVcXn7pJ+1xiwV8zu2OE2O9CkLQGnEjPS8G0KABRCwGSwJTl2tjVyucUYFNBdEz2PEY91mOv3yadWx+kVaPPaZe5n4O59Bb49hmGuiLhM/vO1dZb3WooseNB4Wp/XNlYejxe0XnRYAbJZyjXQcMa7EzHVWBKEC6r6GIrYQz3+NqwKYgkxQcjF2e0lzv3/4TE+zEe8t3PStn5A/vRH0vZfrBc9t0pIn2O1tF/nzIDqCSNpCc2sk88/PpTXmMIPtASz/W5t7EI/jgnskVWt96M3eZWGPlduQUnwVOcGVhfe6CiNg7m2wGI7E0VyVm+B8bVarfkvCwmTZMBbM5OjDU986zBc3TMpaYxG2rV9DgawLEh6pgnCX2PCEmyYEyYhMhv7zoug6rl/b0WffmyQoNv+qzbKJ/4pWIIKzabIPnVoC4=

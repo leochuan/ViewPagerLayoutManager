@@ -24,3 +24,32 @@ android {
 dependencies {
     compileOnly 'com.android.support:recyclerview-v7:26.1.0'
 }
+
+apply plugin: 'maven'
+task createPom << {
+    pom {
+        project {
+            groupId 'rouchuan.viewpagerlayoutmanager'
+            artifactId 'viewpagerlayoutmanager'
+            version '2.0.1'
+            packaging 'aar'
+            name 'ViewPager Layout Manager'
+            url "https://github.com/leochuan/ViewPagerLayoutManager"
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            developers {
+                developer {
+                    id 'leochuan'
+                    name 'Shen Ruo Chuan'
+                    email 'ruochuan.leo@gmail.com'
+                }
+            }
+        }
+    }.writeTo("pom.xml")
+}
+build.dependsOn('createPom')
