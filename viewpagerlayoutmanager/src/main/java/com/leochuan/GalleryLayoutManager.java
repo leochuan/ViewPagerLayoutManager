@@ -1,7 +1,6 @@
 package com.leochuan;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.View;
 
 /**
@@ -144,10 +143,6 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         }
         final float alpha = calAlpha(targetOffset);
         itemView.setAlpha(alpha);
-        if (getEnableBringCenterToFront() &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.setElevation(alpha * 5);
-        }
     }
 
     @Override

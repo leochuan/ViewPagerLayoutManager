@@ -1,7 +1,6 @@
 package com.leochuan;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.View;
 
 /**
@@ -94,9 +93,6 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         float scale = calculateScale(targetOffset + mSpaceMain);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.setElevation(scale * 5);
-        }
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.leochuan;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.View;
 
 /**
@@ -11,6 +10,9 @@ import android.view.View;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
+    public static final int LEFT_ON_TOP = 0;
+    public static final int RIGHT_ON_TOP = 1;
+    public static final int CENTER_ON_TOP = 2;
 
     private int radius;
     private int angleInterval;
@@ -18,6 +20,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
     private float centerScale;
     private float maxRemoveAngle;
     private float minRemoveAngle;
+    private int zAlignment;
 
     public CircleScaleLayoutManager(Context context) {
         this(new Builder(context));
@@ -29,11 +32,11 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     public CircleScaleLayoutManager(Builder builder) {
         this(builder.context, builder.radius, builder.angleInterval, builder.centerScale, builder.moveSpeed,
-                builder.maxRemoveAngle, builder.minRemoveAngle, builder.reverseLayout);
+                builder.maxRemoveAngle, builder.minRemoveAngle, builder.zAlignment, builder.reverseLayout);
     }
 
     private CircleScaleLayoutManager(Context context, int radius, int angleInterval, float centerScale, float moveSpeed,
-                                     float max, float min, boolean reverseLayout) {
+                                     float max, float min, int zAlignment, boolean reverseLayout) {
         super(context, HORIZONTAL, reverseLayout);
         setEnableBringCenterToFront(true);
         this.radius = radius;
@@ -42,6 +45,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         this.moveSpeed = moveSpeed;
         this.maxRemoveAngle = max;
         this.minRemoveAngle = min;
+        this.zAlignment = zAlignment;
     }
 
     public int getRadius() {
@@ -66,6 +70,10 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     public float getMinRemoveAngle() {
         return minRemoveAngle;
+    }
+
+    public int getZAlignment() {
+        return zAlignment;
     }
 
     public void setRadius(int radius) {
@@ -109,6 +117,14 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         requestLayout();
     }
 
+    public void setZAlignment(int zAlignment) {
+        assertNotInLayoutOrScroll(null);
+        assertZAlignmentState(zAlignment);
+        if (this.zAlignment == zAlignment) return;
+        this.zAlignment = zAlignment;
+        requestLayout();
+    }
+
     @Override
     protected float setInterval() {
         return angleInterval;
@@ -145,14 +161,16 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         float scale = calculateScale(itemView, targetOffset);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.setElevation(calculateElevation(targetOffset));
-        }
     }
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        return calculateElevation(targetOffset);
+        if (zAlignment == LEFT_ON_TOP)
+            return (540 - targetOffset) / 72;
+        else if (zAlignment == RIGHT_ON_TOP)
+            return (targetOffset - 540) / 72;
+        else
+            return (360 - Math.abs(targetOffset)) / 72;
     }
 
     @Override
@@ -172,8 +190,10 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         return (centerScale - 1f) / -angleInterval * diff + centerScale;
     }
 
-    private float calculateElevation(float targetOffset) {
-        return (360 - Math.abs(targetOffset)) / 72;
+    static void assertZAlignmentState(int zAlignment) {
+        if (zAlignment != LEFT_ON_TOP && zAlignment != RIGHT_ON_TOP && zAlignment != CENTER_ON_TOP) {
+            throw new IllegalStateException("zAlignment must be one of LEFT_ON_TOP RIGHT_ON_TOP and CENTER_ON_TOP");
+        }
     }
 
     public static class Builder {
@@ -190,6 +210,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         private float minRemoveAngle;
         private boolean reverseLayout;
         private Context context;
+        private int zAlignment;
 
         public Builder(Context context) {
             this.context = context;
@@ -200,6 +221,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
             maxRemoveAngle = 90;
             minRemoveAngle = -90;
             reverseLayout = false;
+            zAlignment = CENTER_ON_TOP;
         }
 
         public Builder setRadius(int radius) {
@@ -234,6 +256,12 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setReverseLayout(boolean reverseLayout) {
             this.reverseLayout = reverseLayout;
+            return this;
+        }
+
+        public Builder setZAlignment(int zAlignment) {
+            assertZAlignmentState(zAlignment);
+            this.zAlignment = zAlignment;
             return this;
         }
 

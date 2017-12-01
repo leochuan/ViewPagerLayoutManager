@@ -1,7 +1,6 @@
 package com.leochuan;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.View;
 
 /**
@@ -128,15 +127,11 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
         itemView.setRotation(targetOffset);
-        if (getEnableBringCenterToFront() &&
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            itemView.setElevation(calculateElevation(targetOffset));
-        }
     }
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        return calculateElevation(targetOffset);
+        return (360 - Math.abs(targetOffset)) / 72;
     }
 
     @Override
@@ -148,10 +143,6 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     protected float getDistanceRatio() {
         if (moveSpeed == 0) return Float.MAX_VALUE;
         return 1 / moveSpeed;
-    }
-
-    private float calculateElevation(float targetOffset) {
-        return (360 - Math.abs(targetOffset)) / 72;
     }
 
     public static class Builder {

@@ -2,7 +2,6 @@ package com.leochuan;
 
 import android.content.Context;
 import android.graphics.PointF;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
@@ -542,9 +541,8 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
                 // we need i to calculate the real offset of current view
                 final float targetOffset = getProperty(i) - mOffset;
                 layoutScrap(scrap, targetOffset);
-                final float orderWeight =
-                        (mEnableBringCenterToFront && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
-                                setViewElevation(scrap, targetOffset) : adapterPosition;
+                final float orderWeight = mEnableBringCenterToFront ?
+                        setViewElevation(scrap, targetOffset) : adapterPosition;
                 if (orderWeight > lastOrderWeight) {
                     addView(scrap);
                 } else {
