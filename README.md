@@ -45,7 +45,7 @@ repositories {
 }
 
 dependencies {
-  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.0'
+  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.1'
 }
 ```
 
@@ -55,7 +55,7 @@ Maven:
 <dependency>
   <groupId>rouchuan.viewpagerlayoutmanager</groupId>
   <artifactId>viewpagerlayoutmanager</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.1</version>
   <type>pom</type>
 </dependency>
 ```
@@ -66,7 +66,7 @@ Make sure that each item has the same size, or something unpredictable may happe
 You can warm up your layoutmanager by `Builder`.
 
 ```java
-new CircleLayoutManager.Builder()
+new CircleLayoutManager.Builder(context)
                 .setAngleInterval(mAngle)
                 .setMaxRemoveAngle(mMaxRemoveAngle)
                 .setMinRemoveAngle(mMinRemoveAngle)
@@ -79,7 +79,7 @@ new CircleLayoutManager.Builder()
 Or just simply call the construct.
 
 ```java
-new CircleLayoutManager();
+new CircleLayoutManager(context);
 ```
 
 ## License

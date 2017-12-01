@@ -43,7 +43,7 @@ repositories {
 }
 
 dependencies {
-  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.0'
+  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.1'
 }
 ```
 
@@ -53,7 +53,7 @@ Maven:
 <dependency>
   <groupId>rouchuan.viewpagerlayoutmanager</groupId>
   <artifactId>viewpagerlayoutmanager</artifactId>
-  <version>2.0.0</version>
+  <version>2.0.1</version>
   <type>pom</type>
 </dependency>
 ```
@@ -67,7 +67,7 @@ Maven:
 你可以通过新建一个`Builder`来设置各种属性:
 
 ```java
-new CircleLayoutManager.Builder()
+new CircleLayoutManager.Builder(context)
                 .setAngleInterval(mAngle)
                 .setMaxRemoveAngle(mMaxRemoveAngle)
                 .setMinRemoveAngle(mMinRemoveAngle)
@@ -80,7 +80,7 @@ new CircleLayoutManager.Builder()
 或者只是简单的调用一下预设的构造方法:
 
 ```java
-new CircleLayoutManager();
+new CircleLayoutManager(context);
 ```
 
 ## License
