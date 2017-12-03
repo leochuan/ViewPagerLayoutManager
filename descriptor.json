@@ -2,7 +2,7 @@
   "package": {
     "name": "viewpager-layout-manager",
     "repo": "maven",
-    "subject": "rouchuan",
+    "subject": "leochuan",
     "desc": "ViewPager like LayoutManager which supports some awesome animations and infinite scroll.",
     "website_url": "https://github.com/leochuan/ViewPagerLayoutManager",
     "issue_tracker_url": "https://github.com/leochuan/ViewPagerLayoutManager/issues",
