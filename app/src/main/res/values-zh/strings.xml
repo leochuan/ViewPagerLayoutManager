@@ -24,4 +24,13 @@
     <string name="toggle_reverse">翻转排列</string>
     <string name="flip_rotate">交换翻转方向</string>
     <string name="change_orientation">改变朝向</string>
+    <string name="gravity">方向</string>
+    <string name="left">靠左</string>
+    <string name="right">靠右</string>
+    <string name="top">靠上</string>
+    <string name="bottom">靠下</string>
+    <string name="z_alignment">Z轴对齐方式</string>
+    <string name="left_on_top">靠左在上</string>
+    <string name="right_on_top">靠右在上</string>
+    <string name="center_on_top">靠中间在上</string>
 </resources>

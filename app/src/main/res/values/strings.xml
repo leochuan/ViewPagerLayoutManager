@@ -24,4 +24,13 @@
     <string name="toggle_reverse">Toggle Reverse</string>
     <string name="flip_rotate">Flip Rotate</string>
     <string name="change_orientation">Change Orientation</string>
+    <string name="gravity">Gravity</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="top">Top</string>
+    <string name="bottom">Bottom</string>
+    <string name="z_alignment">Z-Alignment</string>
+    <string name="left_on_top">Left On Top</string>
+    <string name="right_on_top">Right On Top</string>
+    <string name="center_on_top">Center On Top</string>
 </resources>

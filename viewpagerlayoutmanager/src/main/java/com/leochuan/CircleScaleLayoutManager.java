@@ -10,9 +10,14 @@ import android.view.View;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
-    public static final int LEFT_ON_TOP = 0;
-    public static final int RIGHT_ON_TOP = 1;
-    public static final int CENTER_ON_TOP = 2;
+    public static final int LEFT = 0;
+    public static final int RIGHT = 1;
+    public static final int TOP = 2;
+    public static final int BOTTOM = 3;
+
+    public static final int LEFT_ON_TOP = 4;
+    public static final int RIGHT_ON_TOP = 5;
+    public static final int CENTER_ON_TOP = 6;
 
     private int radius;
     private int angleInterval;
@@ -20,10 +25,16 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
     private float centerScale;
     private float maxRemoveAngle;
     private float minRemoveAngle;
+    private int gravity;
+    private boolean flipRotate;
     private int zAlignment;
 
     public CircleScaleLayoutManager(Context context) {
         this(new Builder(context));
+    }
+
+    public CircleScaleLayoutManager(Context context, int gravity, boolean reverseLayout) {
+        this(new Builder(context).setGravity(gravity).setReverseLayout(reverseLayout));
     }
 
     public CircleScaleLayoutManager(Context context, boolean reverseLayout) {
@@ -32,11 +43,11 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     public CircleScaleLayoutManager(Builder builder) {
         this(builder.context, builder.radius, builder.angleInterval, builder.centerScale, builder.moveSpeed,
-                builder.maxRemoveAngle, builder.minRemoveAngle, builder.zAlignment, builder.reverseLayout);
+                builder.maxRemoveAngle, builder.minRemoveAngle, builder.gravity, builder.zAlignment, builder.flipRotate, builder.reverseLayout);
     }
 
-    private CircleScaleLayoutManager(Context context, int radius, int angleInterval, float centerScale, float moveSpeed,
-                                     float max, float min, int zAlignment, boolean reverseLayout) {
+    private CircleScaleLayoutManager(Context context, int radius, int angleInterval, float centerScale, float moveSpeed, float max,
+                                     float min, int gravity, int zAlignment, boolean flipRotate, boolean reverseLayout) {
         super(context, HORIZONTAL, reverseLayout);
         setEnableBringCenterToFront(true);
         this.radius = radius;
@@ -45,6 +56,8 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         this.moveSpeed = moveSpeed;
         this.maxRemoveAngle = max;
         this.minRemoveAngle = min;
+        this.gravity = gravity;
+        this.flipRotate = flipRotate;
         this.zAlignment = zAlignment;
     }
 
@@ -70,6 +83,14 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     public float getMinRemoveAngle() {
         return minRemoveAngle;
+    }
+
+    public int getGravity() {
+        return gravity;
+    }
+
+    public boolean getFlipRotate() {
+        return flipRotate;
     }
 
     public int getZAlignment() {
@@ -117,6 +138,26 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         requestLayout();
     }
 
+    public void setGravity(int gravity) {
+        assertNotInLayoutOrScroll(null);
+        assertGravity(gravity);
+        if (this.gravity == gravity) return;
+        this.gravity = gravity;
+        if (gravity == LEFT || gravity == RIGHT) {
+            setOrientation(VERTICAL);
+        } else {
+            setOrientation(HORIZONTAL);
+        }
+        requestLayout();
+    }
+
+    public void setFlipRotate(boolean flipRotate) {
+        assertNotInLayoutOrScroll(null);
+        if (this.flipRotate == flipRotate) return;
+        this.flipRotate = flipRotate;
+        requestLayout();
+    }
+
     public void setZAlignment(int zAlignment) {
         assertNotInLayoutOrScroll(null);
         assertZAlignmentState(zAlignment);
@@ -147,18 +188,70 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected int calItemLeft(View itemView, float targetOffset) {
-        return (int) (radius * Math.cos(Math.toRadians(90 - targetOffset)));
+        switch (gravity) {
+            case LEFT:
+                return (int) (radius * Math.sin(Math.toRadians(90 - targetOffset)) - radius);
+            case RIGHT:
+                return (int) (radius - radius * Math.sin(Math.toRadians(90 - targetOffset)));
+            case TOP:
+            case BOTTOM:
+            default:
+                return (int) (radius * Math.cos(Math.toRadians(90 - targetOffset)));
+        }
     }
 
     @Override
     protected int calItemTop(View itemView, float targetOffset) {
-        return (int) (radius - radius * Math.sin(Math.toRadians(90 - targetOffset)));
+        switch (gravity) {
+            case LEFT:
+            case RIGHT:
+                return (int) (radius * Math.cos(Math.toRadians(90 - targetOffset)));
+            case TOP:
+                return (int) (radius * Math.sin(Math.toRadians(90 - targetOffset)) - radius);
+            case BOTTOM:
+            default:
+                return (int) (radius - radius * Math.sin(Math.toRadians(90 - targetOffset)));
+        }
     }
 
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        itemView.setRotation(targetOffset);
-        float scale = calculateScale(itemView, targetOffset);
+        float scale = 1f;
+        switch (gravity) {
+            case RIGHT:
+            case TOP:
+                if (flipRotate) {
+                    itemView.setRotation(targetOffset);
+                    if (targetOffset < angleInterval && targetOffset > -angleInterval) {
+                        float diff = Math.abs(Math.abs(itemView.getRotation() - angleInterval) - angleInterval);
+                        scale = (centerScale - 1f) / -angleInterval * diff + centerScale;
+                    }
+                } else {
+                    itemView.setRotation(360 - targetOffset);
+                    if (targetOffset < angleInterval && targetOffset > -angleInterval) {
+                        float diff = Math.abs(Math.abs(360 - itemView.getRotation() - angleInterval) - angleInterval);
+                        scale = (centerScale - 1f) / -angleInterval * diff + centerScale;
+                    }
+                }
+                break;
+            case LEFT:
+            case BOTTOM:
+            default:
+                if (flipRotate) {
+                    itemView.setRotation(360 - targetOffset);
+                    if (targetOffset < angleInterval && targetOffset > -angleInterval) {
+                        float diff = Math.abs(Math.abs(360 - itemView.getRotation() - angleInterval) - angleInterval);
+                        scale = (centerScale - 1f) / -angleInterval * diff + centerScale;
+                    }
+                } else {
+                    itemView.setRotation(targetOffset);
+                    if (targetOffset < angleInterval && targetOffset > -angleInterval) {
+                        float diff = Math.abs(Math.abs(itemView.getRotation() - angleInterval) - angleInterval);
+                        scale = (centerScale - 1f) / -angleInterval * diff + centerScale;
+                    }
+                }
+                break;
+        }
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
     }
@@ -184,15 +277,15 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         return 1 / moveSpeed;
     }
 
-    private float calculateScale(View itemView, float targetOffset) {
-        if (targetOffset >= angleInterval || targetOffset <= -angleInterval) return 1f;
-        float diff = Math.abs(Math.abs(itemView.getRotation() - angleInterval) - angleInterval);
-        return (centerScale - 1f) / -angleInterval * diff + centerScale;
+    private static void assertGravity(int gravity) {
+        if (gravity != LEFT && gravity != RIGHT && gravity != TOP && gravity != BOTTOM) {
+            throw new IllegalArgumentException("gravity must be one of LEFT RIGHT TOP and BOTTOM");
+        }
     }
 
-    static void assertZAlignmentState(int zAlignment) {
+    private static void assertZAlignmentState(int zAlignment) {
         if (zAlignment != LEFT_ON_TOP && zAlignment != RIGHT_ON_TOP && zAlignment != CENTER_ON_TOP) {
-            throw new IllegalStateException("zAlignment must be one of LEFT_ON_TOP RIGHT_ON_TOP and CENTER_ON_TOP");
+            throw new IllegalArgumentException("zAlignment must be one of LEFT_ON_TOP RIGHT_ON_TOP and CENTER_ON_TOP");
         }
     }
 
@@ -210,6 +303,8 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         private float minRemoveAngle;
         private boolean reverseLayout;
         private Context context;
+        private int gravity;
+        private boolean flipRotate;
         private int zAlignment;
 
         public Builder(Context context) {
@@ -221,6 +316,8 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
             maxRemoveAngle = 90;
             minRemoveAngle = -90;
             reverseLayout = false;
+            flipRotate = false;
+            gravity = BOTTOM;
             zAlignment = CENTER_ON_TOP;
         }
 
@@ -256,6 +353,17 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setReverseLayout(boolean reverseLayout) {
             this.reverseLayout = reverseLayout;
+            return this;
+        }
+
+        public Builder setGravity(int gravity) {
+            assertGravity(gravity);
+            this.gravity = gravity;
+            return this;
+        }
+
+        public Builder setFlipRotate(boolean flipRotate) {
+            this.flipRotate = flipRotate;
             return this;
         }
 

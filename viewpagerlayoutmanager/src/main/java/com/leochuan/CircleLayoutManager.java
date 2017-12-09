@@ -10,12 +10,23 @@ import android.view.View;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class CircleLayoutManager extends ViewPagerLayoutManager {
+    public static final int LEFT = 0;
+    public static final int RIGHT = 1;
+    public static final int TOP = 2;
+    public static final int BOTTOM = 3;
+
+    public static final int LEFT_ON_TOP = 4;
+    public static final int RIGHT_ON_TOP = 5;
+    public static final int CENTER_ON_TOP = 6;
 
     private int radius;
     private int angleInterval;
     private float moveSpeed;
     private float maxRemoveAngle;
     private float minRemoveAngle;
+    private int gravity;
+    private boolean flipRotate;
+    private int zAlignment;
 
     public CircleLayoutManager(Context context) {
         this(new Builder(context));
@@ -25,19 +36,27 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         this(new Builder(context).setReverseLayout(reverseLayout));
     }
 
-    public CircleLayoutManager(Builder builder) {
-        this(builder.context, builder.radius, builder.angleInterval, builder.moveSpeed, builder.maxRemoveAngle,
-                builder.minRemoveAngle, builder.reverseLayout);
+    public CircleLayoutManager(Context context, int gravity, boolean reverseLayout) {
+        this(new Builder(context).setGravity(gravity).setReverseLayout(reverseLayout));
     }
 
-    private CircleLayoutManager(Context context, int radius, int angleInterval, float moveSpeed,
-                                float max, float min, boolean reverseLayout) {
-        super(context, HORIZONTAL, reverseLayout);
+    public CircleLayoutManager(Builder builder) {
+        this(builder.context, builder.radius, builder.angleInterval, builder.moveSpeed, builder.maxRemoveAngle,
+                builder.minRemoveAngle, builder.gravity, builder.zAlignment, builder.flipRotate, builder.reverseLayout);
+    }
+
+    private CircleLayoutManager(Context context, int radius, int angleInterval, float moveSpeed, float max,
+                                float min, int gravity, int zAlignment, boolean flipRotate, boolean reverseLayout) {
+        super(context, (gravity == LEFT || gravity == RIGHT) ? VERTICAL : HORIZONTAL, reverseLayout);
+        setEnableBringCenterToFront(true);
         this.radius = radius;
         this.angleInterval = angleInterval;
         this.moveSpeed = moveSpeed;
         this.maxRemoveAngle = max;
         this.minRemoveAngle = min;
+        this.gravity = gravity;
+        this.flipRotate = flipRotate;
+        this.zAlignment = zAlignment;
     }
 
     public int getRadius() {
@@ -58,6 +77,18 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     public float getMinRemoveAngle() {
         return minRemoveAngle;
+    }
+
+    public int getGravity() {
+        return gravity;
+    }
+
+    public boolean getFlipRotate() {
+        return flipRotate;
+    }
+
+    public int getZAlignment() {
+        return zAlignment;
     }
 
     public void setRadius(int radius) {
@@ -94,6 +125,34 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         requestLayout();
     }
 
+    public void setGravity(int gravity) {
+        assertNotInLayoutOrScroll(null);
+        assertGravity(gravity);
+        if (this.gravity == gravity) return;
+        this.gravity = gravity;
+        if (gravity == LEFT || gravity == RIGHT) {
+            setOrientation(VERTICAL);
+        } else {
+            setOrientation(HORIZONTAL);
+        }
+        requestLayout();
+    }
+
+    public void setFlipRotate(boolean flipRotate) {
+        assertNotInLayoutOrScroll(null);
+        if (this.flipRotate == flipRotate) return;
+        this.flipRotate = flipRotate;
+        requestLayout();
+    }
+
+    public void setZAlignment(int zAlignment) {
+        assertNotInLayoutOrScroll(null);
+        assertZAlignmentState(zAlignment);
+        if (this.zAlignment == zAlignment) return;
+        this.zAlignment = zAlignment;
+        requestLayout();
+    }
+
     @Override
     protected float setInterval() {
         return angleInterval;
@@ -116,27 +175,76 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected int calItemLeft(View itemView, float targetOffset) {
-        return (int) (radius * Math.cos(Math.toRadians(90 - targetOffset)));
+        switch (gravity) {
+            case LEFT:
+                return (int) (radius * Math.sin(Math.toRadians(90 - targetOffset)) - radius);
+            case RIGHT:
+                return (int) (radius - radius * Math.sin(Math.toRadians(90 - targetOffset)));
+            case TOP:
+            case BOTTOM:
+            default:
+                return (int) (radius * Math.cos(Math.toRadians(90 - targetOffset)));
+        }
     }
 
     @Override
     protected int calItemTop(View itemView, float targetOffset) {
-        return (int) (radius - radius * Math.sin(Math.toRadians(90 - targetOffset)));
+        switch (gravity) {
+            case LEFT:
+            case RIGHT:
+                return (int) (radius * Math.cos(Math.toRadians(90 - targetOffset)));
+            case TOP:
+                return (int) (radius * Math.sin(Math.toRadians(90 - targetOffset)) - radius);
+            case BOTTOM:
+            default:
+                return (int) (radius - radius * Math.sin(Math.toRadians(90 - targetOffset)));
+        }
     }
 
     @Override
     protected void setItemViewProperty(View itemView, float targetOffset) {
-        itemView.setRotation(targetOffset);
+        switch (gravity) {
+            case RIGHT:
+            case TOP:
+                if (flipRotate) {
+                    itemView.setRotation(targetOffset);
+                } else {
+                    itemView.setRotation(360 - targetOffset);
+                }
+                break;
+            case LEFT:
+            case BOTTOM:
+            default:
+                if (flipRotate) {
+                    itemView.setRotation(360 - targetOffset);
+                } else {
+                    itemView.setRotation(targetOffset);
+                }
+                break;
+        }
     }
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        return (360 - Math.abs(targetOffset)) / 72;
+        if (zAlignment == LEFT_ON_TOP)
+            return (540 - targetOffset) / 72;
+        else if (zAlignment == RIGHT_ON_TOP)
+            return (targetOffset - 540) / 72;
+        else
+            return (360 - Math.abs(targetOffset)) / 72;
     }
 
     @Override
     protected float propertyChangeWhenScroll(View itemView) {
-        return itemView.getRotation();
+        switch (gravity) {
+            case RIGHT:
+            case TOP:
+                return flipRotate ? -itemView.getRotation() : itemView.getRotation() - 360;
+            case LEFT:
+            case BOTTOM:
+            default:
+                return flipRotate ? itemView.getRotation() - 360 : -itemView.getRotation();
+        }
     }
 
     @Override
@@ -145,10 +253,24 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         return 1 / moveSpeed;
     }
 
+    private static void assertGravity(int gravity) {
+        if (gravity != LEFT && gravity != RIGHT && gravity != TOP && gravity != BOTTOM) {
+            throw new IllegalArgumentException("gravity must be one of LEFT RIGHT TOP and BOTTOM");
+        }
+    }
+
+    private static void assertZAlignmentState(int zAlignment) {
+        if (zAlignment != LEFT_ON_TOP && zAlignment != RIGHT_ON_TOP && zAlignment != CENTER_ON_TOP) {
+            throw new IllegalArgumentException("zAlignment must be one of LEFT_ON_TOP RIGHT_ON_TOP and CENTER_ON_TOP");
+        }
+    }
+
     public static class Builder {
         private static int INTERVAL_ANGLE = 30;// The default mInterval angle between each items
         private static float DISTANCE_RATIO = 10f; // Finger swipe distance divide item rotate angle
         private static int INVALID_VALUE = Integer.MIN_VALUE;
+        private static int MAX_REMOVE_ANGLE = 90;
+        private static int MIN_REMOVE_ANGLE = -90;
 
         private int radius;
         private int angleInterval;
@@ -157,15 +279,21 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         private float minRemoveAngle;
         private boolean reverseLayout;
         private Context context;
+        private int gravity;
+        private boolean flipRotate;
+        private int zAlignment;
 
         public Builder(Context context) {
             this.context = context;
             radius = INVALID_VALUE;
             angleInterval = INTERVAL_ANGLE;
             moveSpeed = 1 / DISTANCE_RATIO;
-            maxRemoveAngle = 90;
-            minRemoveAngle = -90;
+            maxRemoveAngle = MAX_REMOVE_ANGLE;
+            minRemoveAngle = MIN_REMOVE_ANGLE;
             reverseLayout = false;
+            flipRotate = false;
+            gravity = BOTTOM;
+            zAlignment = LEFT_ON_TOP;
         }
 
         public Builder setRadius(int radius) {
@@ -195,6 +323,23 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setReverseLayout(boolean reverseLayout) {
             this.reverseLayout = reverseLayout;
+            return this;
+        }
+
+        public Builder setGravity(int gravity) {
+            assertGravity(gravity);
+            this.gravity = gravity;
+            return this;
+        }
+
+        public Builder setFlipRotate(boolean flipRotate) {
+            this.flipRotate = flipRotate;
+            return this;
+        }
+
+        public Builder setZAlignment(int zAlignment) {
+            assertZAlignmentState(zAlignment);
+            this.zAlignment = zAlignment;
             return this;
         }
 

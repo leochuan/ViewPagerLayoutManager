@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#66000000"
     android:orientation="vertical"
     android:paddingBottom="20dp"
@@ -157,4 +158,113 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end" />
     </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flip_rotate"
+            android:textColor="#fff" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/s_flip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/gravity"
+        android:textColor="#fff" />
+
+    <RadioGroup
+        android:id="@+id/rg_gravity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/left"
+            android:textColor="#fff"
+            app:buttonTint="@color/colorAccent" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/right"
+            android:textColor="#fff"
+            app:buttonTint="@color/colorAccent" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/top"
+            android:textColor="#fff"
+            app:buttonTint="@color/colorAccent" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/bottom"
+            android:textColor="#fff"
+            app:buttonTint="@color/colorAccent" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/z_alignment"
+        android:textColor="#fff" />
+
+    <RadioGroup
+        android:id="@+id/rg_z_alignment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb_left_on_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/left_on_top"
+            android:textColor="#fff"
+            app:buttonTint="@color/colorAccent" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb_right_on_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/right_on_top"
+            android:textColor="#fff"
+            app:buttonTint="@color/colorAccent" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/rb_center_on_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/center_on_top"
+            android:textColor="#fff"
+            app:buttonTint="@color/colorAccent" />
+    </RadioGroup>
 </LinearLayout>
