@@ -22,6 +22,8 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 public abstract class ViewPagerLayoutManager extends LinearLayoutManager
         implements RecyclerView.SmoothScroller.ScrollVectorProvider {
 
+    public static final int DETERMINE_BY_MAX_AND_MIN = -1;
+
     public static final int HORIZONTAL = OrientationHelper.HORIZONTAL;
 
     public static final int VERTICAL = OrientationHelper.VERTICAL;
@@ -89,6 +91,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
     private int mLeftItems;
 
     private int mRightItems;
+
+    /**
+     * max visible item count
+     */
+    private int mMaxVisibleItemCount = DETERMINE_BY_MAX_AND_MIN;
 
     /**
      * @return the mInterval of each item's mOffset
@@ -229,6 +236,29 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
         }
         mOrientation = orientation;
         mOrientationHelper = null;
+        removeAllViews();
+    }
+
+    /**
+     * Returns the max visible item count, {@link #DETERMINE_BY_MAX_AND_MIN} means it haven't been set now
+     * And it will use {@link #maxRemoveOffset()} and {@link #minRemoveOffset()} to handle the range
+     *
+     * @return Max visible item count
+     */
+    public int getMaxVisibleItemCount() {
+        return mMaxVisibleItemCount;
+    }
+
+    /**
+     * Set the max visible item count, {@link #DETERMINE_BY_MAX_AND_MIN} means it haven't been set now
+     * And it will use {@link #maxRemoveOffset()} and {@link #minRemoveOffset()} to handle the range
+     *
+     * @param mMaxVisibleItemCount Max visible item count
+     */
+    public void setMaxVisibleItemCount(int mMaxVisibleItemCount) {
+        assertNotInLayoutOrScroll(null);
+        if (this.mMaxVisibleItemCount == mMaxVisibleItemCount) return;
+        this.mMaxVisibleItemCount = mMaxVisibleItemCount;
         removeAllViews();
     }
 
@@ -510,21 +540,38 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
     private void layoutItems(RecyclerView.Recycler recycler) {
         detachAndScrapAttachedViews(recycler);
 
-        //make sure that current position start from 0 to 1
+        // make sure that current position start from 0 to 1
         final int currentPos = mReverseLayout ?
                 -getCurrentPositionOffset() : getCurrentPositionOffset();
         int start = currentPos - mLeftItems;
         int end = currentPos + mRightItems;
 
+        // handle max visible count
+        if (useMaxVisibleCount()) {
+            boolean isEven = mMaxVisibleItemCount % 2 == 0;
+            if (isEven) {
+                int offset = mMaxVisibleItemCount / 2;
+                start = currentPos - offset + 1;
+                end = currentPos + offset + 1;
+            } else {
+                int offset = (mMaxVisibleItemCount - 1) / 2;
+                start = currentPos - offset;
+                end = currentPos + offset + 1;
+            }
+        }
+
         final int itemCount = getItemCount();
         if (!mInfinite) {
-            if (start < 0) start = 0;
+            if (start < 0) {
+                start = 0;
+                if (useMaxVisibleCount()) end = mMaxVisibleItemCount;
+            }
             if (end > itemCount) end = itemCount;
         }
 
         float lastOrderWeight = Float.MIN_VALUE;
         for (int i = start; i < end; i++) {
-            if (!removeCondition(getProperty(i) - mOffset)) {
+            if (useMaxVisibleCount() || !removeCondition(getProperty(i) - mOffset)) {
                 // start and end base on current position,
                 // so we need to calculate the adapter position
                 int adapterPosition = i;
@@ -551,6 +598,10 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
                 lastOrderWeight = orderWeight;
             }
         }
+    }
+
+    private boolean useMaxVisibleCount() {
+        return mMaxVisibleItemCount != DETERMINE_BY_MAX_AND_MIN;
     }
 
     private boolean removeCondition(float targetOffset) {

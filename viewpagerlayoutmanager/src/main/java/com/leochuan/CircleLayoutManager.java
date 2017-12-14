@@ -42,13 +42,14 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
     public CircleLayoutManager(Builder builder) {
         this(builder.context, builder.radius, builder.angleInterval, builder.moveSpeed, builder.maxRemoveAngle,
-                builder.minRemoveAngle, builder.gravity, builder.zAlignment, builder.flipRotate, builder.reverseLayout);
+                builder.minRemoveAngle, builder.gravity, builder.zAlignment, builder.flipRotate, builder.maxVisibleItemCount, builder.reverseLayout);
     }
 
-    private CircleLayoutManager(Context context, int radius, int angleInterval, float moveSpeed, float max,
-                                float min, int gravity, int zAlignment, boolean flipRotate, boolean reverseLayout) {
+    private CircleLayoutManager(Context context, int radius, int angleInterval, float moveSpeed, float max, float min,
+                                int gravity, int zAlignment, boolean flipRotate, int maxVisibleItemCount, boolean reverseLayout) {
         super(context, (gravity == LEFT || gravity == RIGHT) ? VERTICAL : HORIZONTAL, reverseLayout);
         setEnableBringCenterToFront(true);
+        setMaxVisibleItemCount(maxVisibleItemCount);
         this.radius = radius;
         this.angleInterval = angleInterval;
         this.moveSpeed = moveSpeed;
@@ -282,6 +283,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         private int gravity;
         private boolean flipRotate;
         private int zAlignment;
+        private int maxVisibleItemCount;
 
         public Builder(Context context) {
             this.context = context;
@@ -294,6 +296,7 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
             flipRotate = false;
             gravity = BOTTOM;
             zAlignment = LEFT_ON_TOP;
+            maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
         }
 
         public Builder setRadius(int radius) {
@@ -340,6 +343,11 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         public Builder setZAlignment(int zAlignment) {
             assertZAlignmentState(zAlignment);
             this.zAlignment = zAlignment;
+            return this;
+        }
+
+        public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
+            this.maxVisibleItemCount = maxVisibleItemCount;
             return this;
         }
 

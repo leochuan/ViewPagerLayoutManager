@@ -29,14 +29,15 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
     }
 
     public RotateLayoutManager(Builder builder) {
-        this(builder.context, builder.itemSpace, builder.angle,
-                builder.orientation, builder.moveSpeed, builder.reverseRotate, builder.reverseLayout);
+        this(builder.context, builder.itemSpace, builder.angle, builder.orientation, builder.moveSpeed,
+                builder.reverseRotate, builder.maxVisibleItemCount, builder.reverseLayout);
     }
 
     private RotateLayoutManager(Context context, int itemSpace, float angle, int orientation,
-                                float moveSpeed, boolean reverseRotate, boolean reverseLayout) {
+                                float moveSpeed, boolean reverseRotate, int maxVisibleItemCount, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setIntegerDy(true);
+        setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.angle = angle;
         this.moveSpeed = moveSpeed;
@@ -126,6 +127,7 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
         private boolean reverseRotate;
         private boolean reverseLayout;
         private Context context;
+        private int maxVisibleItemCount;
 
         public Builder(Context context, int itemSpace) {
             this.context = context;
@@ -135,6 +137,7 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
             this.moveSpeed = DEFAULT_SPEED;
             reverseRotate = false;
             reverseLayout = false;
+            maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
         }
 
         public Builder setOrientation(int orientation) {
@@ -159,6 +162,11 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setReverseRotate(boolean reverseRotate) {
             this.reverseRotate = reverseRotate;
+            return this;
+        }
+
+        public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
+            this.maxVisibleItemCount = maxVisibleItemCount;
             return this;
         }
 

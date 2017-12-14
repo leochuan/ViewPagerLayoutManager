@@ -32,13 +32,14 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
     public GalleryLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.angle, builder.maxAlpha, builder.minAlpha,
-                builder.orientation, builder.moveSpeed, builder.flipRotate, builder.reverseLayout);
+                builder.orientation, builder.moveSpeed, builder.flipRotate, builder.maxVisibleItemCount, builder.reverseLayout);
     }
 
     private GalleryLayoutManager(Context context, int itemSpace, float angle, float maxAlpha, float minAlpha,
-                                 int orientation, float moveSpeed, boolean flipRotate, boolean reverseLayout) {
+                                 int orientation, float moveSpeed, boolean flipRotate, int maxVisibleItemCount, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setIntegerDy(true);
+        setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.moveSpeed = moveSpeed;
         this.angle = angle;
@@ -181,6 +182,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         private boolean flipRotate;
         private boolean reverseLayout;
         private Context context;
+        private int maxVisibleItemCount;
 
         public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
@@ -192,6 +194,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
             this.moveSpeed = DEFAULT_SPEED;
             reverseLayout = false;
             flipRotate = false;
+            maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
         }
 
         public Builder setItemSpace(int itemSpace) {
@@ -233,6 +236,11 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setReverseLayout(boolean reverseLayout) {
             this.reverseLayout = reverseLayout;
+            return this;
+        }
+
+        public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
+            this.maxVisibleItemCount = maxVisibleItemCount;
             return this;
         }
 

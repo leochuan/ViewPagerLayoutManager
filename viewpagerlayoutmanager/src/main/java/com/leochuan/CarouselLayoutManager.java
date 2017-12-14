@@ -28,15 +28,16 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
     }
 
     public CarouselLayoutManager(Builder builder) {
-        this(builder.context, builder.itemSpace, builder.minScale,
-                builder.orientation, builder.moveSpeed, builder.reverseLayout);
+        this(builder.context, builder.itemSpace, builder.minScale, builder.orientation,
+                builder.maxVisibleItemCount, builder.moveSpeed, builder.reverseLayout);
     }
 
     private CarouselLayoutManager(Context context, int itemSpace, float minScale, int orientation,
-                                  float moveSpeed, boolean reverseLayout) {
+                                  int maxVisibleItemCount, float moveSpeed, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setEnableBringCenterToFront(true);
         setIntegerDy(true);
+        setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.minScale = minScale;
         this.moveSpeed = moveSpeed;
@@ -120,6 +121,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         private int orientation;
         private float minScale;
         private float moveSpeed;
+        private int maxVisibleItemCount;
         private boolean reverseLayout;
 
         public Builder(Context context, int itemSpace) {
@@ -129,6 +131,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
             minScale = MIN_SCALE;
             this.moveSpeed = DEFAULT_SPEED;
             reverseLayout = false;
+            maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
         }
 
         public Builder setOrientation(int orientation) {
@@ -148,6 +151,11 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMoveSpeed(float moveSpeed) {
             this.moveSpeed = moveSpeed;
+            return this;
+        }
+
+        public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
+            this.maxVisibleItemCount = maxVisibleItemCount;
             return this;
         }
 

@@ -28,14 +28,15 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     }
 
     public ScaleLayoutManager(Builder builder) {
-        this(builder.context, builder.itemSpace, builder.centerScale,
-                builder.orientation, builder.moveSpeed, builder.reverseLayout);
+        this(builder.context, builder.itemSpace, builder.centerScale, builder.orientation,
+                builder.moveSpeed, builder.maxVisibleItemCount, builder.reverseLayout);
     }
 
     private ScaleLayoutManager(Context context, int itemSpace, float centerScale, int orientation,
-                               float moveSpeed, boolean reverseLayout) {
+                               float moveSpeed, int maxVisibleItemCount, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setIntegerDy(true);
+        setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.centerScale = centerScale;
         this.moveSpeed = moveSpeed;
@@ -120,6 +121,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         private float moveSpeed;
         private boolean reverseLayout;
         private Context context;
+        private int maxVisibleItemCount;
 
         public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
@@ -128,6 +130,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
             centerScale = SCALE_RATE;
             this.moveSpeed = DEFAULT_SPEED;
             reverseLayout = false;
+            maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
         }
 
         public Builder setOrientation(int orientation) {
@@ -147,6 +150,11 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMoveSpeed(float moveSpeed) {
             this.moveSpeed = moveSpeed;
+            return this;
+        }
+
+        public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
+            this.maxVisibleItemCount = maxVisibleItemCount;
             return this;
         }
 
