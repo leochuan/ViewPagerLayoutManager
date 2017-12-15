@@ -33,6 +33,11 @@ VPLM 实现了一些常见的动画效果，如果你有什么别的想要的效
 recyclerView.addOnScrollListener(new CenterScrollListener());
 ```
 
+## 设置可见个数
+```java
+layoutmanager.setMaxVisibleItemCount(count);
+```
+
 ## 安装
 
 Gradle:
@@ -43,7 +48,7 @@ repositories {
 }
 
 dependencies {
-  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.1'
+  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.2'
 }
 ```
 
@@ -53,7 +58,7 @@ Maven:
 <dependency>
   <groupId>rouchuan.viewpagerlayoutmanager</groupId>
   <artifactId>viewpagerlayoutmanager</artifactId>
-  <version>2.0.1</version>
+  <version>2.0.2</version>
   <type>pom</type>
 </dependency>
 ```

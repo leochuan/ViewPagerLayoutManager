@@ -26,7 +26,7 @@ dependencies {
 }
 
 apply plugin: 'maven'
-def currentVersion = '2.0.1'
+def currentVersion = '2.0.2'
 task createPom << {
     pom {
         project {

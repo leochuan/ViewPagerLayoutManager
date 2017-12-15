@@ -35,6 +35,11 @@ You can make the current position move to center automaticlly by:
 recyclerView.addOnScrollListener(new CenterScrollListener());
 ```
 
+## Set Max Visible Item Count
+```java
+layoutmanager.setMaxVisibleItemCount(count);
+```
+
 ## Download
 
 Gradle:
@@ -45,7 +50,7 @@ repositories {
 }
 
 dependencies {
-  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.1'
+  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.2'
 }
 ```
 
@@ -55,7 +60,7 @@ Maven:
 <dependency>
   <groupId>rouchuan.viewpagerlayoutmanager</groupId>
   <artifactId>viewpagerlayoutmanager</artifactId>
-  <version>2.0.1</version>
+  <version>2.0.2</version>
   <type>pom</type>
 </dependency>
 ```
