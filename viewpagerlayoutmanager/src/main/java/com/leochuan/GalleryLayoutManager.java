@@ -162,8 +162,9 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     }
 
     private float calAlpha(float targetOffset) {
-        float alpha = (minAlpha - maxAlpha) / mInterval * Math.abs(targetOffset) + maxAlpha;
-        if (alpha < minAlpha) alpha = minAlpha;
+        final float offset =  Math.abs(targetOffset);
+        float alpha = (minAlpha - maxAlpha) / mInterval * offset + maxAlpha;
+        if (offset >= mInterval) alpha = minAlpha;
         return alpha;
     }
 

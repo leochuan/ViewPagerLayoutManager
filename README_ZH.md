@@ -48,7 +48,7 @@ repositories {
 }
 
 dependencies {
-  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.3'
+  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.4'
 }
 ```
 
@@ -58,7 +58,7 @@ Maven:
 <dependency>
   <groupId>rouchuan.viewpagerlayoutmanager</groupId>
   <artifactId>viewpagerlayoutmanager</artifactId>
-  <version>2.0.3</version>
+  <version>2.0.4</version>
   <type>pom</type>
 </dependency>
 ```

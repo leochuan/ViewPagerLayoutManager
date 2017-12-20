@@ -14,6 +14,8 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     private int itemSpace;
     private float centerScale;
     private float moveSpeed;
+    private float maxAlpha;
+    private float minAlpha;
 
     public ScaleLayoutManager(Context context, int itemSpace) {
         this(new Builder(context, itemSpace));
@@ -28,18 +30,20 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     }
 
     public ScaleLayoutManager(Builder builder) {
-        this(builder.context, builder.itemSpace, builder.centerScale, builder.orientation,
-                builder.moveSpeed, builder.maxVisibleItemCount, builder.reverseLayout);
+        this(builder.context, builder.itemSpace, builder.centerScale, builder.maxAlpha, builder.minAlpha,
+                builder.orientation, builder.moveSpeed, builder.maxVisibleItemCount, builder.reverseLayout);
     }
 
-    private ScaleLayoutManager(Context context, int itemSpace, float centerScale, int orientation,
-                               float moveSpeed, int maxVisibleItemCount, boolean reverseLayout) {
+    private ScaleLayoutManager(Context context, int itemSpace, float centerScale, float maxAlpha, float minAlpha,
+                               int orientation, float moveSpeed, int maxVisibleItemCount, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setIntegerDy(true);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.centerScale = centerScale;
         this.moveSpeed = moveSpeed;
+        this.maxAlpha = maxAlpha;
+        this.minAlpha = minAlpha;
     }
 
     public int getItemSpace() {
@@ -58,6 +62,14 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         return moveSpeed;
     }
 
+    public float getMaxAlpha() {
+        return maxAlpha;
+    }
+
+    public float getMinAlpha() {
+        return minAlpha;
+    }
+
     public void setItemSpace(int itemSpace) {
         assertNotInLayoutOrScroll(null);
         if (this.itemSpace == itemSpace) return;
@@ -70,6 +82,22 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         if (this.centerScale == centerScale) return;
         this.centerScale = centerScale;
         removeAllViews();
+    }
+
+    public void setMaxAlpha(float maxAlpha) {
+        assertNotInLayoutOrScroll(null);
+        if (maxAlpha > 1) maxAlpha = 1;
+        if (this.maxAlpha == maxAlpha) return;
+        this.maxAlpha = maxAlpha;
+        requestLayout();
+    }
+
+    public void setMinAlpha(float minAlpha) {
+        assertNotInLayoutOrScroll(null);
+        if (minAlpha < 0) minAlpha = 0;
+        if (this.minAlpha == minAlpha) return;
+        this.minAlpha = minAlpha;
+        requestLayout();
     }
 
     public void setOrientation(int orientation) {
@@ -92,6 +120,15 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         float scale = calculateScale(targetOffset + mSpaceMain);
         itemView.setScaleX(scale);
         itemView.setScaleY(scale);
+        final float alpha = calAlpha(targetOffset);
+        itemView.setAlpha(alpha);
+    }
+
+    private float calAlpha(float targetOffset) {
+        final float offset =  Math.abs(targetOffset);
+        float alpha = (minAlpha - maxAlpha) / mInterval * offset + maxAlpha;
+        if (offset >= mInterval) alpha = minAlpha;
+        return alpha;
     }
 
     @Override
@@ -114,11 +151,15 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     public static class Builder {
         private static final float SCALE_RATE = 1.2f;
         private static final float DEFAULT_SPEED = 1f;
+        private static float MIN_ALPHA = 1f;
+        private static float MAX_ALPHA = 1f;
 
         private int itemSpace;
         private int orientation;
         private float centerScale;
         private float moveSpeed;
+        private float maxAlpha;
+        private float minAlpha;
         private boolean reverseLayout;
         private Context context;
         private int maxVisibleItemCount;
@@ -129,6 +170,8 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
             orientation = HORIZONTAL;
             centerScale = SCALE_RATE;
             this.moveSpeed = DEFAULT_SPEED;
+            maxAlpha = MAX_ALPHA;
+            minAlpha = MIN_ALPHA;
             reverseLayout = false;
             maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
         }
@@ -145,6 +188,18 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setReverseLayout(boolean reverseLayout) {
             this.reverseLayout = reverseLayout;
+            return this;
+        }
+
+        public Builder setMaxAlpha(float maxAlpha) {
+            if (maxAlpha > 1) maxAlpha = 1;
+            this.maxAlpha = maxAlpha;
+            return this;
+        }
+
+        public Builder setMinAlpha(float minAlpha) {
+            if (minAlpha < 0) minAlpha = 0;
+            this.minAlpha = minAlpha;
             return this;
         }
 
