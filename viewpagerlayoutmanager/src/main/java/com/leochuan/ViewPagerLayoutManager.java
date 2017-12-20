@@ -129,6 +129,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
         setOrientation(orientation);
         setReverseLayout(reverseLayout);
         setAutoMeasureEnabled(true);
+        setItemPrefetchEnabled(false);
     }
 
     @Override
