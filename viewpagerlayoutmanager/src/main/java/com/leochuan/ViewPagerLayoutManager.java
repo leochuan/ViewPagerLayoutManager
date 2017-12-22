@@ -1,15 +1,14 @@
 package com.leochuan;
 
 import android.content.Context;
-import android.graphics.PointF;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
@@ -19,8 +18,7 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
  */
 
 @SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
-public abstract class ViewPagerLayoutManager extends LinearLayoutManager
-        implements RecyclerView.SmoothScroller.ScrollVectorProvider {
+public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     public static final int DETERMINE_BY_MAX_AND_MIN = -1;
 
@@ -101,6 +99,8 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
      * when the size of main direction will minus twice of it
      */
     private int shrinkSpace;
+
+    private Interpolator mSmoothScrollInterpolator;
 
     /**
      * @return the mInterval of each item's mOffset
@@ -322,25 +322,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
         removeAllViews();
     }
 
-    @Override
-    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-        LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(recyclerView.getContext());
-        linearSmoothScroller.setTargetPosition(position);
-        startSmoothScroll(linearSmoothScroller);
+    public void setSmoothScrollInterpolator(Interpolator smoothScrollInterpolator) {
+        this.mSmoothScrollInterpolator = smoothScrollInterpolator;
     }
 
-    public PointF computeScrollVectorForPosition(int targetPosition) {
-        if (getChildCount() == 0) {
-            return null;
-        }
-        final int firstChildPos = getPosition(getChildAt(0));
-        final float direction = targetPosition < firstChildPos == !mReverseLayout ?
-                -1 / getDistanceRatio() : 1 / getDistanceRatio();
-        if (mOrientation == HORIZONTAL) {
-            return new PointF(direction, 0);
-        } else {
-            return new PointF(0, direction);
-        }
+    @Override
+    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+        recyclerView.smoothScrollBy(getOffsetToPosition(position), 0, mSmoothScrollInterpolator);
     }
 
     @Override
@@ -692,6 +680,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
         return position;
     }
 
+    @Override
+    public View findViewByPosition(int position) {
+        return super.findViewByPosition(position);
+    }
+
     private int getCurrentPositionOffset() {
         return Math.round(mOffset / mInterval);
     }
@@ -724,6 +717,15 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
         if (mInfinite)
             return (int) ((getCurrentPositionOffset() * mInterval - mOffset) * getDistanceRatio());
         return (int) ((getCurrentPosition() *
+                (!mReverseLayout ? mInterval : -mInterval) - mOffset) * getDistanceRatio());
+    }
+
+    public int getOffsetToPosition(int position) {
+        if (mInfinite)
+            return (int) (((getCurrentPositionOffset() +
+                    (!mReverseLayout ? position - getCurrentPosition() : getCurrentPosition() - position)) *
+                    mInterval - mOffset) * getDistanceRatio());
+        return (int) ((position *
                 (!mReverseLayout ? mInterval : -mInterval) - mOffset) * getDistanceRatio());
     }
 
