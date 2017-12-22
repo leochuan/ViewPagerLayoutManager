@@ -31,13 +31,14 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     public ScaleLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.centerScale, builder.maxAlpha, builder.minAlpha,
-                builder.orientation, builder.moveSpeed, builder.maxVisibleItemCount, builder.reverseLayout);
+                builder.orientation, builder.moveSpeed, builder.maxVisibleItemCount, builder.shrinkSpace, builder.reverseLayout);
     }
 
     private ScaleLayoutManager(Context context, int itemSpace, float centerScale, float maxAlpha, float minAlpha,
-                               int orientation, float moveSpeed, int maxVisibleItemCount, boolean reverseLayout) {
+                               int orientation, float moveSpeed, int maxVisibleItemCount, int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setIntegerDy(true);
+        setShrinkSpace(shrinkSpace);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.centerScale = centerScale;
@@ -125,7 +126,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     }
 
     private float calAlpha(float targetOffset) {
-        final float offset =  Math.abs(targetOffset);
+        final float offset = Math.abs(targetOffset);
         float alpha = (minAlpha - maxAlpha) / mInterval * offset + maxAlpha;
         if (offset >= mInterval) alpha = minAlpha;
         return alpha;
@@ -155,6 +156,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         private static float MAX_ALPHA = 1f;
 
         private int itemSpace;
+        private int shrinkSpace;
         private int orientation;
         private float centerScale;
         private float moveSpeed;
@@ -210,6 +212,11 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
+            return this;
+        }
+
+        public Builder setShrinkSpace(int shrinkSpace) {
+            this.shrinkSpace = shrinkSpace;
             return this;
         }
 

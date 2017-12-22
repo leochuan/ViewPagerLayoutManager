@@ -42,15 +42,18 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
     }
 
     public CircleScaleLayoutManager(Builder builder) {
-        this(builder.context, builder.radius, builder.angleInterval, builder.centerScale, builder.moveSpeed, builder.maxRemoveAngle,
-                builder.minRemoveAngle, builder.gravity, builder.zAlignment, builder.flipRotate, builder.maxVisibleItemCount, builder.reverseLayout);
+        this(builder.context, builder.radius, builder.angleInterval, builder.centerScale, builder.moveSpeed,
+                builder.maxRemoveAngle, builder.minRemoveAngle, builder.gravity, builder.zAlignment,
+                builder.flipRotate, builder.maxVisibleItemCount, builder.shrinkSpace, builder.reverseLayout);
     }
 
-    private CircleScaleLayoutManager(Context context, int radius, int angleInterval, float centerScale, float moveSpeed, float max,
-                                     float min, int gravity, int zAlignment, boolean flipRotate, int maxVisibleItemCount, boolean reverseLayout) {
+    private CircleScaleLayoutManager(Context context, int radius, int angleInterval, float centerScale,
+                                     float moveSpeed, float max, float min, int gravity, int zAlignment,
+                                     boolean flipRotate, int maxVisibleItemCount, int shrinkSpace, boolean reverseLayout) {
         super(context, HORIZONTAL, reverseLayout);
         setEnableBringCenterToFront(true);
         setMaxVisibleItemCount(maxVisibleItemCount);
+        setShrinkSpace(shrinkSpace);
         this.radius = radius;
         this.angleInterval = angleInterval;
         this.centerScale = centerScale;
@@ -308,6 +311,7 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         private boolean flipRotate;
         private int zAlignment;
         private int maxVisibleItemCount;
+        private int shrinkSpace;
 
         public Builder(Context context) {
             this.context = context;
@@ -378,6 +382,11 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
+            return this;
+        }
+
+        public Builder setShrinkSpace(int shrinkSpace) {
+            this.shrinkSpace = shrinkSpace;
             return this;
         }
 

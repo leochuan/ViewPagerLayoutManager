@@ -31,13 +31,14 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     }
 
     public GalleryLayoutManager(Builder builder) {
-        this(builder.context, builder.itemSpace, builder.angle, builder.maxAlpha, builder.minAlpha,
-                builder.orientation, builder.moveSpeed, builder.flipRotate, builder.maxVisibleItemCount, builder.reverseLayout);
+        this(builder.context, builder.itemSpace, builder.angle, builder.maxAlpha, builder.minAlpha, builder.orientation,
+                builder.moveSpeed, builder.flipRotate, builder.maxVisibleItemCount, builder.shrinkSpace, builder.reverseLayout);
     }
 
-    private GalleryLayoutManager(Context context, int itemSpace, float angle, float maxAlpha, float minAlpha,
-                                 int orientation, float moveSpeed, boolean flipRotate, int maxVisibleItemCount, boolean reverseLayout) {
+    private GalleryLayoutManager(Context context, int itemSpace, float angle, float maxAlpha, float minAlpha, int orientation,
+                                 float moveSpeed, boolean flipRotate, int maxVisibleItemCount, int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
+        setShrinkSpace(shrinkSpace);
         setIntegerDy(true);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
@@ -162,7 +163,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     }
 
     private float calAlpha(float targetOffset) {
-        final float offset =  Math.abs(targetOffset);
+        final float offset = Math.abs(targetOffset);
         float alpha = (minAlpha - maxAlpha) / mInterval * offset + maxAlpha;
         if (offset >= mInterval) alpha = minAlpha;
         return alpha;
@@ -184,6 +185,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         private boolean reverseLayout;
         private Context context;
         private int maxVisibleItemCount;
+        private int shrinkSpace;
 
         public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
@@ -242,6 +244,11 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
+            return this;
+        }
+
+        public Builder setShrinkSpace(int shrinkSpace) {
+            this.shrinkSpace = shrinkSpace;
             return this;
         }
 

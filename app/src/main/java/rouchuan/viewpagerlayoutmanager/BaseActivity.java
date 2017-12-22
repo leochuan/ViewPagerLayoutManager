@@ -31,7 +31,7 @@ public abstract class BaseActivity<V extends ViewPagerLayoutManager, S extends S
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         setTitle(getIntent().getCharSequenceExtra(MainActivity.INTENT_TITLE));
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView = findViewById(R.id.recycler);
         viewPagerLayoutManager = createLayoutManager();
         recyclerView.setAdapter(new DataAdapter());
         recyclerView.setLayoutManager(viewPagerLayoutManager);

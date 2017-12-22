@@ -98,6 +98,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
     private int mMaxVisibleItemCount = DETERMINE_BY_MAX_AND_MIN;
 
     /**
+     * when the size of main direction will minus twice of it
+     */
+    private int shrinkSpace;
+
+    /**
      * @return the mInterval of each item's mOffset
      */
     protected abstract float setInterval();
@@ -352,7 +357,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
         //make sure properties are correct while measure more than once
         View scrap = recycler.getViewForPosition(0);
         measureChildWithMargins(scrap, 0, 0);
-        mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
+        mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap) - 2 * shrinkSpace;
         mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
         mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
         mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
@@ -737,6 +742,17 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager
 
     public boolean getInfinite() {
         return mInfinite;
+    }
+
+    public int getShrinkSpace() {
+        return shrinkSpace;
+    }
+
+    public void setShrinkSpace(int shrinkSpace) {
+        assertNotInLayoutOrScroll(null);
+        if (this.shrinkSpace == shrinkSpace) return;
+        this.shrinkSpace = shrinkSpace;
+        removeAllViews();
     }
 
     /**
