@@ -15,8 +15,8 @@ import android.widget.Scroller;
  */
 public class CenterSnapHelper extends RecyclerView.OnFlingListener {
 
-    private RecyclerView mRecyclerView;
-    private Scroller mGravityScroller;
+    RecyclerView mRecyclerView;
+    Scroller mGravityScroller;
 
     // Handles the snap on scroll case.
     private final RecyclerView.OnScrollListener mScrollListener =
@@ -98,7 +98,7 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
      * @throws IllegalArgumentException if there is already a {@link RecyclerView.OnFlingListener}
      *                                  attached to the provided {@link RecyclerView}.
      */
-    public void attachToRecyclerView(@Nullable final RecyclerView recyclerView)
+    public void attachToRecyclerView(@Nullable RecyclerView recyclerView)
             throws IllegalStateException {
         if (mRecyclerView == recyclerView) {
             return; // nothing to do
@@ -120,8 +120,8 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
         }
     }
 
-    private void snapToCenterView(ViewPagerLayoutManager layoutManager,
-                                  ViewPagerLayoutManager.OnPageChangeListener listener) {
+    void snapToCenterView(ViewPagerLayoutManager layoutManager,
+                          ViewPagerLayoutManager.OnPageChangeListener listener) {
         final int delta = layoutManager.getOffsetToCenter();
         if (delta != 0) {
             if (layoutManager.getOrientation()
@@ -137,7 +137,7 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
     /**
      * Called when an instance of a {@link RecyclerView} is attached.
      */
-    private void setupCallbacks() throws IllegalStateException {
+    void setupCallbacks() throws IllegalStateException {
         if (mRecyclerView.getOnFlingListener() != null) {
             throw new IllegalStateException("An instance of OnFlingListener already set.");
         }
@@ -148,7 +148,7 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
     /**
      * Called when the instance of a {@link RecyclerView} is detached.
      */
-    private void destroyCallbacks() {
+    void destroyCallbacks() {
         mRecyclerView.removeOnScrollListener(mScrollListener);
         mRecyclerView.setOnFlingListener(null);
     }
