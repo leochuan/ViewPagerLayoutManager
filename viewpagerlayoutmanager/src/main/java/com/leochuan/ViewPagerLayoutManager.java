@@ -331,7 +331,12 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-        recyclerView.smoothScrollBy(getOffsetToPosition(position), 0, mSmoothScrollInterpolator);
+        final int offsetPosition = getOffsetToPosition(position);
+        if (mOrientation == VERTICAL) {
+            recyclerView.smoothScrollBy(0, offsetPosition, mSmoothScrollInterpolator);
+        } else {
+            recyclerView.smoothScrollBy(offsetPosition, 0, mSmoothScrollInterpolator);
+        }
     }
 
     @Override
@@ -725,7 +730,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     /**
-     * used by {@link CenterScrollListener} to center the current view
+     * used by {@link CenterSnapHelper} to center the current view
      *
      * @return the dy between center and current position
      */

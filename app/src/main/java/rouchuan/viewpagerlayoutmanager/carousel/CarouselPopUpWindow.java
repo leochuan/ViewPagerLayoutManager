@@ -11,7 +11,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.leochuan.CarouselLayoutManager;
-import com.leochuan.CenterScrollListener;
+import com.leochuan.CenterSnapHelper;
 import com.leochuan.ViewPagerLayoutManager;
 
 import rouchuan.viewpagerlayoutmanager.R;
@@ -36,7 +36,7 @@ public class CarouselPopUpWindow extends SettingPopUpWindow
     private SwitchCompat autoCenter;
     private SwitchCompat infinite;
     private SwitchCompat reverse;
-    private CenterScrollListener scrollListener;
+    private CenterSnapHelper centerSnapHelper;
 
     CarouselPopUpWindow(Context context, CarouselLayoutManager carouselLayoutManager, RecyclerView recyclerView) {
         super(context);
@@ -45,7 +45,7 @@ public class CarouselPopUpWindow extends SettingPopUpWindow
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_carousel_setting, null);
         setContentView(view);
 
-        scrollListener = new CenterScrollListener();
+        centerSnapHelper = new CenterSnapHelper();
 
         SeekBar itemSpace = view.findViewById(R.id.sb_item_space);
         SeekBar speed = view.findViewById(R.id.sb_speed);
@@ -127,9 +127,9 @@ public class CarouselPopUpWindow extends SettingPopUpWindow
                 break;
             case R.id.s_auto_center:
                 if (isChecked) {
-                    recyclerView.addOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(recyclerView);
                 } else {
-                    recyclerView.removeOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(null);
                 }
                 break;
             case R.id.s_reverse:

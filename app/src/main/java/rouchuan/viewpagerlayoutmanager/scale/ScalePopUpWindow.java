@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.leochuan.CenterScrollListener;
+import com.leochuan.CenterSnapHelper;
 import com.leochuan.ScaleLayoutManager;
 import com.leochuan.ViewPagerLayoutManager;
 
@@ -38,7 +38,7 @@ public class ScalePopUpWindow extends SettingPopUpWindow
     private SwitchCompat autoCenter;
     private SwitchCompat infinite;
     private SwitchCompat reverse;
-    private CenterScrollListener scrollListener;
+    private CenterSnapHelper centerSnapHelper;
 
     ScalePopUpWindow(Context context, ScaleLayoutManager scaleLayoutManager, RecyclerView recyclerView) {
         super(context);
@@ -47,7 +47,7 @@ public class ScalePopUpWindow extends SettingPopUpWindow
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_scale_setting, null);
         setContentView(view);
 
-        scrollListener = new CenterScrollListener();
+        centerSnapHelper = new CenterSnapHelper();
 
         SeekBar itemSpace = view.findViewById(R.id.sb_item_space);
         SeekBar speed = view.findViewById(R.id.sb_speed);
@@ -149,9 +149,9 @@ public class ScalePopUpWindow extends SettingPopUpWindow
                 break;
             case R.id.s_auto_center:
                 if (isChecked) {
-                    recyclerView.addOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(recyclerView);
                 } else {
-                    recyclerView.removeOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(null);
                 }
                 break;
             case R.id.s_reverse:

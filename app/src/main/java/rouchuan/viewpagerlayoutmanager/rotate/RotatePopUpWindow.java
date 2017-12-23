@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.leochuan.CenterScrollListener;
+import com.leochuan.CenterSnapHelper;
 import com.leochuan.RotateLayoutManager;
 import com.leochuan.ViewPagerLayoutManager;
 
@@ -37,7 +37,7 @@ public class RotatePopUpWindow extends SettingPopUpWindow
     private SwitchCompat infinite;
     private SwitchCompat reverseRotate;
     private SwitchCompat reverse;
-    private CenterScrollListener scrollListener;
+    private CenterSnapHelper centerSnapHelper;
 
     RotatePopUpWindow(Context context, RotateLayoutManager rotateLayoutManager, RecyclerView recyclerView) {
         super(context);
@@ -46,7 +46,7 @@ public class RotatePopUpWindow extends SettingPopUpWindow
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_rotate_setting, null);
         setContentView(view);
 
-        scrollListener = new CenterScrollListener();
+        centerSnapHelper = new CenterSnapHelper();
 
         SeekBar itemSpace = view.findViewById(R.id.sb_item_space);
         SeekBar speed = view.findViewById(R.id.sb_speed);
@@ -131,9 +131,9 @@ public class RotatePopUpWindow extends SettingPopUpWindow
                 break;
             case R.id.s_auto_center:
                 if (isChecked) {
-                    recyclerView.addOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(recyclerView);
                 } else {
-                    recyclerView.removeOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(null);
                 }
                 break;
             case R.id.s_reverse_rotate:

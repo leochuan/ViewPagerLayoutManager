@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.leochuan.CenterScrollListener;
+import com.leochuan.CenterSnapHelper;
 import com.leochuan.GalleryLayoutManager;
 import com.leochuan.ViewPagerLayoutManager;
 
@@ -40,7 +40,7 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
     private SwitchCompat infinite;
     private SwitchCompat reverse;
     private SwitchCompat flipRotate;
-    private CenterScrollListener scrollListener;
+    private CenterSnapHelper centerSnapHelper;
 
     GalleryPopUpWindow(Context context, GalleryLayoutManager galleryLayoutManager, RecyclerView recyclerView) {
         super(context);
@@ -49,7 +49,7 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_gallery_setting, null);
         setContentView(view);
 
-        scrollListener = new CenterScrollListener();
+        centerSnapHelper = new CenterSnapHelper();
 
         SeekBar itemSpace = view.findViewById(R.id.sb_item_space);
         SeekBar speed = view.findViewById(R.id.sb_speed);
@@ -157,9 +157,9 @@ public class GalleryPopUpWindow extends SettingPopUpWindow
                 break;
             case R.id.s_auto_center:
                 if (isChecked) {
-                    recyclerView.addOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(recyclerView);
                 } else {
-                    recyclerView.removeOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(null);
                 }
                 break;
             case R.id.s_reverse:

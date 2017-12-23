@@ -11,7 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.leochuan.CenterScrollListener;
+import com.leochuan.CenterSnapHelper;
 import com.leochuan.CircleLayoutManager;
 
 import rouchuan.viewpagerlayoutmanager.R;
@@ -37,7 +37,7 @@ class CirclePopUpWindow extends SettingPopUpWindow
     private SwitchCompat autoCenter;
     private SwitchCompat reverse;
     private SwitchCompat flipRotate;
-    private CenterScrollListener scrollListener;
+    private CenterSnapHelper centerSnapHelper;
     private RadioGroup gravity;
     private RadioGroup zAlignment;
 
@@ -48,7 +48,7 @@ class CirclePopUpWindow extends SettingPopUpWindow
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_circle_setting, null);
         setContentView(view);
 
-        scrollListener = new CenterScrollListener();
+        centerSnapHelper = new CenterSnapHelper();
 
         SeekBar radius = view.findViewById(R.id.sb_radius);
         SeekBar interval = view.findViewById(R.id.sb_interval);
@@ -160,9 +160,9 @@ class CirclePopUpWindow extends SettingPopUpWindow
                 break;
             case R.id.s_auto_center:
                 if (isChecked) {
-                    recyclerView.addOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(recyclerView);
                 } else {
-                    recyclerView.removeOnScrollListener(scrollListener);
+                    centerSnapHelper.attachToRecyclerView(null);
                 }
                 break;
             case R.id.s_reverse:
