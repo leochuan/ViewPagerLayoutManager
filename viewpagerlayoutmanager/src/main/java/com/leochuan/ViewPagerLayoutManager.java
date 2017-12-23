@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -25,6 +26,8 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     public static final int HORIZONTAL = OrientationHelper.HORIZONTAL;
 
     public static final int VERTICAL = OrientationHelper.VERTICAL;
+
+    private SparseArray<View> positionCache = new SparseArray<>();
 
     protected int mDecoratedMeasurement;
 
@@ -533,6 +536,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     private void layoutItems(RecyclerView.Recycler recycler) {
         detachAndScrapAttachedViews(recycler);
+        positionCache.clear();
 
         // make sure that current position start from 0 to 1
         final int currentPos = mReverseLayout ?
@@ -590,6 +594,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                     addView(scrap, 0);
                 }
                 lastOrderWeight = orderWeight;
+                positionCache.put(i, scrap);
             }
         }
     }
@@ -682,7 +687,18 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     @Override
     public View findViewByPosition(int position) {
-        return super.findViewByPosition(position);
+        final int itemCount = getItemCount();
+        for (int i = 0; i < positionCache.size(); i++) {
+            final int key = positionCache.keyAt(i);
+            if (key >= 0) {
+                if (position == key % itemCount) return positionCache.valueAt(i);
+            } else {
+                int delta = key % itemCount;
+                if (delta == 0) delta = itemCount;
+                if (itemCount + delta == position) return positionCache.valueAt(i);
+            }
+        }
+        return null;
     }
 
     private int getCurrentPositionOffset() {
