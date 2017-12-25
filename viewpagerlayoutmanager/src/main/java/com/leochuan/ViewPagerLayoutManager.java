@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
+import java.util.ArrayList;
+
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 /**
@@ -26,6 +28,12 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     public static final int HORIZONTAL = OrientationHelper.HORIZONTAL;
 
     public static final int VERTICAL = OrientationHelper.VERTICAL;
+
+    private static final int DIRECTION_NO_WHERE = -1;
+
+    private static final int DIRECTION_FORWARD = 0;
+
+    private static final int DIRECTION_BACKWARD = 1;
 
     private SparseArray<View> positionCache = new SparseArray<>();
 
@@ -104,6 +112,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     private int shrinkSpace;
 
     private Interpolator mSmoothScrollInterpolator;
+
+    /**
+     * use for handle focus
+     */
+    private View currentFocusView;
 
     /**
      * @return the mInterval of each item's mOffset
@@ -331,6 +344,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+        if (!mInfinite && (position < 0 || position >= getItemCount())) return;
         final int offsetPosition = getOffsetToPosition(position);
         if (mOrientation == VERTICAL) {
             recyclerView.smoothScrollBy(0, offsetPosition, mSmoothScrollInterpolator);
@@ -384,6 +398,49 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         mPendingScrollPosition = NO_POSITION;
     }
 
+    @Override
+    public boolean onAddFocusables(RecyclerView recyclerView, ArrayList<View> views, int direction, int focusableMode) {
+        final int currentPosition = getCurrentPosition();
+        final View currentView = findViewByPosition(currentPosition);
+        if (currentView == null) return true;
+        if (recyclerView.hasFocus()) {
+            final int movement = getMovement(direction);
+            if (movement != DIRECTION_NO_WHERE) {
+                final int targetPosition = movement == DIRECTION_BACKWARD ?
+                        currentPosition - 1 : currentPosition + 1;
+                recyclerView.smoothScrollToPosition(targetPosition);
+            }
+        } else {
+            currentView.addFocusables(views, direction, focusableMode);
+        }
+        return true;
+    }
+
+    @Override
+    public View onFocusSearchFailed(View focused, int focusDirection, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        return null;
+    }
+
+    private int getMovement(int direction) {
+        if (mOrientation == VERTICAL) {
+            if (direction == View.FOCUS_UP) {
+                return mReverseLayout ? DIRECTION_FORWARD : DIRECTION_BACKWARD;
+            } else if (direction == View.FOCUS_DOWN) {
+                return mReverseLayout ? DIRECTION_BACKWARD : DIRECTION_FORWARD;
+            } else {
+                return DIRECTION_NO_WHERE;
+            }
+        } else {
+            if (direction == View.FOCUS_LEFT) {
+                return mReverseLayout ? DIRECTION_FORWARD : DIRECTION_BACKWARD;
+            } else if (direction == View.FOCUS_RIGHT) {
+                return mReverseLayout ? DIRECTION_BACKWARD : DIRECTION_FORWARD;
+            } else {
+                return DIRECTION_NO_WHERE;
+            }
+        }
+    }
+
     void ensureLayoutState() {
         if (mOrientationHelper == null) {
             mOrientationHelper = OrientationHelper.createOrientationHelper(this, mOrientation);
@@ -409,6 +466,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     @Override
     public void scrollToPosition(int position) {
+        if (!mInfinite && (position < 0 || position >= getItemCount())) return;
         mPendingScrollPosition = position;
         mOffset = mReverseLayout ? position * -mInterval : position * mInterval;
         requestLayout();
@@ -598,10 +656,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                 } else {
                     addView(scrap, 0);
                 }
+                if (i == currentPos) currentFocusView = scrap;
                 lastOrderWeight = orderWeight;
                 positionCache.put(i, scrap);
             }
         }
+
+        currentFocusView.requestFocus();
     }
 
     private boolean useMaxVisibleCount() {

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rouchuan.viewpagerlayoutmanager</groupId>
   <artifactId>viewpagerlayoutmanager</artifactId>
-  <version>2.0.5</version>
+  <version>2.0.6</version>
   <packaging>aar</packaging>
   <name>Viewpager Layout Manager</name>
   <url>https://github.com/leochuan/ViewPagerLayoutManager</url>
