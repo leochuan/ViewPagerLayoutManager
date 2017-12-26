@@ -601,6 +601,9 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         detachAndScrapAttachedViews(recycler);
         positionCache.clear();
 
+        final int itemCount = getItemCount();
+        if (itemCount == 0) return;
+
         // make sure that current position start from 0 to 1
         final int currentPos = mReverseLayout ?
                 -getCurrentPositionOffset() : getCurrentPositionOffset();
@@ -621,7 +624,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
             }
         }
 
-        final int itemCount = getItemCount();
         if (!mInfinite) {
             if (start < 0) {
                 start = 0;
@@ -738,8 +740,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     public int getCurrentPosition() {
+        if (getItemCount() == 0) return 0;
+
         int position = getCurrentPositionOffset();
         if (!mInfinite) return Math.abs(position);
+
         position = !mReverseLayout ?
                 //take care of position = getItemCount()
                 (position >= 0 ?
@@ -754,6 +759,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     @Override
     public View findViewByPosition(int position) {
         final int itemCount = getItemCount();
+        if (itemCount == 0) return null;
         for (int i = 0; i < positionCache.size(); i++) {
             final int key = positionCache.keyAt(i);
             if (key >= 0) {
