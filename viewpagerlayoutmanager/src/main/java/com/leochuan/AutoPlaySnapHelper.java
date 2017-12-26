@@ -4,32 +4,32 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 
 /**
- * Created by Dajavu on 24/12/2017.
+ * Used by {@link AutoPlayRecyclerView} to implement auto play effect
  */
 
-public class AutoPlaySnapHelper extends CenterSnapHelper {
-    private final static int INTERVAL = 2000;
+class AutoPlaySnapHelper extends CenterSnapHelper {
+    final static int TIME_INTERVAL = 2000;
+
+    final static int LEFT = 1;
+    final static int RIGHT = 2;
 
     private Handler handler;
     private int timeInterval;
     private Runnable autoPlayRunnable;
     private boolean runnableAdded;
+    private int direction;
 
-    public AutoPlaySnapHelper() {
-        handler = new Handler(Looper.getMainLooper());
-        this.timeInterval = INTERVAL;
-    }
-
-    public AutoPlaySnapHelper(int timeInterval) {
+    AutoPlaySnapHelper(int timeInterval, int direction) {
+        checkTimeInterval(timeInterval);
+        checkDirection(direction);
         handler = new Handler(Looper.getMainLooper());
         this.timeInterval = timeInterval;
+        this.direction = direction;
     }
 
     @Override
@@ -54,30 +54,12 @@ public class AutoPlaySnapHelper extends CenterSnapHelper {
 
             ((ViewPagerLayoutManager) layoutManager).setInfinite(true);
 
-            mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_MOVE:
-                            if (runnableAdded) {
-                                handler.removeCallbacks(autoPlayRunnable);
-                                runnableAdded = false;
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            handler.postDelayed(autoPlayRunnable, timeInterval);
-                            runnableAdded = true;
-                            break;
-                    }
-                    return false;
-                }
-            });
             autoPlayRunnable = new Runnable() {
                 @Override
                 public void run() {
                     final int currentPosition =
                             ((ViewPagerLayoutManager) layoutManager).getCurrentPosition();
-                    mRecyclerView.smoothScrollToPosition(currentPosition + 1);
+                    mRecyclerView.smoothScrollToPosition(direction == RIGHT ? currentPosition + 1 : currentPosition - 1);
                     handler.postDelayed(autoPlayRunnable, timeInterval);
                 }
             };
@@ -93,5 +75,39 @@ public class AutoPlaySnapHelper extends CenterSnapHelper {
             handler.removeCallbacks(autoPlayRunnable);
             runnableAdded = false;
         }
+    }
+
+    void pause() {
+        if (runnableAdded) {
+            handler.removeCallbacks(autoPlayRunnable);
+            runnableAdded = false;
+        }
+    }
+
+    void start() {
+        if (!runnableAdded) {
+            handler.postDelayed(autoPlayRunnable, timeInterval);
+            runnableAdded = true;
+        }
+    }
+
+    void setTimeInterval(int timeInterval) {
+        checkTimeInterval(timeInterval);
+        this.timeInterval = timeInterval;
+    }
+
+    void setDirection(int direction) {
+        checkDirection(direction);
+        this.direction = direction;
+    }
+
+    private void checkDirection(int direction) {
+        if (direction != LEFT && direction != RIGHT)
+            throw new IllegalArgumentException("direction should be one of left or right");
+    }
+
+    private void checkTimeInterval(int timeInterval) {
+        if (timeInterval <= 0)
+            throw new IllegalArgumentException("time interval should greater than 0");
     }
 }
