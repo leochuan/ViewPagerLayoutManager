@@ -6,7 +6,7 @@
 
 VPLM is a `ViewPager` like `LayoutManager` which implements some common animations. If you need some other effects feel free to raise an issue or PR.
 
-![circle](static/circle.gif) ![circle_scale](static/circle_scale.gif) ![carousel](static/carousel.gif) ![gallery](static/gallery.gif) ![rotate](static/rotate.gif) ![scale](static/scale.gif)
+![circle](static/circle.jpg) ![circle_scale](static/circle_scale.jpg) ![carousel](static/carousel.jpg) ![gallery](static/gallery.jpg) ![rotate](static/rotate.jpg) ![scale](static/scale.jpg)
 
 ## Customzie
 
@@ -28,16 +28,28 @@ Run the demo to see more details.
 
 ## Auto Center
 
-![auto_center](static/auto_center.gif)
-
-You can make the current position move to center automaticlly by:
+You can make the target view stop right at center every time you swipe or drag by:
 ```java
-recyclerView.addOnScrollListener(new CenterScrollListener());
+// work exactly same as LinearSnapHelper.
+new CenterSnapHelper().attachToRecyclerView(recyclerView);
 ```
 
 ## Set Max Visible Item Count
 ```java
 layoutmanager.setMaxVisibleItemCount(count);
+```
+
+## Auto Play
+
+You can make it auto play by using `AutoPlayRecyclerView`
+
+```xml
+<com.leochuan.AutoPlayRecyclerView
+    android:id="@+id/recycler"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:direction="right"
+    app:timeInterval="1500"/>
 ```
 
 ## Download
@@ -50,7 +62,7 @@ repositories {
 }
 
 dependencies {
-  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.6'
+  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.7'
 }
 ```
 
@@ -60,7 +72,7 @@ Maven:
 <dependency>
   <groupId>rouchuan.viewpagerlayoutmanager</groupId>
   <artifactId>viewpagerlayoutmanager</artifactId>
-  <version>2.0.6</version>
+  <version>2.0.7</version>
   <type>pom</type>
 </dependency>
 ```

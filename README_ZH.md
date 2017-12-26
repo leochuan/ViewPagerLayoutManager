@@ -6,7 +6,7 @@
 
 VPLM 实现了一些常见的动画效果，如果你有什么别的想要的效果欢迎给我提ISSUE以及PR
 
-![circle](static/circle.gif) ![circle_scale](static/circle_scale.gif) ![carousel](static/carousel.gif) ![gallery](static/gallery.gif) ![rotate](static/rotate.gif) ![scale](static/scale.gif)
+![circle](static/circle.jpg) ![circle_scale](static/circle_scale.jpg) ![carousel](static/carousel.jpg) ![gallery](static/gallery.jpg) ![rotate](static/rotate.jpg) ![scale](static/scale.jpg)
 
 ## 自定义属性
 ![customize](static/customize.gif)
@@ -24,18 +24,30 @@ VPLM 实现了一些常见的动画效果，如果你有什么别的想要的效
 
 ![infinite](static/infinite.gif)
 
-## 自动回滚
+## 自动滚动到中心
 
-![auto_center](static/auto_center.gif)
-
-可通过给recyclerView添加`CenterScrollListener`实现
+在每次拖动或者快速滑动的时候，你可以通过设置 `CenterSnapHelper` 让目标 view 自动停在屏幕中央
 ```java
-recyclerView.addOnScrollListener(new CenterScrollListener());
+// work exactly same as LinearSnapHelper.
+new CenterSnapHelper().attachToRecyclerView(recyclerView);
 ```
 
 ## 设置可见个数
 ```java
 layoutmanager.setMaxVisibleItemCount(count);
+```
+
+## 自动轮播
+
+请使用 `AutoPlayRecyclerView`
+
+```xml
+<com.leochuan.AutoPlayRecyclerView
+    android:id="@+id/recycler"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:direction="right"
+    app:timeInterval="1500"/>
 ```
 
 ## 安装
@@ -48,7 +60,7 @@ repositories {
 }
 
 dependencies {
-  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.6'
+  compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.7'
 }
 ```
 
@@ -58,7 +70,7 @@ Maven:
 <dependency>
   <groupId>rouchuan.viewpagerlayoutmanager</groupId>
   <artifactId>viewpagerlayoutmanager</artifactId>
-  <version>2.0.6</version>
+  <version>2.0.7</version>
   <type>pom</type>
 </dependency>
 ```
