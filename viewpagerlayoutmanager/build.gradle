@@ -1,3 +1,5 @@
+import groovy.json.JsonBuilder
+
 apply plugin: 'com.android.library'
 
 android {
@@ -26,7 +28,13 @@ dependencies {
 }
 
 apply plugin: 'maven'
+
 def currentVersion = '2.0.7'
+def versionDes = 'Fix bugs and support wrap content and match parent'
+def websiteUrl = 'https://github.com/leochuan/ViewPagerLayoutManager'
+def date = new Date()
+def projectName = 'viewpager-layout-manager'
+
 task createPom << {
     pom {
         project {
@@ -34,8 +42,8 @@ task createPom << {
             artifactId 'viewpagerlayoutmanager'
             version currentVersion
             packaging 'aar'
-            name 'Viewpager Layout Manager'
-            url "https://github.com/leochuan/ViewPagerLayoutManager"
+            name projectName
+            url websiteUrl
             licenses {
                 license {
                     name 'The Apache Software License, Version 2.0'
@@ -50,12 +58,57 @@ task createPom << {
                 }
             }
             scm {
-                connection 'https://github.com/leochuan/ViewPagerLayoutManager.git'
-                developerConnection 'https://github.com/leochuan/ViewPagerLayoutManager.git'
-                url 'https://github.com/leochuan/ViewPagerLayoutManager'
+                connection "${websiteUrl}.git"
+                developerConnection "${websiteUrl}.git"
+                url websiteUrl
             }
         }
-    }.writeTo("viewpagerlayoutmanager-${currentVersion}.pom")
+    }.writeTo("build/viewpagerlayoutmanager-${currentVersion}.pom")
+
+    def builder = new JsonBuilder()
+    def root = builder {
+        'package' {
+            name projectName
+            repo 'maven'
+            subject 'leochuan'
+            desc 'ViewPager like LayoutManager which supports some awesome animations and infinite scroll.'
+            website_url websiteUrl
+            issue_tracker_url "$websiteUrl/issues"
+            vcs_url "${websiteUrl}.git"
+            github_use_tag_release_notes true
+            github_release_notes_file 'RELEASE_NOTE.md'
+            labels "android", "layoutManager"
+            public_download_numbers false
+            public_stats false
+        }
+        'version' {
+            name currentVersion
+            desc versionDes
+            released date.format('yyyy-MM-dd')
+            vcs_tag "v${currentVersion}"
+            gpgSign false
+        }
+        publish true
+    }
+    root.files = []
+    root.files.add([
+            'includePattern': 'viewpagerlayoutmanager/build/libs/(.*\\.jar)',
+            'uploadPattern': "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/\$1",
+            'matrixParams': ['override': 1]
+    ])
+    root.files.add([
+            'includePattern': 'viewpagerlayoutmanager/build/(.*\\.pom)',
+            'uploadPattern': "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/\$1",
+            'matrixParams': ['override': 1]
+    ])
+    root.files.add([
+            'includePattern': 'viewpagerlayoutmanager/build/outputs/aar/(.*release\\.aar)',
+            'uploadPattern': "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/\$1",
+            'matrixParams': ['override': 1]
+    ])
+
+    def jsonFile = new File("descriptor.json")
+    jsonFile.write(builder.toPrettyString())
 }
 
 task sourcesJar(type: Jar) {
