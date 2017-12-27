@@ -17,31 +17,31 @@
         "public_stats": false
     },
     "version": {
-        "name": "2.0.7",
-        "desc": "Fix bugs and support wrap content and match parent",
-        "released": "2017-12-26",
-        "vcs_tag": "v2.0.7",
+        "name": "2.0.8",
+        "desc": "Fix bugs",
+        "released": "2017-12-27",
+        "vcs_tag": "v2.0.8",
         "gpgSign": false
     },
     "publish": true,
     "files": [
         {
             "includePattern": "viewpagerlayoutmanager/build/libs/(.*\\.jar)",
-            "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.7/$1",
+            "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.8/$1",
             "matrixParams": {
                 "override": 1
             }
         },
         {
             "includePattern": "viewpagerlayoutmanager/build/(.*\\.pom)",
-            "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.7/$1",
+            "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.8/$1",
             "matrixParams": {
                 "override": 1
             }
         },
         {
             "includePattern": "viewpagerlayoutmanager/build/outputs/aar/(.*release\\.aar)",
-            "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.7/$1",
+            "uploadPattern": "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/2.0.8/viewpagerlayoutmanager-2.0.8.aar",
             "matrixParams": {
                 "override": 1
             }

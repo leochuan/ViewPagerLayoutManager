@@ -29,8 +29,8 @@ dependencies {
 
 apply plugin: 'maven'
 
-def currentVersion = '2.0.7'
-def versionDes = 'Fix bugs and support wrap content and match parent'
+def currentVersion = '2.0.8'
+def versionDes = 'Fix bugs'
 def websiteUrl = 'https://github.com/leochuan/ViewPagerLayoutManager'
 def date = new Date()
 def projectName = 'viewpager-layout-manager'
@@ -93,18 +93,18 @@ task createPom << {
     root.files = []
     root.files.add([
             'includePattern': 'viewpagerlayoutmanager/build/libs/(.*\\.jar)',
-            'uploadPattern': "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/\$1",
-            'matrixParams': ['override': 1]
+            'uploadPattern' : "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/\$1",
+            'matrixParams'  : ['override': 1]
     ])
     root.files.add([
             'includePattern': 'viewpagerlayoutmanager/build/(.*\\.pom)',
-            'uploadPattern': "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/\$1",
-            'matrixParams': ['override': 1]
+            'uploadPattern' : "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/\$1",
+            'matrixParams'  : ['override': 1]
     ])
     root.files.add([
             'includePattern': 'viewpagerlayoutmanager/build/outputs/aar/(.*release\\.aar)',
-            'uploadPattern': "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/\$1",
-            'matrixParams': ['override': 1]
+            'uploadPattern' : "rouchuan/viewpagerlayoutmanager/viewpagerlayoutmanager/$currentVersion/viewpagerlayoutmanager-${currentVersion}.aar",
+            'matrixParams'  : ['override': 1]
     ])
 
     def jsonFile = new File("descriptor.json")

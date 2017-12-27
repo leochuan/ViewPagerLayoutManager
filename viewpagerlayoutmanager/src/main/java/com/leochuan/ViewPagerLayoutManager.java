@@ -752,7 +752,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                 (position > 0 ?
                         getItemCount() - position % getItemCount() :
                         -position % getItemCount());
-        return position;
+        return position == getItemCount() ? 0 : position;
     }
 
     @Override
@@ -765,7 +765,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                 if (position == key % itemCount) return positionCache.valueAt(i);
             } else {
                 int delta = key % itemCount;
-                if (delta == 0) delta = itemCount;
+                if (delta == 0) delta = -itemCount;
                 if (itemCount + delta == position) return positionCache.valueAt(i);
             }
         }
