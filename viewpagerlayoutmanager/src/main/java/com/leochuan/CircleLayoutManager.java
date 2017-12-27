@@ -10,10 +10,10 @@ import android.view.View;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class CircleLayoutManager extends ViewPagerLayoutManager {
-    public static final int LEFT = 0;
-    public static final int RIGHT = 1;
-    public static final int TOP = 2;
-    public static final int BOTTOM = 3;
+    public static final int LEFT = 10;
+    public static final int RIGHT = 11;
+    public static final int TOP = 12;
+    public static final int BOTTOM = 13;
 
     public static final int LEFT_ON_TOP = 4;
     public static final int RIGHT_ON_TOP = 5;
