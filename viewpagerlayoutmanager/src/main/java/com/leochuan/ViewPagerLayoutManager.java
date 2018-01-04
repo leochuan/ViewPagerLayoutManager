@@ -3,7 +3,6 @@ package com.leochuan;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -67,6 +66,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * Defines if layout should be calculated from end to start.
      */
     private boolean mReverseLayout = false;
+
+    /**
+     * This keeps the final value for how LayoutManager should start laying out views.
+     * It is calculated by checking {@link #getReverseLayout()} and View's layout direction.
+     * {@link #onLayoutChildren(RecyclerView.Recycler, RecyclerView.State)} is run.
+     */
+    private boolean mShouldReverseLayout = false;
 
     /**
      * Works the same way as {@link android.widget.AbsListView#setSmoothScrollbarEnabled(boolean)}.
@@ -204,7 +210,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         SavedState savedState = new SavedState();
         savedState.position = mPendingScrollPosition;
         savedState.offset = mOffset;
-        savedState.isReverseLayout = mReverseLayout;
+        savedState.isReverseLayout = mShouldReverseLayout;
         return savedState;
     }
 
@@ -304,8 +310,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * {@link #getReverseLayout()} is {@code true}, elements will be laid out starting from left.
      */
     private void resolveShouldLayoutReverse() {
-        if (mOrientation == HORIZONTAL && getLayoutDirection() == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            mReverseLayout = !mReverseLayout;
+        // A == B is the same result, but we rather keep it readable
+        if (mOrientation == VERTICAL || !isLayoutRTL()) {
+            mShouldReverseLayout = mReverseLayout;
+        } else {
+            mShouldReverseLayout = !mReverseLayout;
         }
     }
 
@@ -376,13 +385,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         mRightItems = (int) Math.abs(maxRemoveOffset() / mInterval) + 1;
 
         if (mPendingSavedState != null) {
-            mReverseLayout = mPendingSavedState.isReverseLayout;
+            mShouldReverseLayout = mPendingSavedState.isReverseLayout;
             mPendingScrollPosition = mPendingSavedState.position;
             mOffset = mPendingSavedState.offset;
         }
 
         if (mPendingScrollPosition != NO_POSITION) {
-            mOffset = mReverseLayout ?
+            mOffset = mShouldReverseLayout ?
                     mPendingScrollPosition * -mInterval : mPendingScrollPosition * mInterval;
         }
 
@@ -423,17 +432,17 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     private int getMovement(int direction) {
         if (mOrientation == VERTICAL) {
             if (direction == View.FOCUS_UP) {
-                return mReverseLayout ? DIRECTION_FORWARD : DIRECTION_BACKWARD;
+                return mShouldReverseLayout ? DIRECTION_FORWARD : DIRECTION_BACKWARD;
             } else if (direction == View.FOCUS_DOWN) {
-                return mReverseLayout ? DIRECTION_BACKWARD : DIRECTION_FORWARD;
+                return mShouldReverseLayout ? DIRECTION_BACKWARD : DIRECTION_FORWARD;
             } else {
                 return DIRECTION_NO_WHERE;
             }
         } else {
             if (direction == View.FOCUS_LEFT) {
-                return mReverseLayout ? DIRECTION_FORWARD : DIRECTION_BACKWARD;
+                return mShouldReverseLayout ? DIRECTION_FORWARD : DIRECTION_BACKWARD;
             } else if (direction == View.FOCUS_RIGHT) {
-                return mReverseLayout ? DIRECTION_BACKWARD : DIRECTION_FORWARD;
+                return mShouldReverseLayout ? DIRECTION_BACKWARD : DIRECTION_FORWARD;
             } else {
                 return DIRECTION_NO_WHERE;
             }
@@ -454,7 +463,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     private float getProperty(int position) {
-        return mReverseLayout ? position * -mInterval : position * mInterval;
+        return mShouldReverseLayout ? position * -mInterval : position * mInterval;
     }
 
     @Override
@@ -467,7 +476,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     public void scrollToPosition(int position) {
         if (!mInfinite && (position < 0 || position >= getItemCount())) return;
         mPendingScrollPosition = position;
-        mOffset = mReverseLayout ? position * -mInterval : position * mInterval;
+        mOffset = mShouldReverseLayout ? position * -mInterval : position * mInterval;
         requestLayout();
     }
 
@@ -507,12 +516,12 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
 
         if (!mSmoothScrollbarEnabled) {
-            return !mReverseLayout ?
+            return !mShouldReverseLayout ?
                     getCurrentPosition() : getItemCount() - getCurrentPosition() - 1;
         }
 
         final float realOffset = getOffsetOfRightAdapterPosition();
-        return !mReverseLayout ? (int) realOffset : (int) ((getItemCount() - 1) * mInterval + realOffset);
+        return !mShouldReverseLayout ? (int) realOffset : (int) ((getItemCount() - 1) * mInterval + realOffset);
     }
 
     private int computeScrollExtent() {
@@ -604,7 +613,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         if (itemCount == 0) return;
 
         // make sure that current position start from 0 to 1
-        final int currentPos = mReverseLayout ?
+        final int currentPos = mShouldReverseLayout ?
                 -getCurrentPositionOffset() : getCurrentPositionOffset();
         int start = currentPos - mLeftItems;
         int end = currentPos + mRightItems;
@@ -684,11 +693,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     private float getMaxOffset() {
-        return !mReverseLayout ? (getItemCount() - 1) * mInterval : 0;
+        return !mShouldReverseLayout ? (getItemCount() - 1) * mInterval : 0;
     }
 
     private float getMinOffset() {
-        return !mReverseLayout ? 0 : -(getItemCount() - 1) * mInterval;
+        return !mShouldReverseLayout ? 0 : -(getItemCount() - 1) * mInterval;
     }
 
     private void layoutScrap(View scrap, float targetOffset) {
@@ -744,7 +753,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         int position = getCurrentPositionOffset();
         if (!mInfinite) return Math.abs(position);
 
-        position = !mReverseLayout ?
+        position = !mShouldReverseLayout ?
                 //take care of position = getItemCount()
                 (position >= 0 ?
                         position % getItemCount() :
@@ -781,7 +790,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
      * cause when {@link #mInfinite} is set true, there will be no limitation of {@link #mOffset}
      */
     private float getOffsetOfRightAdapterPosition() {
-        if (mReverseLayout)
+        if (mShouldReverseLayout)
             return mInfinite ?
                     (mOffset <= 0 ?
                             (mOffset % (mInterval * getItemCount())) :
@@ -804,16 +813,16 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         if (mInfinite)
             return (int) ((getCurrentPositionOffset() * mInterval - mOffset) * getDistanceRatio());
         return (int) ((getCurrentPosition() *
-                (!mReverseLayout ? mInterval : -mInterval) - mOffset) * getDistanceRatio());
+                (!mShouldReverseLayout ? mInterval : -mInterval) - mOffset) * getDistanceRatio());
     }
 
     public int getOffsetToPosition(int position) {
         if (mInfinite)
             return (int) (((getCurrentPositionOffset() +
-                    (!mReverseLayout ? position - getCurrentPosition() : getCurrentPosition() - position)) *
+                    (!mShouldReverseLayout ? position - getCurrentPosition() : getCurrentPosition() - position)) *
                     mInterval - mOffset) * getDistanceRatio());
         return (int) ((position *
-                (!mReverseLayout ? mInterval : -mInterval) - mOffset) * getDistanceRatio());
+                (!mShouldReverseLayout ? mInterval : -mInterval) - mOffset) * getDistanceRatio());
     }
 
     public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
