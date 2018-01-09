@@ -36,7 +36,6 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
     private RotateLayoutManager(Context context, int itemSpace, float angle, int orientation, float moveSpeed,
                                 boolean reverseRotate, int maxVisibleItemCount, int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
-        setIntegerDy(true);
         setShrinkSpace(shrinkSpace);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;

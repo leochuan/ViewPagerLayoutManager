@@ -36,7 +36,6 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
                                   int maxVisibleItemCount, float moveSpeed, int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setEnableBringCenterToFront(true);
-        setIntegerDy(true);
         setShrinkSpace(shrinkSpace);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;

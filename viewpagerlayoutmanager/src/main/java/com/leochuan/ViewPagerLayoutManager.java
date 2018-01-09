@@ -98,11 +98,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     private boolean mEnableBringCenterToFront;
 
-    /**
-     * ugly code for fix bug caused by float
-     */
-    private boolean mIntegerDy = false;
-
     private int mLeftItems;
 
     private int mRightItems;
@@ -288,20 +283,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         if (this.mMaxVisibleItemCount == mMaxVisibleItemCount) return;
         this.mMaxVisibleItemCount = mMaxVisibleItemCount;
         removeAllViews();
-    }
-
-    /**
-     * see {@link #mIntegerDy}
-     */
-    public boolean isIntegerDy() {
-        return mIntegerDy;
-    }
-
-    /**
-     * see {@link #mIntegerDy}
-     */
-    public void setIntegerDy(boolean mIntegerDy) {
-        this.mIntegerDy = mIntegerDy;
     }
 
     /**
@@ -584,20 +565,9 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
             willScroll = (int) ((getMaxOffset() - mOffset) * getDistanceRatio());
         }
 
-        if (mIntegerDy) {
-            realDx = (int) (willScroll / getDistanceRatio());
-        } else {
-            realDx = willScroll / getDistanceRatio();
-        }
+        realDx = willScroll / getDistanceRatio();
 
         mOffset += realDx;
-
-        // we re-layout all current views in the right place
-        for (int i = 0; i < getChildCount(); i++) {
-            final View scrap = getChildAt(i);
-            final float delta = propertyChangeWhenScroll(scrap) - realDx;
-            layoutScrap(scrap, delta);
-        }
 
         //handle recycle
         layoutItems(recycler);

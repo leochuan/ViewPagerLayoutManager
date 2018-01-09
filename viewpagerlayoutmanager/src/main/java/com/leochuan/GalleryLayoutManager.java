@@ -39,7 +39,6 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
                                  float moveSpeed, boolean flipRotate, int maxVisibleItemCount, int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setShrinkSpace(shrinkSpace);
-        setIntegerDy(true);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.moveSpeed = moveSpeed;

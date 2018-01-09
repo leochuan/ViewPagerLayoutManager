@@ -37,7 +37,6 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     private ScaleLayoutManager(Context context, int itemSpace, float centerScale, float maxAlpha, float minAlpha,
                                int orientation, float moveSpeed, int maxVisibleItemCount, int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
-        setIntegerDy(true);
         setShrinkSpace(shrinkSpace);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
