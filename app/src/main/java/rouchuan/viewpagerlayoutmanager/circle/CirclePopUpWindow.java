@@ -33,6 +33,7 @@ class CirclePopUpWindow extends SettingPopUpWindow
     private TextView radiusValue;
     private TextView intervalValue;
     private TextView speedValue;
+    private TextView distanceToBottomValue;
     private SwitchCompat infinite;
     private SwitchCompat autoCenter;
     private SwitchCompat reverse;
@@ -53,10 +54,12 @@ class CirclePopUpWindow extends SettingPopUpWindow
         SeekBar radius = view.findViewById(R.id.sb_radius);
         SeekBar interval = view.findViewById(R.id.sb_interval);
         SeekBar speed = view.findViewById(R.id.sb_speed);
+        SeekBar distanceToBottom = view.findViewById(R.id.sb_distance_to_bottom);
 
         radiusValue = view.findViewById(R.id.radius_value);
         intervalValue = view.findViewById(R.id.interval_value);
         speedValue = view.findViewById(R.id.speed_value);
+        distanceToBottomValue = view.findViewById(R.id.distance_to_bottom_value);
 
         infinite = view.findViewById(R.id.s_infinite);
         autoCenter = view.findViewById(R.id.s_auto_center);
@@ -69,15 +72,18 @@ class CirclePopUpWindow extends SettingPopUpWindow
         radius.setOnSeekBarChangeListener(this);
         interval.setOnSeekBarChangeListener(this);
         speed.setOnSeekBarChangeListener(this);
+        distanceToBottom.setOnSeekBarChangeListener(this);
 
         final int maxRadius = Util.Dp2px(radius.getContext(), 400);
         radius.setProgress(Math.round(circleLayoutManager.getRadius() * 1f / maxRadius * 100));
         interval.setProgress(Math.round(circleLayoutManager.getAngleInterval() / 0.9f));
         speed.setProgress(Math.round(circleLayoutManager.getMoveSpeed() / 0.005f));
+        distanceToBottom.setProgress(circleLayoutManager.getDistanceToBottom() / 10);
 
         radiusValue.setText(String.valueOf(circleLayoutManager.getRadius()));
         intervalValue.setText(String.valueOf(circleLayoutManager.getAngleInterval()));
         speedValue.setText(Util.formatFloat(circleLayoutManager.getMoveSpeed()));
+        distanceToBottomValue.setText(String.valueOf(circleLayoutManager.getDistanceToBottom()));
 
         infinite.setChecked(circleLayoutManager.getInfinite());
         reverse.setChecked(circleLayoutManager.getReverseLayout());
@@ -137,6 +143,11 @@ class CirclePopUpWindow extends SettingPopUpWindow
                 final float speed = progress * 0.005f;
                 circleLayoutManager.setMoveSpeed(speed);
                 speedValue.setText(Util.formatFloat(speed));
+                break;
+            case R.id.sb_distance_to_bottom:
+                final int distance = progress * 10;
+                circleLayoutManager.setDistanceToBottom(distance);
+                distanceToBottomValue.setText(String.valueOf(distance));
                 break;
         }
     }

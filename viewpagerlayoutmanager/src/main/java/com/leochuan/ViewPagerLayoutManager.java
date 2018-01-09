@@ -34,6 +34,8 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     private static final int DIRECTION_BACKWARD = 1;
 
+    protected static final int INVALID_SIZE = Integer.MAX_VALUE;
+
     private SparseArray<View> positionCache = new SparseArray<>();
 
     protected int mDecoratedMeasurement;
@@ -108,11 +110,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     private int mMaxVisibleItemCount = DETERMINE_BY_MAX_AND_MIN;
 
     /**
-     * when the size of main direction will minus twice of it
+     * size of main direction will minus twice of it
      */
-    private int shrinkSpace;
+    private int mShrinkSpace;
 
     private Interpolator mSmoothScrollInterpolator;
+
+    private int mDistanceToBottom = INVALID_SIZE;
 
     /**
      * use for handle focus
@@ -356,10 +360,15 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         //make sure properties are correct while measure more than once
         View scrap = recycler.getViewForPosition(0);
         measureChildWithMargins(scrap, 0, 0);
-        mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap) - 2 * shrinkSpace;
+        mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap) - 2 * mShrinkSpace;
         mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
         mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
-        mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
+        if (mDistanceToBottom == INVALID_SIZE) {
+            mSpaceInOther = mDistanceToBottom = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
+        } else {
+            mSpaceInOther = mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther - mDistanceToBottom;
+        }
+
         mInterval = setInterval();
         setUp();
         mLeftItems = (int) Math.abs(minRemoveOffset() / mInterval) + 1;
@@ -813,13 +822,24 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     public int getShrinkSpace() {
-        return shrinkSpace;
+        return mShrinkSpace;
     }
 
-    public void setShrinkSpace(int shrinkSpace) {
+    public void setShrinkSpace(int mShrinkSpace) {
         assertNotInLayoutOrScroll(null);
-        if (this.shrinkSpace == shrinkSpace) return;
-        this.shrinkSpace = shrinkSpace;
+        if (this.mShrinkSpace == mShrinkSpace) return;
+        this.mShrinkSpace = mShrinkSpace;
+        removeAllViews();
+    }
+
+    public int getDistanceToBottom() {
+        return mDistanceToBottom;
+    }
+
+    public void setDistanceToBottom(int mDistanceToBottom) {
+        assertNotInLayoutOrScroll(null);
+        if (this.mDistanceToBottom == mDistanceToBottom) return;
+        this.mDistanceToBottom = mDistanceToBottom;
         removeAllViews();
     }
 

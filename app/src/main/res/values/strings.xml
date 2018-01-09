@@ -11,6 +11,7 @@
     <string name="radius">Radius</string>
     <string name="item_space">Item Space</string>
     <string name="move_speed">Move Speed</string>
+    <string name="distance_to_bottom">Distance To Bottom</string>
     <string name="angle_interval">Interval Angle</string>
     <string name="center_scale">Center Scale</string>
     <string name="rotate_angle">Rotate Angle</string>

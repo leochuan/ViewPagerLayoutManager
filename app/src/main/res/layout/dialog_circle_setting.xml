@@ -89,6 +89,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/distance_to_bottom"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/distance_to_bottom_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textColor="#fff" />
+    </FrameLayout>
+
+    <SeekBar
+        android:id="@+id/sb_distance_to_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/toggle_reverse"
             android:textColor="#fff" />
 

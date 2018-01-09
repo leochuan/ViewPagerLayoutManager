@@ -31,13 +31,16 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     public ScaleLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.centerScale, builder.maxAlpha, builder.minAlpha,
-                builder.orientation, builder.moveSpeed, builder.maxVisibleItemCount, builder.shrinkSpace, builder.reverseLayout);
+                builder.orientation, builder.moveSpeed, builder.maxVisibleItemCount, builder.distanceToBottom,
+                builder.shrinkSpace, builder.reverseLayout);
     }
 
     private ScaleLayoutManager(Context context, int itemSpace, float centerScale, float maxAlpha, float minAlpha,
-                               int orientation, float moveSpeed, int maxVisibleItemCount, int shrinkSpace, boolean reverseLayout) {
+                               int orientation, float moveSpeed, int maxVisibleItemCount, int distanceToBottom,
+                               int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setShrinkSpace(shrinkSpace);
+        setDistanceToBottom(distanceToBottom);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.centerScale = centerScale;
@@ -164,6 +167,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         private boolean reverseLayout;
         private Context context;
         private int maxVisibleItemCount;
+        private int distanceToBottom;
 
         public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
@@ -174,6 +178,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
             maxAlpha = MAX_ALPHA;
             minAlpha = MIN_ALPHA;
             reverseLayout = false;
+            distanceToBottom = ViewPagerLayoutManager.INVALID_SIZE;
             maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
         }
 
@@ -216,6 +221,11 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setShrinkSpace(int shrinkSpace) {
             this.shrinkSpace = shrinkSpace;
+            return this;
+        }
+
+        public Builder setDistanceToBottom(int distanceToBottom) {
+            this.distanceToBottom = distanceToBottom;
             return this;
         }
 

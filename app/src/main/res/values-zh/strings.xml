@@ -12,6 +12,7 @@
     <string name="item_space">间距</string>
     <string name="move_speed">滚动速度</string>
     <string name="angle_interval">间隔角度</string>
+    <string name="distance_to_bottom">到底部距离</string>
     <string name="center_scale">中心缩放比</string>
     <string name="rotate_angle">旋转角度</string>
     <string name="min_scale">最小缩放比</string>

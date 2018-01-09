@@ -29,14 +29,17 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
     public CarouselLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.minScale, builder.orientation,
-                builder.maxVisibleItemCount, builder.moveSpeed, builder.shrinkSpace, builder.reverseLayout);
+                builder.maxVisibleItemCount, builder.moveSpeed, builder.distanceToBottom,
+                builder.shrinkSpace, builder.reverseLayout);
     }
 
     private CarouselLayoutManager(Context context, int itemSpace, float minScale, int orientation,
-                                  int maxVisibleItemCount, float moveSpeed, int shrinkSpace, boolean reverseLayout) {
+                                  int maxVisibleItemCount, float moveSpeed, int distanceToBottom,
+                                  int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setEnableBringCenterToFront(true);
         setShrinkSpace(shrinkSpace);
+        setDistanceToBottom(distanceToBottom);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
         this.minScale = minScale;
@@ -124,6 +127,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         private int maxVisibleItemCount;
         private boolean reverseLayout;
         private int shrinkSpace;
+        private int distanceToBottom;
 
         public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
@@ -133,6 +137,7 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
             this.moveSpeed = DEFAULT_SPEED;
             reverseLayout = false;
             maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
+            distanceToBottom = ViewPagerLayoutManager.INVALID_SIZE;
         }
 
         public Builder setOrientation(int orientation) {
@@ -162,6 +167,11 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setShrinkSpace(int shrinkSpace) {
             this.shrinkSpace = shrinkSpace;
+            return this;
+        }
+
+        public Builder setDistanceToBottom(int distanceToBottom) {
+            this.distanceToBottom = distanceToBottom;
             return this;
         }
 
