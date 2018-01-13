@@ -578,6 +578,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
         mOffset += realDx;
 
+        // we re-layout all current views in the right place
+        for (int i = 0; i < getChildCount(); i++) {
+            final View scrap = getChildAt(i);
+            final float delta = propertyChangeWhenScroll(scrap) - realDx;
+            layoutScrap(scrap, delta);
+        }
+
         //handle recycle
         layoutItems(recycler);
 
