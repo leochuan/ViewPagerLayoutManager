@@ -67,10 +67,6 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         return angle;
     }
 
-    public int getOrientation() {
-        return super.getOrientation();
-    }
-
     public float getMoveSpeed() {
         return moveSpeed;
     }
@@ -84,10 +80,6 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         if (this.itemSpace == itemSpace) return;
         this.itemSpace = itemSpace;
         removeAllViews();
-    }
-
-    public void setOrientation(int orientation) {
-        super.setOrientation(orientation);
     }
 
     public void setMoveSpeed(float moveSpeed) {

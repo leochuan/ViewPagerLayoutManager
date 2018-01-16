@@ -263,6 +263,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
         mOrientation = orientation;
         mOrientationHelper = null;
+        mDistanceToBottom = INVALID_SIZE;
         removeAllViews();
     }
 

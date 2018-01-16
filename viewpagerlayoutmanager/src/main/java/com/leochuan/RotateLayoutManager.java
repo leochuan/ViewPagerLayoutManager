@@ -55,10 +55,6 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
         return angle;
     }
 
-    public int getOrientation() {
-        return super.getOrientation();
-    }
-
     public float getMoveSpeed() {
         return moveSpeed;
     }
@@ -79,10 +75,6 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
         if (this.angle == centerScale) return;
         this.angle = centerScale;
         requestLayout();
-    }
-
-    public void setOrientation(int orientation) {
-        super.setOrientation(orientation);
     }
 
     public void setMoveSpeed(float moveSpeed) {

@@ -54,10 +54,6 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         return minScale;
     }
 
-    public int getOrientation() {
-        return super.getOrientation();
-    }
-
     public float getMoveSpeed() {
         return moveSpeed;
     }
@@ -75,10 +71,6 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         if (this.minScale == minScale) return;
         this.minScale = minScale;
         requestLayout();
-    }
-
-    public void setOrientation(int orientation) {
-        super.setOrientation(orientation);
     }
 
     public void setMoveSpeed(float moveSpeed) {

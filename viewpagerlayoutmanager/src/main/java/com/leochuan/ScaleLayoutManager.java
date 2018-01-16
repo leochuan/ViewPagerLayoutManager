@@ -57,10 +57,6 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         return centerScale;
     }
 
-    public int getOrientation() {
-        return super.getOrientation();
-    }
-
     public float getMoveSpeed() {
         return moveSpeed;
     }
@@ -101,10 +97,6 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         if (this.minAlpha == minAlpha) return;
         this.minAlpha = minAlpha;
         requestLayout();
-    }
-
-    public void setOrientation(int orientation) {
-        super.setOrientation(orientation);
     }
 
     public void setMoveSpeed(float moveSpeed) {
