@@ -24,6 +24,7 @@
     <string name="toggle_auto_center">Toggle Auto Center</string>
     <string name="toggle_reverse">Toggle Reverse</string>
     <string name="flip_rotate">Flip Rotate</string>
+    <string name="rotate_from_edge">Rotate From Edge</string>
     <string name="change_orientation">Change Orientation</string>
     <string name="gravity">Gravity</string>
     <string name="left">Left</string>

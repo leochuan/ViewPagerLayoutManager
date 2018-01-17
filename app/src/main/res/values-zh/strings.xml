@@ -34,4 +34,5 @@
     <string name="left_on_top">靠左在上</string>
     <string name="right_on_top">靠右在上</string>
     <string name="center_on_top">靠中间在上</string>
+    <string name="rotate_from_edge">绕底边旋转</string>
 </resources>

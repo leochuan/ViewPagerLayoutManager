@@ -10,6 +10,7 @@ import android.view.View;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class GalleryLayoutManager extends ViewPagerLayoutManager {
+    private final float MAX_ELEVATION = 5F;
 
     private int itemSpace;
     private float moveSpeed;
@@ -17,6 +18,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     private float minAlpha;
     private float angle;
     private boolean flipRotate;
+    private boolean rotateFromEdge;
 
     public GalleryLayoutManager(Context context, int itemSpace) {
         this(new Builder(context, itemSpace));
@@ -32,13 +34,13 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
     public GalleryLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.angle, builder.maxAlpha, builder.minAlpha,
-                builder.orientation, builder.moveSpeed, builder.flipRotate, builder.maxVisibleItemCount,
-                builder.distanceToBottom, builder.shrinkSpace, builder.reverseLayout);
+                builder.orientation, builder.moveSpeed, builder.flipRotate, builder.rotateFromEdge,
+                builder.maxVisibleItemCount, builder.distanceToBottom, builder.shrinkSpace, builder.reverseLayout);
     }
 
     private GalleryLayoutManager(Context context, int itemSpace, float angle, float maxAlpha, float minAlpha,
-                                 int orientation, float moveSpeed, boolean flipRotate, int maxVisibleItemCount,
-                                 int distanceToBottom, int shrinkSpace, boolean reverseLayout) {
+                                 int orientation, float moveSpeed, boolean flipRotate, boolean rotateFromEdge,
+                                 int maxVisibleItemCount, int distanceToBottom, int shrinkSpace, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setShrinkSpace(shrinkSpace);
         setDistanceToBottom(distanceToBottom);
@@ -49,6 +51,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         this.maxAlpha = maxAlpha;
         this.minAlpha = minAlpha;
         this.flipRotate = flipRotate;
+        this.rotateFromEdge = rotateFromEdge;
     }
 
     public int getItemSpace() {
@@ -73,6 +76,10 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
     public boolean getFlipRotate() {
         return flipRotate;
+    }
+
+    public boolean getRotateFromEdge() {
+        return rotateFromEdge;
     }
 
     public void setItemSpace(int itemSpace) {
@@ -118,6 +125,13 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         requestLayout();
     }
 
+    public void setRotateFromEdge(boolean rotateFromEdge) {
+        assertNotInLayoutOrScroll(null);
+        if (this.rotateFromEdge == rotateFromEdge) return;
+        this.rotateFromEdge = rotateFromEdge;
+        removeAllViews();
+    }
+
     @Override
     protected float setInterval() {
         return mDecoratedMeasurement + itemSpace;
@@ -127,15 +141,26 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     protected void setItemViewProperty(View itemView, float targetOffset) {
         final float rotation = calRotation(targetOffset);
         if (getOrientation() == HORIZONTAL) {
-            if (flipRotate)
+            if (rotateFromEdge) {
+                itemView.setPivotX(rotation > 0 ? 0 : mDecoratedMeasurement);
+                itemView.setPivotY(mDecoratedMeasurementInOther * 0.5f);
+            }
+            if (flipRotate) {
                 itemView.setRotationX(rotation);
-            else
+            } else {
                 itemView.setRotationY(rotation);
+            }
         } else {
-            if (flipRotate)
+            if (rotateFromEdge) {
+                itemView.setPivotY(rotation > 0 ? 0 : mDecoratedMeasurement);
+                itemView.setPivotX(mDecoratedMeasurementInOther * 0.5f);
+
+            }
+            if (flipRotate) {
                 itemView.setRotationY(-rotation);
-            else
+            } else {
                 itemView.setRotationX(-rotation);
+            }
         }
         final float alpha = calAlpha(targetOffset);
         itemView.setAlpha(alpha);
@@ -143,7 +168,8 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setViewElevation(View itemView, float targetOffset) {
-        return calAlpha(targetOffset) * 5;
+        final float ele = Math.max(Math.abs(itemView.getRotationX()), Math.abs(itemView.getRotationY())) * MAX_ELEVATION / 360;
+        return MAX_ELEVATION - ele;
     }
 
     @Override
@@ -181,6 +207,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         private int maxVisibleItemCount;
         private int shrinkSpace;
         private int distanceToBottom;
+        private boolean rotateFromEdge;
 
         public Builder(Context context, int itemSpace) {
             this.itemSpace = itemSpace;
@@ -192,6 +219,7 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
             this.moveSpeed = DEFAULT_SPEED;
             reverseLayout = false;
             flipRotate = false;
+            rotateFromEdge = false;
             distanceToBottom = ViewPagerLayoutManager.INVALID_SIZE;
             maxVisibleItemCount = ViewPagerLayoutManager.DETERMINE_BY_MAX_AND_MIN;
         }
@@ -250,6 +278,11 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setDistanceToBottom(int distanceToBottom) {
             this.distanceToBottom = distanceToBottom;
+            return this;
+        }
+
+        public Builder setRotateFromEdge(boolean rotateFromEdge) {
+            this.rotateFromEdge = rotateFromEdge;
             return this;
         }
 
