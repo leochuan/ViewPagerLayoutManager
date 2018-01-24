@@ -32,14 +32,13 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     public ScaleLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.centerScale, builder.maxAlpha, builder.minAlpha,
                 builder.orientation, builder.moveSpeed, builder.maxVisibleItemCount, builder.distanceToBottom,
-                builder.shrinkSpace, builder.reverseLayout);
+                builder.reverseLayout);
     }
 
     private ScaleLayoutManager(Context context, int itemSpace, float centerScale, float maxAlpha, float minAlpha,
                                int orientation, float moveSpeed, int maxVisibleItemCount, int distanceToBottom,
-                               int shrinkSpace, boolean reverseLayout) {
+                               boolean reverseLayout) {
         super(context, orientation, reverseLayout);
-        setShrinkSpace(shrinkSpace);
         setDistanceToBottom(distanceToBottom);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
@@ -150,7 +149,6 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         private static float MAX_ALPHA = 1f;
 
         private int itemSpace;
-        private int shrinkSpace;
         private int orientation;
         private float centerScale;
         private float moveSpeed;
@@ -208,11 +206,6 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
-            return this;
-        }
-
-        public Builder setShrinkSpace(int shrinkSpace) {
-            this.shrinkSpace = shrinkSpace;
             return this;
         }
 

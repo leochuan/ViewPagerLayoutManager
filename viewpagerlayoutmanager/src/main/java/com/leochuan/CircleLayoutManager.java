@@ -43,16 +43,15 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     public CircleLayoutManager(Builder builder) {
         this(builder.context, builder.radius, builder.angleInterval, builder.moveSpeed, builder.maxRemoveAngle,
                 builder.minRemoveAngle, builder.gravity, builder.zAlignment, builder.flipRotate,
-                builder.maxVisibleItemCount, builder.distanceToBottom, builder.shrinkSpace, builder.reverseLayout);
+                builder.maxVisibleItemCount, builder.distanceToBottom, builder.reverseLayout);
     }
 
     private CircleLayoutManager(Context context, int radius, int angleInterval, float moveSpeed,
                                 float max, float min, int gravity, int zAlignment, boolean flipRotate,
-                                int maxVisibleItemCount, int distanceToBottom, int shrinkSpace, boolean reverseLayout) {
+                                int maxVisibleItemCount, int distanceToBottom, boolean reverseLayout) {
         super(context, (gravity == LEFT || gravity == RIGHT) ? VERTICAL : HORIZONTAL, reverseLayout);
         setEnableBringCenterToFront(true);
         setMaxVisibleItemCount(maxVisibleItemCount);
-        setShrinkSpace(shrinkSpace);
         setDistanceToBottom(distanceToBottom);
         this.radius = radius;
         this.angleInterval = angleInterval;
@@ -278,7 +277,6 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
         private static int MIN_REMOVE_ANGLE = -90;
 
         private int radius;
-        private int shrinkSpace;
         private int angleInterval;
         private float moveSpeed;
         private float maxRemoveAngle;
@@ -355,11 +353,6 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
-            return this;
-        }
-
-        public Builder setShrinkSpace(int shrinkSpace) {
-            this.shrinkSpace = shrinkSpace;
             return this;
         }
 

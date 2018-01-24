@@ -35,14 +35,13 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
     public GalleryLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.angle, builder.maxAlpha, builder.minAlpha,
                 builder.orientation, builder.moveSpeed, builder.flipRotate, builder.rotateFromEdge,
-                builder.maxVisibleItemCount, builder.distanceToBottom, builder.shrinkSpace, builder.reverseLayout);
+                builder.maxVisibleItemCount, builder.distanceToBottom, builder.reverseLayout);
     }
 
     private GalleryLayoutManager(Context context, int itemSpace, float angle, float maxAlpha, float minAlpha,
                                  int orientation, float moveSpeed, boolean flipRotate, boolean rotateFromEdge,
-                                 int maxVisibleItemCount, int distanceToBottom, int shrinkSpace, boolean reverseLayout) {
+                                 int maxVisibleItemCount, int distanceToBottom, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
-        setShrinkSpace(shrinkSpace);
         setDistanceToBottom(distanceToBottom);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
@@ -205,7 +204,6 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
         private boolean reverseLayout;
         private Context context;
         private int maxVisibleItemCount;
-        private int shrinkSpace;
         private int distanceToBottom;
         private boolean rotateFromEdge;
 
@@ -268,11 +266,6 @@ public class GalleryLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
-            return this;
-        }
-
-        public Builder setShrinkSpace(int shrinkSpace) {
-            this.shrinkSpace = shrinkSpace;
             return this;
         }
 

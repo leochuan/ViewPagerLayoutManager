@@ -44,16 +44,15 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
     public CircleScaleLayoutManager(Builder builder) {
         this(builder.context, builder.radius, builder.angleInterval, builder.centerScale, builder.moveSpeed,
                 builder.maxRemoveAngle, builder.minRemoveAngle, builder.gravity, builder.zAlignment,
-                builder.flipRotate, builder.maxVisibleItemCount, builder.distanceToBottom, builder.shrinkSpace, builder.reverseLayout);
+                builder.flipRotate, builder.maxVisibleItemCount, builder.distanceToBottom, builder.reverseLayout);
     }
 
     private CircleScaleLayoutManager(Context context, int radius, int angleInterval, float centerScale,
                                      float moveSpeed, float max, float min, int gravity, int zAlignment,
-                                     boolean flipRotate, int maxVisibleItemCount, int distanceToBottom, int shrinkSpace, boolean reverseLayout) {
+                                     boolean flipRotate, int maxVisibleItemCount, int distanceToBottom, boolean reverseLayout) {
         super(context, HORIZONTAL, reverseLayout);
         setEnableBringCenterToFront(true);
         setMaxVisibleItemCount(maxVisibleItemCount);
-        setShrinkSpace(shrinkSpace);
         setDistanceToBottom(distanceToBottom);
         this.radius = radius;
         this.angleInterval = angleInterval;
@@ -312,7 +311,6 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
         private boolean flipRotate;
         private int zAlignment;
         private int maxVisibleItemCount;
-        private int shrinkSpace;
         private int distanceToBottom;
 
         public Builder(Context context) {
@@ -385,11 +383,6 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
-            return this;
-        }
-
-        public Builder setShrinkSpace(int shrinkSpace) {
-            this.shrinkSpace = shrinkSpace;
             return this;
         }
 

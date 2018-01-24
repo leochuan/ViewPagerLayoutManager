@@ -30,15 +30,14 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
     public CarouselLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.minScale, builder.orientation,
                 builder.maxVisibleItemCount, builder.moveSpeed, builder.distanceToBottom,
-                builder.shrinkSpace, builder.reverseLayout);
+                builder.reverseLayout);
     }
 
     private CarouselLayoutManager(Context context, int itemSpace, float minScale, int orientation,
                                   int maxVisibleItemCount, float moveSpeed, int distanceToBottom,
-                                  int shrinkSpace, boolean reverseLayout) {
+                                  boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setEnableBringCenterToFront(true);
-        setShrinkSpace(shrinkSpace);
         setDistanceToBottom(distanceToBottom);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
@@ -118,7 +117,6 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
         private float moveSpeed;
         private int maxVisibleItemCount;
         private boolean reverseLayout;
-        private int shrinkSpace;
         private int distanceToBottom;
 
         public Builder(Context context, int itemSpace) {
@@ -154,11 +152,6 @@ public class CarouselLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
-            return this;
-        }
-
-        public Builder setShrinkSpace(int shrinkSpace) {
-            this.shrinkSpace = shrinkSpace;
             return this;
         }
 

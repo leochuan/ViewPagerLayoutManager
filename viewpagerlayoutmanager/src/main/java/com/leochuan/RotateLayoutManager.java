@@ -31,14 +31,13 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
     public RotateLayoutManager(Builder builder) {
         this(builder.context, builder.itemSpace, builder.angle, builder.orientation, builder.moveSpeed,
                 builder.reverseRotate, builder.maxVisibleItemCount, builder.distanceToBottom,
-                builder.shrinkSpace, builder.reverseLayout);
+                builder.reverseLayout);
     }
 
     private RotateLayoutManager(Context context, int itemSpace, float angle, int orientation, float moveSpeed,
                                 boolean reverseRotate, int maxVisibleItemCount, int distanceToBottom,
-                                int shrinkSpace, boolean reverseLayout) {
+                                boolean reverseLayout) {
         super(context, orientation, reverseLayout);
-        setShrinkSpace(shrinkSpace);
         setDistanceToBottom(distanceToBottom);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
@@ -123,7 +122,6 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
         private boolean reverseLayout;
         private Context context;
         private int maxVisibleItemCount;
-        private int shrinkSpace;
         private int distanceToBottom;
 
         public Builder(Context context, int itemSpace) {
@@ -165,11 +163,6 @@ public class RotateLayoutManager extends ViewPagerLayoutManager {
 
         public Builder setMaxVisibleItemCount(int maxVisibleItemCount) {
             this.maxVisibleItemCount = maxVisibleItemCount;
-            return this;
-        }
-
-        public Builder setShrinkSpace(int shrinkSpace) {
-            this.shrinkSpace = shrinkSpace;
             return this;
         }
 
