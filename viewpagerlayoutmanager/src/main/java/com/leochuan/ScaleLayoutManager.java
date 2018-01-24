@@ -12,7 +12,7 @@ import android.view.View;
 public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     private int itemSpace;
-    private float centerScale;
+    private float minScale;
     private float moveSpeed;
     private float maxAlpha;
     private float minAlpha;
@@ -30,19 +30,19 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
     }
 
     public ScaleLayoutManager(Builder builder) {
-        this(builder.context, builder.itemSpace, builder.centerScale, builder.maxAlpha, builder.minAlpha,
+        this(builder.context, builder.itemSpace, builder.minScale, builder.maxAlpha, builder.minAlpha,
                 builder.orientation, builder.moveSpeed, builder.maxVisibleItemCount, builder.distanceToBottom,
                 builder.reverseLayout);
     }
 
-    private ScaleLayoutManager(Context context, int itemSpace, float centerScale, float maxAlpha, float minAlpha,
+    private ScaleLayoutManager(Context context, int itemSpace, float minScale, float maxAlpha, float minAlpha,
                                int orientation, float moveSpeed, int maxVisibleItemCount, int distanceToBottom,
                                boolean reverseLayout) {
         super(context, orientation, reverseLayout);
         setDistanceToBottom(distanceToBottom);
         setMaxVisibleItemCount(maxVisibleItemCount);
         this.itemSpace = itemSpace;
-        this.centerScale = centerScale;
+        this.minScale = minScale;
         this.moveSpeed = moveSpeed;
         this.maxAlpha = maxAlpha;
         this.minAlpha = minAlpha;
@@ -52,8 +52,8 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         return itemSpace;
     }
 
-    public float getCenterScale() {
-        return centerScale;
+    public float getMinScale() {
+        return minScale;
     }
 
     public float getMoveSpeed() {
@@ -75,10 +75,10 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
         removeAllViews();
     }
 
-    public void setCenterScale(float centerScale) {
+    public void setMinScale(float minScale) {
         assertNotInLayoutOrScroll(null);
-        if (this.centerScale == centerScale) return;
-        this.centerScale = centerScale;
+        if (this.minScale == minScale) return;
+        this.minScale = minScale;
         removeAllViews();
     }
 
@@ -106,7 +106,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setInterval() {
-        return mDecoratedMeasurement * ((centerScale - 1) / 2 + 1) + itemSpace;
+        return itemSpace + mDecoratedMeasurement * (1f - (1f - minScale) / 2);
     }
 
     @Override
@@ -136,21 +136,20 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
      * @return the scale rate of current scroll mOffset
      */
     private float calculateScale(float x) {
-        float deltaX = Math.abs(x - (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2f);
-        float diff = 0f;
-        if ((mDecoratedMeasurement - deltaX) > 0) diff = mDecoratedMeasurement - deltaX;
-        return (centerScale - 1f) / mDecoratedMeasurement * diff + 1;
+        float deltaX = Math.abs(x - mSpaceMain);
+        if (deltaX - mDecoratedMeasurement > 0) deltaX = mDecoratedMeasurement;
+        return 1f - deltaX / mDecoratedMeasurement * (1f - minScale);
     }
 
     public static class Builder {
-        private static final float SCALE_RATE = 1.2f;
+        private static final float SCALE_RATE = 0.8f;
         private static final float DEFAULT_SPEED = 1f;
         private static float MIN_ALPHA = 1f;
         private static float MAX_ALPHA = 1f;
 
         private int itemSpace;
         private int orientation;
-        private float centerScale;
+        private float minScale;
         private float moveSpeed;
         private float maxAlpha;
         private float minAlpha;
@@ -163,7 +162,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
             this.itemSpace = itemSpace;
             this.context = context;
             orientation = HORIZONTAL;
-            centerScale = SCALE_RATE;
+            minScale = SCALE_RATE;
             this.moveSpeed = DEFAULT_SPEED;
             maxAlpha = MAX_ALPHA;
             minAlpha = MIN_ALPHA;
@@ -177,8 +176,8 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
             return this;
         }
 
-        public Builder setCenterScale(float centerScale) {
-            this.centerScale = centerScale;
+        public Builder setMinScale(float minScale) {
+            this.minScale = minScale;
             return this;
         }
 

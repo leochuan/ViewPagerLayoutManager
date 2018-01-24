@@ -40,11 +40,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/center_scale"
+            android:text="@string/min_scale"
             android:textColor="#fff" />
 
         <TextView
-            android:id="@+id/center_scale_value"
+            android:id="@+id/min_scale_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -52,7 +52,7 @@
     </FrameLayout>
 
     <SeekBar
-        android:id="@+id/sb_center_scale"
+        android:id="@+id/sb_min_scale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

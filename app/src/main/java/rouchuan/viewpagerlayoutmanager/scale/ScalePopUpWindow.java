@@ -31,7 +31,7 @@ public class ScalePopUpWindow extends SettingPopUpWindow
     private RecyclerView recyclerView;
     private TextView itemSpaceValue;
     private TextView speedValue;
-    private TextView centerScaleValue;
+    private TextView minScaleValue;
     private TextView minAlphaValue;
     private TextView maxAlphaValue;
     private SwitchCompat changeOrientation;
@@ -51,13 +51,13 @@ public class ScalePopUpWindow extends SettingPopUpWindow
 
         SeekBar itemSpace = view.findViewById(R.id.sb_item_space);
         SeekBar speed = view.findViewById(R.id.sb_speed);
-        SeekBar centerScale = view.findViewById(R.id.sb_center_scale);
+        SeekBar minScale = view.findViewById(R.id.sb_min_scale);
         SeekBar minAlpha = view.findViewById(R.id.sb_min_alpha);
         SeekBar maxAlpha = view.findViewById(R.id.sb_max_alpha);
 
         itemSpaceValue = view.findViewById(R.id.item_space);
         speedValue = view.findViewById(R.id.speed_value);
-        centerScaleValue = view.findViewById(R.id.center_scale_value);
+        minScaleValue = view.findViewById(R.id.min_scale_value);
         minAlphaValue = view.findViewById(R.id.min_alpha_value);
         maxAlphaValue = view.findViewById(R.id.max_alpha_value);
 
@@ -68,19 +68,19 @@ public class ScalePopUpWindow extends SettingPopUpWindow
 
         itemSpace.setOnSeekBarChangeListener(this);
         speed.setOnSeekBarChangeListener(this);
-        centerScale.setOnSeekBarChangeListener(this);
+        minScale.setOnSeekBarChangeListener(this);
         minAlpha.setOnSeekBarChangeListener(this);
         maxAlpha.setOnSeekBarChangeListener(this);
 
         itemSpace.setProgress(scaleLayoutManager.getItemSpace() / 2);
         speed.setProgress(Math.round(scaleLayoutManager.getMoveSpeed() / 0.05f));
-        centerScale.setProgress(Math.round(scaleLayoutManager.getCenterScale() * 200f / 3 - 100f / 3));
+        minScale.setProgress(Math.round((scaleLayoutManager.getMinScale() - 0.5f) * 200));
         maxAlpha.setProgress(Math.round(scaleLayoutManager.getMaxAlpha() * 100));
         minAlpha.setProgress(Math.round(scaleLayoutManager.getMinAlpha() * 100));
 
         itemSpaceValue.setText(String.valueOf(scaleLayoutManager.getItemSpace()));
         speedValue.setText(Util.formatFloat(scaleLayoutManager.getMoveSpeed()));
-        centerScaleValue.setText(Util.formatFloat(scaleLayoutManager.getCenterScale()));
+        minScaleValue.setText(Util.formatFloat(scaleLayoutManager.getMinScale()));
         minAlphaValue.setText(Util.formatFloat(scaleLayoutManager.getMinAlpha()));
         maxAlphaValue.setText(Util.formatFloat(scaleLayoutManager.getMaxAlpha()));
 
@@ -102,10 +102,10 @@ public class ScalePopUpWindow extends SettingPopUpWindow
                 scaleLayoutManager.setItemSpace(itemSpace);
                 itemSpaceValue.setText(String.valueOf(itemSpace));
                 break;
-            case R.id.sb_center_scale:
-                final float scale = (progress + 100f / 3) * 3 / 200;
-                scaleLayoutManager.setCenterScale(scale);
-                centerScaleValue.setText(Util.formatFloat(scale));
+            case R.id.sb_min_scale:
+                final float scale = 0.5f + (progress / 200f);
+                scaleLayoutManager.setMinScale(scale);
+                minScaleValue.setText(Util.formatFloat(scale));
                 break;
             case R.id.sb_speed:
                 final float speed = progress * 0.05f;
