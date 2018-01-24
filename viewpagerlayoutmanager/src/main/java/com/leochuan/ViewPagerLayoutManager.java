@@ -360,7 +360,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
         mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
         if (mDistanceToBottom == INVALID_SIZE) {
-            mSpaceInOther = mDistanceToBottom = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
+            mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
         } else {
             mSpaceInOther = mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther - mDistanceToBottom;
         }
@@ -818,7 +818,8 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     public int getDistanceToBottom() {
-        return mDistanceToBottom;
+        return mDistanceToBottom == INVALID_SIZE ?
+                (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2 : mDistanceToBottom;
     }
 
     public void setDistanceToBottom(int mDistanceToBottom) {
