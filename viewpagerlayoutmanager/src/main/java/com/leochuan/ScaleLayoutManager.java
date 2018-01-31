@@ -106,7 +106,7 @@ public class ScaleLayoutManager extends ViewPagerLayoutManager {
 
     @Override
     protected float setInterval() {
-        return itemSpace + mDecoratedMeasurement * (1f - (1f - minScale) / 2);
+        return itemSpace + mDecoratedMeasurement;
     }
 
     @Override
