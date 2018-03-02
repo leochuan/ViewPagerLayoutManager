@@ -239,19 +239,6 @@ public class CircleLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected float propertyChangeWhenScroll(View itemView) {
-        switch (gravity) {
-            case RIGHT:
-            case TOP:
-                return flipRotate ? -itemView.getRotation() : itemView.getRotation() - 360;
-            case LEFT:
-            case BOTTOM:
-            default:
-                return flipRotate ? itemView.getRotation() - 360 : -itemView.getRotation();
-        }
-    }
-
-    @Override
     protected float getDistanceRatio() {
         if (moveSpeed == 0) return Float.MAX_VALUE;
         return 1 / moveSpeed;

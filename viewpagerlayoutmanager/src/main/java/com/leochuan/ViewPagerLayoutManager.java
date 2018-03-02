@@ -712,12 +712,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         return -mDecoratedMeasurement - mOrientationHelper.getStartAfterPadding() - mSpaceMain;
     }
 
-    protected float propertyChangeWhenScroll(View itemView) {
-        if (mOrientation == VERTICAL)
-            return itemView.getTop() - mSpaceMain;
-        return itemView.getLeft() - mSpaceMain;
-    }
-
     protected float getDistanceRatio() {
         return 1f;
     }

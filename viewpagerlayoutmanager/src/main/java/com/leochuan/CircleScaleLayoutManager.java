@@ -271,11 +271,6 @@ public class CircleScaleLayoutManager extends ViewPagerLayoutManager {
     }
 
     @Override
-    protected float propertyChangeWhenScroll(View itemView) {
-        return itemView.getRotation();
-    }
-
-    @Override
     protected float getDistanceRatio() {
         if (moveSpeed == 0) return Float.MAX_VALUE;
         return 1 / moveSpeed;
