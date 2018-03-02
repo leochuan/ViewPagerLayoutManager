@@ -23,6 +23,7 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
             new RecyclerView.OnScrollListener() {
 
                 boolean mScrolled = false;
+                boolean snapToCenter = false;
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -38,7 +39,12 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
 
                     if (newState == RecyclerView.SCROLL_STATE_IDLE && mScrolled) {
                         mScrolled = false;
-                        snapToCenterView(layoutManager, onPageChangeListener);
+                        if (!snapToCenter) {
+                            snapToCenterView(layoutManager, onPageChangeListener);
+                            snapToCenter = true;
+                        } else {
+                            snapToCenter = false;
+                        }
                     }
                 }
 
