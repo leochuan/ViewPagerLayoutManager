@@ -48,6 +48,14 @@ public class AutoPlayRecyclerView extends RecyclerView {
         return result;
     }
 
+    public void start() {
+        autoPlaySnapHelper.start();
+    }
+
+    public void pause() {
+        autoPlaySnapHelper.pause();
+    }
+
     @Override
     public void setLayoutManager(LayoutManager layout) {
         super.setLayoutManager(layout);
