@@ -37,6 +37,11 @@ new CenterSnapHelper().attachToRecyclerView(recyclerView);
 layoutmanager.setMaxVisibleItemCount(count);
 ```
 
+## 获取中间item的位置
+```java
+layoutmanager.getCurrentPosition()
+``
+
 ## 自动轮播
 
 请使用 `AutoPlayRecyclerView`

@@ -39,6 +39,11 @@ new CenterSnapHelper().attachToRecyclerView(recyclerView);
 layoutmanager.setMaxVisibleItemCount(count);
 ```
 
+## Get Position Of Center Item
+```java
+layoutmanager.getCurrentPosition()
+```
+
 ## Auto Play
 
 You can make it auto play by using `AutoPlayRecyclerView`
