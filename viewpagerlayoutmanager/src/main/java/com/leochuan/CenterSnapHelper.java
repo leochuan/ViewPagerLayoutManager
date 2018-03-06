@@ -18,12 +18,18 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
     RecyclerView mRecyclerView;
     Scroller mGravityScroller;
 
+    /**
+     * when the dataSet is extremely large
+     * {@link #snapToCenterView(ViewPagerLayoutManager, ViewPagerLayoutManager.OnPageChangeListener)}
+     * may keep calling itself because the accuracy of float
+     */
+    private boolean snapToCenter = false;
+
     // Handles the snap on scroll case.
     private final RecyclerView.OnScrollListener mScrollListener =
             new RecyclerView.OnScrollListener() {
 
                 boolean mScrolled = false;
-                boolean snapToCenter = false;
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -40,8 +46,8 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
                     if (newState == RecyclerView.SCROLL_STATE_IDLE && mScrolled) {
                         mScrolled = false;
                         if (!snapToCenter) {
-                            snapToCenterView(layoutManager, onPageChangeListener);
                             snapToCenter = true;
+                            snapToCenterView(layoutManager, onPageChangeListener);
                         } else {
                             snapToCenter = false;
                         }
@@ -135,7 +141,11 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
                 mRecyclerView.smoothScrollBy(0, delta);
             else
                 mRecyclerView.smoothScrollBy(delta, 0);
+        } else {
+            // set it false to make smoothScrollToPosition keep trigger the listener
+            snapToCenter = false;
         }
+
         if (listener != null)
             listener.onPageSelected(layoutManager.getCurrentPosition());
     }
