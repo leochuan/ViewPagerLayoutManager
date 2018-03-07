@@ -667,11 +667,11 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         v.setAlpha(1f);
     }
 
-    private float getMaxOffset() {
+    /* package */ float getMaxOffset() {
         return !mShouldReverseLayout ? (getItemCount() - 1) * mInterval : 0;
     }
 
-    private float getMinOffset() {
+    /* package */ float getMinOffset() {
         return !mShouldReverseLayout ? 0 : -(getItemCount() - 1) * mInterval;
     }
 

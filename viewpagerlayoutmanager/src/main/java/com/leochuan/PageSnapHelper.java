@@ -19,6 +19,12 @@ public class PageSnapHelper extends CenterSnapHelper {
             return false;
         }
 
+        if (!layoutManager.getInfinite() &&
+                (layoutManager.mOffset == layoutManager.getMaxOffset()
+                        || layoutManager.mOffset == layoutManager.getMinOffset())) {
+            return false;
+        }
+
         final int minFlingVelocity = mRecyclerView.getMinFlingVelocity();
         mGravityScroller.fling(0, 0, velocityX, velocityY,
                 Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE);
