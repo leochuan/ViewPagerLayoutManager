@@ -334,6 +334,22 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+
+        int currentPosition = getCurrentPosition();
+        if (currentPosition == position) {
+            return;
+        }
+        int leftOffset = getMaxVisibleItemCount() % 2 == 0 ? getMaxVisibleItemCount() / 2 - 1 : getMaxVisibleItemCount() / 2;
+        int rightOffset = getMaxVisibleItemCount() / 2;
+        int count = recyclerView.getAdapter().getItemCount();
+        if (position >= 0 && position <= currentPosition + rightOffset - count) {
+            //right
+            position += count;
+        } else if (position >= currentPosition - leftOffset + count) {
+            //left
+            position -= count;
+        }
+
         final int offsetPosition = getOffsetToPosition(position);
         if (mOrientation == VERTICAL) {
             recyclerView.smoothScrollBy(0, offsetPosition, mSmoothScrollInterpolator);
