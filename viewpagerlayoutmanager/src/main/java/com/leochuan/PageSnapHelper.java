@@ -3,7 +3,8 @@ package com.leochuan;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * Used by {@link AutoPlayRecyclerView} to implement auto play effect
+ * The implementation will snap the center of the target child view to the center of
+ * the attached {@link RecyclerView}. And per Child per fling.
  */
 
 public class PageSnapHelper extends CenterSnapHelper {

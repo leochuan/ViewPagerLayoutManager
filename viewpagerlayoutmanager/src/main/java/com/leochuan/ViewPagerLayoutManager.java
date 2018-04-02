@@ -334,7 +334,29 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-        final int offsetPosition = getOffsetToPosition(position);
+        final int offsetPosition;
+
+        // fix wrong scroll direction when infinite enable
+        if (mInfinite) {
+            final int currentPosition = getCurrentPosition();
+            final int total = getItemCount();
+            final int targetPosition;
+            if (position < currentPosition) {
+                int d1 = currentPosition - position;
+                int d2 = total - currentPosition + position;
+                targetPosition = d1 < d2 ? (currentPosition - d1) : (currentPosition + d2);
+            } else {
+                int d1 = position - currentPosition;
+                int d2 = currentPosition + total - position;
+                targetPosition = d1 < d2 ? (currentPosition + d1) : (currentPosition - d2);
+            }
+
+            offsetPosition = getOffsetToPosition(targetPosition);
+        } else {
+            offsetPosition = getOffsetToPosition(position);
+        }
+
+
         if (mOrientation == VERTICAL) {
             recyclerView.smoothScrollBy(0, offsetPosition, mSmoothScrollInterpolator);
         } else {
