@@ -29,7 +29,7 @@ dependencies {
 
 apply plugin: 'maven'
 
-def currentVersion = '2.0.15'
+def currentVersion = '2.0.16'
 def versionDes = 'Fix bugs'
 def websiteUrl = 'https://github.com/leochuan/ViewPagerLayoutManager'
 def date = new Date()
