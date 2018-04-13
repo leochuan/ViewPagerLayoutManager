@@ -376,7 +376,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         resolveShouldLayoutReverse();
 
         //make sure properties are correct while measure more than once
-        View scrap = recycler.getViewForPosition(0);
+        View scrap = getMeasureView(recycler, state, 0);
+        if (scrap == null) {
+            removeAndRecycleAllViews(recycler);
+            mOffset = 0;
+            return;
+        }
+
         measureChildWithMargins(scrap, 0, 0);
         mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
         mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
@@ -403,8 +409,16 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
                     mPendingScrollPosition * -mInterval : mPendingScrollPosition * mInterval;
         }
 
-        detachAndScrapAttachedViews(recycler);
         layoutItems(recycler);
+    }
+
+    private View getMeasureView(RecyclerView.Recycler recycler, RecyclerView.State state, int index) {
+        if (index >= state.getItemCount() || index < 0) return null;
+        try {
+            return recycler.getViewForPosition(index);
+        } catch (Exception e) {
+            return getMeasureView(recycler, state, index + 1);
+        }
     }
 
     @Override
