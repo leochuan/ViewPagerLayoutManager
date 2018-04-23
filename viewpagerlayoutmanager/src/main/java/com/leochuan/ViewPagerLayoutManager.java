@@ -395,8 +395,13 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
 
         mInterval = setInterval();
         setUp();
-        mLeftItems = (int) Math.abs(minRemoveOffset() / mInterval) + 1;
-        mRightItems = (int) Math.abs(maxRemoveOffset() / mInterval) + 1;
+        if (mInterval == 0) {
+            mLeftItems = 1;
+            mRightItems = 1;
+        } else {
+            mLeftItems = (int) Math.abs(minRemoveOffset() / mInterval) + 1;
+            mRightItems = (int) Math.abs(maxRemoveOffset() / mInterval) + 1;
+        }
 
         if (mPendingSavedState != null) {
             mShouldReverseLayout = mPendingSavedState.isReverseLayout;
@@ -787,6 +792,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     }
 
     private int getCurrentPositionOffset() {
+        if (mInterval == 0) return 0;
         return Math.round(mOffset / mInterval);
     }
 
