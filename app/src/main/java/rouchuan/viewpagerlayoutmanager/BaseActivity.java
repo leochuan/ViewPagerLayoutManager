@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.leochuan.ViewPagerLayoutManager;
 
@@ -33,7 +35,15 @@ public abstract class BaseActivity<V extends ViewPagerLayoutManager, S extends S
         setTitle(getIntent().getCharSequenceExtra(MainActivity.INTENT_TITLE));
         recyclerView = findViewById(R.id.recycler);
         viewPagerLayoutManager = createLayoutManager();
-        recyclerView.setAdapter(new DataAdapter());
+        DataAdapter dataAdapter = new DataAdapter();
+        dataAdapter.setOnItemClickListener(new DataAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int pos) {
+                Toast.makeText(v.getContext(), "clicked:" + pos, Toast.LENGTH_SHORT).show();
+                recyclerView.smoothScrollToPosition(pos);
+            }
+        });
+        recyclerView.setAdapter(dataAdapter);
         recyclerView.setLayoutManager(viewPagerLayoutManager);
     }
 

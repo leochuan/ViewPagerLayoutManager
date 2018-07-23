@@ -34,14 +34,14 @@ public class PageSnapHelper extends CenterSnapHelper {
                 && Math.abs(velocityY) > minFlingVelocity) {
             final int currentPosition = layoutManager.getCurrentPosition();
             final int offsetPosition = mGravityScroller.getFinalY() * layoutManager.getDistanceRatio() > layoutManager.mInterval ? 1 : 0;
-            mRecyclerView.smoothScrollToPosition(layoutManager.getReverseLayout() ?
+            ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, layoutManager.getReverseLayout() ?
                     currentPosition - offsetPosition : currentPosition + offsetPosition);
             return true;
         } else if (layoutManager.mOrientation == ViewPagerLayoutManager.HORIZONTAL
                 && Math.abs(velocityX) > minFlingVelocity) {
             final int currentPosition = layoutManager.getCurrentPosition();
             final int offsetPosition = mGravityScroller.getFinalX() * layoutManager.getDistanceRatio() > layoutManager.mInterval ? 1 : 0;
-            mRecyclerView.smoothScrollToPosition(layoutManager.getReverseLayout() ?
+            ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, layoutManager.getReverseLayout() ?
                     currentPosition - offsetPosition : currentPosition + offsetPosition);
             return true;
         }
