@@ -44,6 +44,13 @@ layoutmanager.setMaxVisibleItemCount(count);
 layoutmanager.getCurrentPosition()
 ```
 
+## Smooth Scroll To Position
+Normally you can just use `RecyclerView`'s `SmoothScrollToPosition` method,
+but when infinite scroll enabled, using method below to avoid some unexpected errors.
+```java
+ScrollHelper.smoothScrollToTargetView(recyclerView, itemViewYouWantScrollTo);
+```
+
 ## Auto Play
 
 You can make it auto play by using `AutoPlayRecyclerView`

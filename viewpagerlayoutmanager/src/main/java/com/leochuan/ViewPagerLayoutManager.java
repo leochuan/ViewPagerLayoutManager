@@ -790,6 +790,15 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         return null;
     }
 
+    public int getLayoutPositionOfView(View v) {
+        for (int i = 0; i < positionCache.size(); i++) {
+            int key = positionCache.keyAt(i);
+            View value = positionCache.get(key);
+            if (value == v) return key;
+        }
+        return -1;
+    }
+
     private int getCurrentPositionOffset() {
         if (mInterval == 0) return 0;
         return Math.round(mOffset / mInterval);
@@ -829,7 +838,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     public int getOffsetToPosition(int position) {
         if (mInfinite)
             return (int) (((getCurrentPositionOffset() +
-                    (!mShouldReverseLayout ? position - getCurrentPosition() : getCurrentPosition() - position)) *
+                    (!mShouldReverseLayout ? position - getCurrentPositionOffset() : -getCurrentPositionOffset() - position)) *
                     mInterval - mOffset) * getDistanceRatio());
         return (int) ((position *
                 (!mShouldReverseLayout ? mInterval : -mInterval) - mOffset) * getDistanceRatio());

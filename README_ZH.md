@@ -42,6 +42,13 @@ layoutmanager.setMaxVisibleItemCount(count);
 layoutmanager.getCurrentPosition()
 ```
 
+## 滚动到特定位置
+一般情况下，直接使用`RecyclerView`自带的`smoothScrollToPosition`就可以了，
+但是当无限滚动开启的时候，如果能获取到要滚动到的view建议使用下面的方法。
+```java
+ScrollHelper.smoothScrollToTargetView(recyclerView, itemViewYouWantScrollTo);
+```
+
 ## 自动轮播
 
 请使用 `AutoPlayRecyclerView`

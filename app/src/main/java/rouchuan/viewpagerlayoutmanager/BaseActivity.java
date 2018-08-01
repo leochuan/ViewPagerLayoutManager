@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.leochuan.ScrollHelper;
 import com.leochuan.ViewPagerLayoutManager;
 
 
@@ -40,7 +41,7 @@ public abstract class BaseActivity<V extends ViewPagerLayoutManager, S extends S
             @Override
             public void onItemClick(View v, int pos) {
                 Toast.makeText(v.getContext(), "clicked:" + pos, Toast.LENGTH_SHORT).show();
-                recyclerView.smoothScrollToPosition(pos);
+                ScrollHelper.smoothScrollToTargetView(recyclerView, v);
             }
         });
         recyclerView.setAdapter(dataAdapter);
