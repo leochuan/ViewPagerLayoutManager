@@ -58,7 +58,8 @@ class AutoPlaySnapHelper extends CenterSnapHelper {
                 @Override
                 public void run() {
                     final int currentPosition =
-                            ((ViewPagerLayoutManager) layoutManager).getCurrentPosition();
+                            ((ViewPagerLayoutManager) layoutManager).getCurrentPositionOffset() *
+                                    (((ViewPagerLayoutManager) layoutManager).getReverseLayout() ? -1 : 1);
                     ScrollHelper.smoothScrollToPosition(mRecyclerView,
                             (ViewPagerLayoutManager) layoutManager, direction == RIGHT ? currentPosition + 1 : currentPosition - 1);
                     handler.postDelayed(autoPlayRunnable, timeInterval);

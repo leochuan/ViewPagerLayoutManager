@@ -85,19 +85,19 @@ public class CenterSnapHelper extends RecyclerView.OnFlingListener {
 
         if (layoutManager.mOrientation == ViewPagerLayoutManager.VERTICAL
                 && Math.abs(velocityY) > minFlingVelocity) {
-            final int currentPosition = layoutManager.getCurrentPosition();
+            final int currentPosition = layoutManager.getCurrentPositionOffset();
             final int offsetPosition = (int) (mGravityScroller.getFinalY() /
                     layoutManager.mInterval / layoutManager.getDistanceRatio());
             ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, layoutManager.getReverseLayout() ?
-                    currentPosition - offsetPosition : currentPosition + offsetPosition);
+                    -currentPosition - offsetPosition : currentPosition + offsetPosition);
             return true;
         } else if (layoutManager.mOrientation == ViewPagerLayoutManager.HORIZONTAL
                 && Math.abs(velocityX) > minFlingVelocity) {
-            final int currentPosition = layoutManager.getCurrentPosition();
+            final int currentPosition = layoutManager.getCurrentPositionOffset();
             final int offsetPosition = (int) (mGravityScroller.getFinalX() /
                     layoutManager.mInterval / layoutManager.getDistanceRatio());
             ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, layoutManager.getReverseLayout() ?
-                    currentPosition - offsetPosition : currentPosition + offsetPosition);
+                    -currentPosition - offsetPosition : currentPosition + offsetPosition);
             return true;
         }
 

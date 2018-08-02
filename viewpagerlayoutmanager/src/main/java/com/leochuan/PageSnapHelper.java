@@ -32,17 +32,17 @@ public class PageSnapHelper extends CenterSnapHelper {
 
         if (layoutManager.mOrientation == ViewPagerLayoutManager.VERTICAL
                 && Math.abs(velocityY) > minFlingVelocity) {
-            final int currentPosition = layoutManager.getCurrentPosition();
+            final int currentPosition = layoutManager.getCurrentPositionOffset();
             final int offsetPosition = mGravityScroller.getFinalY() * layoutManager.getDistanceRatio() > layoutManager.mInterval ? 1 : 0;
             ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, layoutManager.getReverseLayout() ?
-                    currentPosition - offsetPosition : currentPosition + offsetPosition);
+                    -currentPosition - offsetPosition : currentPosition + offsetPosition);
             return true;
         } else if (layoutManager.mOrientation == ViewPagerLayoutManager.HORIZONTAL
                 && Math.abs(velocityX) > minFlingVelocity) {
-            final int currentPosition = layoutManager.getCurrentPosition();
+            final int currentPosition = layoutManager.getCurrentPositionOffset();
             final int offsetPosition = mGravityScroller.getFinalX() * layoutManager.getDistanceRatio() > layoutManager.mInterval ? 1 : 0;
             ScrollHelper.smoothScrollToPosition(mRecyclerView, layoutManager, layoutManager.getReverseLayout() ?
-                    currentPosition - offsetPosition : currentPosition + offsetPosition);
+                    -currentPosition - offsetPosition : currentPosition + offsetPosition);
             return true;
         }
 
