@@ -383,14 +383,6 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
 
         measureChildWithMargins(scrap, 0, 0);
-        mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
-        mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
-        mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
-        if (mDistanceToBottom == INVALID_SIZE) {
-            mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
-        } else {
-            mSpaceInOther = mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther - mDistanceToBottom;
-        }
 
         mInterval = setInterval();
         setUp();
@@ -414,6 +406,17 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
         }
 
         layoutItems(recycler);
+    }
+
+    private void calChildSpaceAndSpace(View scrap) {
+        mDecoratedMeasurement = mOrientationHelper.getDecoratedMeasurement(scrap);
+        mDecoratedMeasurementInOther = mOrientationHelper.getDecoratedMeasurementInOther(scrap);
+        mSpaceMain = (mOrientationHelper.getTotalSpace() - mDecoratedMeasurement) / 2;
+        if (mDistanceToBottom == INVALID_SIZE) {
+            mSpaceInOther = (mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther) / 2;
+        } else {
+            mSpaceInOther = mOrientationHelper.getTotalSpaceInOther() - mDecoratedMeasurementInOther - mDistanceToBottom;
+        }
     }
 
     private View getMeasureView(RecyclerView.Recycler recycler, RecyclerView.State state, int index) {
@@ -718,6 +721,7 @@ public abstract class ViewPagerLayoutManager extends LinearLayoutManager {
     private void layoutScrap(View scrap, float targetOffset) {
         final int left = calItemLeft(scrap, targetOffset);
         final int top = calItemTop(scrap, targetOffset);
+        calChildSpaceAndSpace(scrap);
         if (mOrientation == VERTICAL) {
             layoutDecorated(scrap, mSpaceInOther + left, mSpaceMain + top,
                     mSpaceInOther + left + mDecoratedMeasurementInOther, mSpaceMain + top + mDecoratedMeasurement);
